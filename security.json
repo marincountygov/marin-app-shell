@@ -1,0 +1,91 @@
+{
+  "$schema": "https://raw.githubusercontent.com/marincountygov/marin-os/main/schemas/security.schema.json",
+  "$comment": "Security configuration for the static Marin App Shell library and its GitHub Pages demonstration. Application identity is maintained in marin.yml.",
+  "schema": 1,
+  "profile": "internal",
+  "securityTxt": {
+    "enabled": true,
+    "contact": ["mailto:innovation@marincounty.gov"],
+    "preferredLanguages": ["en"],
+    "expires": "2027-09-29T00:00:00.000Z"
+  },
+  "transport": {
+    "httpsRequired": true,
+    "httpRedirect": true,
+    "hsts": { "status": "inherited-from-platform" }
+  },
+  "headers": {
+    "contentTypeOptions": { "status": "not-achievable", "notes": "GitHub Pages does not serve custom HTTP response headers." },
+    "referrerPolicy": { "status": "enabled-via-meta", "value": "strict-origin-when-cross-origin" },
+    "permissionsPolicy": { "status": "not-achievable", "notes": "GitHub Pages does not serve custom HTTP response headers." },
+    "frameProtection": { "status": "not-achievable", "notes": "GitHub Pages cannot provide X-Frame-Options or a header-delivered frame-ancestors directive." }
+  },
+  "csp": {
+    "deliveryMechanism": "meta",
+    "directives": {
+      "default-src": ["'self'"],
+      "script-src": ["'self'"],
+      "style-src": ["'self'"],
+      "img-src": ["'self'", "data:"],
+      "font-src": ["'self'"],
+      "connect-src": ["'self'", "https://api.github.com", "https://marincountygov.github.io"],
+      "object-src": ["'none'"],
+      "base-uri": ["'self'"],
+      "form-action": ["'self'"]
+    }
+  },
+  "authentication": { "required": false },
+  "authorization": { "required": false, "serverSideEnforced": false },
+  "data": {
+    "collectsUserData": false,
+    "collectsSensitiveData": false,
+    "storesPersonalInformation": false,
+    "acceptsUserSubmittedContent": false,
+    "externalDataSources": [
+      "https://marincountygov.github.io/marin-os/catalog.json",
+      "https://api.github.com"
+    ]
+  },
+  "dependencies": {
+    "lockfileRequired": false,
+    "runtimeCdnPolicy": "Dependencies are vendored into each application; no CDN is required.",
+    "thirdPartyDependencyReview": true,
+    "dependencyScanning": { "status": "enabled", "provider": "github-advanced-security" }
+  },
+  "secrets": {
+    "clientSideSecretsProhibited": true,
+    "committedSecretsProhibited": true,
+    "repositoryScanning": { "status": "enabled", "provider": "github-advanced-security" }
+  },
+  "monitoring": {
+    "secretScanning": { "status": "enabled", "provider": "github-advanced-security" },
+    "pushProtection": { "status": "enabled", "provider": "github-advanced-security" },
+    "dependabotSecurityUpdates": { "status": "enabled", "provider": "github-advanced-security" }
+  },
+  "exceptions": [
+    {
+      "control": "Clickjacking protection (frame-ancestors / X-Frame-Options)",
+      "reason": "GitHub Pages cannot serve custom HTTP headers, and meta-delivered CSP ignores frame-ancestors.",
+      "riskDescription": "The demonstration is a static library page and does not process transactions or sensitive information.",
+      "owner": "County of Marin",
+      "expires": "2027-09-29"
+    },
+    {
+      "control": "MIME-sniffing protection (X-Content-Type-Options) and Permissions-Policy",
+      "reason": "Both require HTTP response headers, which GitHub Pages does not serve.",
+      "riskDescription": "This is a standing hosting limitation for GitHub Pages deployments.",
+      "owner": "County of Marin",
+      "expires": "2027-09-29"
+    }
+  ],
+  "publicSecurity": {
+    "profile": "Static library and demonstration",
+    "lastReviewed": "2026-09-29",
+    "controls": ["HTTPS", "Content Security Policy", "Dependency monitoring", "Secret scanning"],
+    "data": { "collectsPersonalData": false }
+  },
+  "review": {
+    "lastReviewed": "2026-09-29",
+    "owner": "County of Marin"
+  }
+}

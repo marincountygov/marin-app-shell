@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Versioned runtime shell for MarinOS applications.">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.github.com https://marincountygov.github.io; object-src 'none'; base-uri 'self'; form-action 'self'"
+    >
+    <title>Marin App Shell | County of Marin</title>
+    <link rel="icon" href="demo/icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="dist/marinos.css">
+    <link rel="stylesheet" href="demo/app.css">
+    <script src="dist/marinos.js" defer></script>
+    <script src="demo/app.js" defer></script>
+  </head>
+  <body>
+    <noscript>
+      <div class="app-notice" role="alert">This demonstration requires JavaScript to render the shared application shell.</div>
+    </noscript>
+
+    <marin-os-banner catalog-url="demo/catalog.json"></marin-os-banner>
+
+    <marin-app-header
+      app-name="Marin App Shell"
+      app-description="A versioned, locally vendored runtime for MarinOS applications."
+    >
+      <template data-icon>
+        <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" x2="12" y1="22" y2="12"/></svg>
+      </template>
+    </marin-app-header>
+
+    <main id="main" class="container app-main">
+      <section id="start" class="app-page-heading" data-tab-section="start">
+        <p class="demo-kicker">Shell version <strong data-shell-version>loading</strong></p>
+        <h2>Shared structure without template migrations</h2>
+        <p class="demo-lede">
+          Applications vendor a pinned release of this shell. Header, navigation, standard information pages,
+          footer, shared styling, and common behavior are generated from a stable component API.
+        </p>
+
+        <div class="demo-grid">
+          <article class="app-card">
+            <h3>Application-owned</h3>
+            <ul>
+              <li>Primary workflow and content</li>
+              <li>Application CSS and JavaScript</li>
+              <li>Application metadata and security configuration</li>
+            </ul>
+          </article>
+          <article class="app-card">
+            <h3>Shell-owned</h3>
+            <ul>
+              <li>MarinOS banner and application header</li>
+              <li>About, Security, Accessibility, and Updates framework</li>
+              <li>Footer, feedback control, routing, and shared utilities</li>
+            </ul>
+          </article>
+        </div>
+
+        <article class="app-card">
+          <div class="demo-code-heading">
+            <h3>Minimal integration</h3>
+            <button type="button" class="secondary copy-button" data-demo-copy>Copy</button>
+          </div>
+          <pre><code id="integration-example">&lt;link rel="stylesheet" href="vendor/marinos/marinos.css"&gt;
+&lt;link rel="stylesheet" href="assets/app.css"&gt;
+&lt;script src="vendor/marinos/marinos.js" defer&gt;&lt;/script&gt;
+&lt;script src="assets/app.js" defer&gt;&lt;/script&gt;
+
+&lt;marin-os-banner&gt;&lt;/marin-os-banner&gt;
+&lt;marin-app-header
+  app-name="APP_NAME"
+  app-description="APP_DESCRIPTION"&gt;
+&lt;/marin-app-header&gt;
+
+&lt;main id="main" class="container app-main"&gt;
+  &lt;section id="start" data-tab-section="start"&gt;
+    &lt;!-- Application workflow --&gt;
+  &lt;/section&gt;
+  &lt;marin-app-info
+    app-name="APP_NAME"
+    repo="APP_REPO"
+    security-src="security.json"&gt;
+    &lt;template data-about&gt;
+      &lt;p&gt;Application-specific About content.&lt;/p&gt;
+    &lt;/template&gt;
+  &lt;/marin-app-info&gt;
+&lt;/main&gt;
+
+&lt;marin-app-footer app-name="APP_NAME"&gt;&lt;/marin-app-footer&gt;
+&lt;marin-app-feedback&gt;&lt;/marin-app-feedback&gt;</code></pre>
+          <p class="app-help-text">The application loads its own CSS after the shell so app-specific rules remain local.</p>
+        </article>
+
+        <article class="app-card">
+          <h3>Distribution contract</h3>
+          <p>Copy the complete <code>dist/</code> directory into <code>vendor/marinos/</code>. Do not edit vendored files inside an app.</p>
+          <dl class="details">
+            <dt>Shell release</dt>
+            <dd><code>1.0.0</code></dd>
+            <dt>Marin UI baseline</dt>
+            <dd><code>1.18.0</code></dd>
+            <dt>Runtime</dt>
+            <dd>Static HTML, CSS, and JavaScript</dd>
+            <dt>Rendering</dt>
+            <dd>Native custom elements using light DOM</dd>
+          </dl>
+        </article>
+      </section>
+
+      <marin-app-info
+        app-name="Marin App Shell"
+        repo="marin-app-shell"
+        security-src="security.json"
+      >
+        <template data-about>
+          <p>
+            Marin App Shell separates the shared MarinOS runtime from the starter template. Established apps
+            pin a shell release instead of receiving structural HTML and CSS migrations from
+            <code>marin-app-template</code>.
+          </p>
+          <p>
+            The distribution is designed for self-contained static deployment. Applications copy it into their
+            own repository and do not depend on a live CDN or central runtime.
+          </p>
+        </template>
+        <template data-accessibility>
+          <p>
+            The shell provides a skip link, visible keyboard focus, semantic header and footer landmarks,
+            responsive navigation, live status regions, reduced-motion support, and minimum control sizing.
+          </p>
+          <p>
+            Each consuming application remains responsible for the accessibility of its own workflow, content,
+            custom controls, and application-specific styles.
+          </p>
+        </template>
+      </marin-app-info>
+    </main>
+
+    <marin-app-footer app-name="Marin App Shell"></marin-app-footer>
+    <marin-app-feedback></marin-app-feedback>
+  </body>
+</html>

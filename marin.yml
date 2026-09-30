@@ -1,0 +1,16 @@
+schema: 1
+
+project:
+  name: Marin App Shell
+  repo: marin-app-shell
+  type: platform
+  owner: County of Marin
+  audience: developers
+  status: active
+
+platform:
+  marin-ui: 1.18.0
+
+deployment:
+  target: github-pages
+  url: https://marincountygov.github.io/marin-app-shell/
