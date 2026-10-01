@@ -310,7 +310,13 @@
       }
 
       titleRow.append(icon, titleCopy);
-      identity.append(titleRow);
+
+      const homeLink = document.createElement("a");
+      homeLink.className = "app-identity__home";
+      homeLink.href = "./";
+      homeLink.setAttribute("aria-label", `${appName} home`);
+      homeLink.append(titleRow);
+      identity.append(homeLink);
 
       const actions = document.createElement("div");
       actions.className = "app-header__actions";

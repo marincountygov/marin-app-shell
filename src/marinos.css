@@ -438,15 +438,22 @@ input[type="radio"] {
   min-width: 0;
 }
 
+.app-identity__home {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-identity__home:hover,
+.app-identity__home:focus-visible {
+  color: inherit;
+  text-decoration: none;
+}
+
 .app-title-row {
   display: flex;
   align-items: center;
   gap: 1rem;
-}
-
-a.app-title-row {
-  color: inherit;
-  text-decoration: none;
 }
 
 .app-icon,

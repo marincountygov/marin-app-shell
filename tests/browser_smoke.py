@@ -9,6 +9,7 @@ from pathlib import Path
 from playwright.sync_api import Page, sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
+SHELL_VERSION = (ROOT / "SHELL_VERSION").read_text(encoding="utf-8").strip()
 SHELL_JS = (ROOT / "dist/marinos.js").read_text(encoding="utf-8")
 SHELL_CSS = (ROOT / "dist/marinos.css").read_text(encoding="utf-8")
 SECURITY = json.loads((ROOT / "security.json").read_text(encoding="utf-8"))
@@ -82,7 +83,7 @@ def prepare_page(page: Page) -> list[str]:
         [CATALOG, SECURITY],
     )
     page.add_script_tag(content=SHELL_JS)
-    page.wait_for_function("window.MarinAppShell && window.MarinAppShell.version === '1.0.0'")
+    page.wait_for_function("version => window.MarinAppShell && window.MarinAppShell.version === version", arg=SHELL_VERSION)
     return errors
 
 
@@ -113,6 +114,14 @@ def run_test(screenshot_dir: Path | None = None) -> None:
             "footer links are incomplete or out of order",
         )
         require(page.locator(".app-icon svg circle").count() == 1, "custom header icon did not render")
+        require(
+            page.locator(".app-identity > a.app-identity__home[href='./']").count() == 1,
+            "application identity home link did not render",
+        )
+        require(
+            page.locator(".app-identity__home .app-title-row").count() == 1,
+            "application identity contents are not wrapped by the home link",
+        )
 
         page.locator("#app-nav a[href='#about']").click()
         page.wait_for_function("!document.querySelector('#about').hidden")

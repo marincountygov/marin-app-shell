@@ -67,7 +67,7 @@ Use the pinned shell version in `marin.yml`:
 
 ```yaml
 platform:
-  shell: 1.0.0
+  shell: 1.0.1
 ```
 
 The release in `vendor/marinos/manifest.json` must match `platform.shell`. Maintenance automation should reject a mismatch.

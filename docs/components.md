@@ -24,6 +24,8 @@ The shell keeps bundled fallback links when the catalog request fails or is unav
 
 Renders the semantic application header, app identity, mobile menu control, and top navigation.
 
+The complete app identity is a link to `./`. Selecting the app icon, name, or description returns the application to its root URL and default on-load content.
+
 ```html
 <marin-app-header
   app-name="Marin Unzipper"

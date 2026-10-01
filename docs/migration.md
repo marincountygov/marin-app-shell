@@ -7,7 +7,7 @@ This migration is intentionally structural and should be performed once per app.
 ```bash
 git switch main
 git pull --ff-only
-git switch -c refactor/marin-app-shell-1.0.0
+git switch -c refactor/marin-app-shell-1.0.1
 ```
 
 ## 2. Install the shell
@@ -130,7 +130,7 @@ Change the platform metadata to:
 
 ```yaml
 platform:
-  shell: 1.0.0
+  shell: 1.0.1
 ```
 
 `templateVersion` may remain temporarily as migration provenance but is no longer the update mechanism. Remove `platform.marin-ui` from consuming apps because the shell manifest records its Marin UI baseline.
