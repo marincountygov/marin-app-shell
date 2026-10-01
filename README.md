@@ -98,7 +98,7 @@ A consuming app should replace template-tracking metadata with its pinned shell 
 
 ```yaml
 platform:
-  shell: 1.0.0
+  shell: 1.0.1
 ```
 
 During migration, an app may retain `templateVersion` as provenance, but MarinOS maintenance should use `platform.shell` as the update target.
