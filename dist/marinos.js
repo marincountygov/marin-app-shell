@@ -6,7 +6,7 @@
     return;
   }
 
-  const SHELL_VERSION = "1.1.0";
+  const SHELL_VERSION = "1.1.1";
   const MARIN_UI_VERSION = "1.18.0";
   const MARINOS_URL = "https://marincountygov.github.io/marin-os/";
   const CATALOG_URL = `${MARINOS_URL}catalog.json`;

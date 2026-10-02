@@ -1,6 +1,13 @@
 # Changelog
 
-## 1.1.0
+## 1.1.1 - 2026-10-02
+
+- Update the installer to keep `marin.yml` `platform.shell` synchronized with the installed shell version.
+- Include `marin.yml` in installer validation and rollback.
+- Add conservative manifest editing that preserves unrelated YAML content and refuses unsupported structures rather than rewriting them.
+- Extend installer regression tests for manifest updates, rollback, concurrent edits, and version verification.
+
+## 1.1.0 - 2026-10-02
 
 - Replace the copied brand CSS source with a hash-pinned Marin UI 1.18.0 input, named compatibility adapters, and a small shell-only stylesheet.
 - Remove `local()` font preferences, enforce body/UI versus heading roles, and automatically synchronize the locked Jost/Open Sans fonts and supplied Open Sans license into standard app paths during installation.

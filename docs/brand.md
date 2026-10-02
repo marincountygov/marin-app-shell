@@ -16,8 +16,10 @@ not replace apps' selected icons. Owners should reconcile that wording upstream.
 checks hashes; it does not download or automatically adopt upstream `main`.
 Marin UI remains the implementation source for future explicitly reviewed imports.
 
-The old shell copied and edited the entire UI stylesheet. Version 1.1.0 removes
+The old shell copied and edited the entire UI stylesheet. Version 1.1.0 removed
 that fork (`src/marinos.css`) in favor of an upstream input and small, named adapters.
+Version 1.1.1 does not change those pinned brand inputs or the runtime presentation;
+it changes installation metadata handling only.
 
 ## Font paths and consumption
 
@@ -27,6 +29,11 @@ cache) into standard `APP/vendor/fonts/` paths. Missing/corrupt files fail befor
 app changes, not merely warn. CSS never prefers a machine-installed `local()` font.
 The two URLs are rebased from `../vendor/fonts/` in the source brand bundle to
 `../fonts/` in the installed `vendor/marinos/marinos.css`.
+
+In 1.1.1, the app's existing `marin.yml` `platform.shell` scalar is staged and
+updated in the same rollback-protected installation as these managed assets. This
+does not expand the brand surface: no unrelated app CSS, icons, security content,
+or other manifest fields are rewritten.
 
 The upstream body and h1-h6/.app-title selectors actually consume the font tokens.
 Both Pico token variants are set in the compatibility layer. Navigation and footer
@@ -56,7 +63,7 @@ icon geometry. Live catalog markup still goes through the SVG allowlist sanitize
 
 The shell demo uses the same layout-grid geometry in its header, rounded-square
 favicon and local catalog. `demo/catalog-entry.json` supplies that geometry for a
-separate review of the real `marin-os/catalog.json`; this patch does not edit that
+separate review of the real `marin-os/catalog.json`; this release does not edit that
 other repository or presume the shell already has a published catalog entry.
 
 ## Header spacing
@@ -72,5 +79,7 @@ explicitly restores the same outer padding on the generated header/footer.
 Automated source checks cover consumption, hashes, paths, prohibited static CDNs,
 canonical owned SVGs, and icon parity. Browser fixtures use the actual fonts and
 inspect both FontFace load state and Chromium's rendered-font report, not just a
-computed family string. An HTTP integration check remains separate; a brand check
-is not a full accessibility, security, or platform-availability certification.
+computed family string. Installer regression tests separately cover the
+`platform.shell` metadata update, preservation, failure handling, and rollback.
+An HTTP integration check remains separate; a brand check is not a full
+accessibility, security, or platform-availability certification.
