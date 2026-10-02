@@ -29,11 +29,12 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--font-source", type=Path)
     args = parser.parse_args()
+    version = (ROOT / "SHELL_VERSION").read_text(encoding="utf-8").strip()
     with tempfile.TemporaryDirectory(prefix="marinos-http-") as temp:
         webroot = Path(temp)
         app = webroot / "test-app"
         app.mkdir()
-        (app / "marin.yml").write_text("schema: 1\nplatform:\n  shell: 1.1.0\n")
+        (app / "marin.yml").write_text(f"schema: 1\nplatform:\n  shell: {version}\n", encoding="utf-8")
         install(app, args.font_source)
         shutil.copytree(ROOT / "demo", app / "demo")
         shutil.copy2(ROOT / "security.json", app / "security.json")
@@ -57,7 +58,7 @@ def main() -> None:
                         content_type="application/json", headers={"Access-Control-Allow-Origin":"*"}, body="[]"))
                     base = f"http://127.0.0.1:{server.server_port}/test-app/"
                     page.goto(base, wait_until="networkidle")
-                    page.wait_for_function("window.MarinAppShell?.version === '1.1.0'")
+                    page.wait_for_function("version => window.MarinAppShell?.version === version", arg=version)
                     page.evaluate("document.fonts.ready")
                     for suffix in ("Jost-wght.ttf", "OpenSans-VariableFont_wdth,wght.woff2"):
                         require(any(suffix in url and status == 200 for url, status in font_responses), f"Local font not served: {suffix}")

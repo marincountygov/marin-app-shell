@@ -24,13 +24,16 @@ if command -v node >/dev/null 2>&1; then
   node --check "$ROOT_DIR/src/marinos.js"
   node --check "$ROOT_DIR/dist/marinos.js"
   node --check "$ROOT_DIR/demo/app.js"
+  printf 'Checking viewBox-aware icon stroke defaults...\n'
+  node "$ROOT_DIR/tests/icon_stroke_defaults.js"
 else
-  printf 'SKIP: Node unavailable; JavaScript syntax check not performed.\n' >&2
+  printf 'SKIP: Node unavailable; JavaScript syntax and icon-default unit checks not performed.\n' >&2
 fi
 printf 'Running release and installer regression tests...\n'
 python3 "$ROOT_DIR/tests/test_release.py"
 if [[ "$BROWSER" == 1 ]]; then
   python3 "$ROOT_DIR/tests/browser_smoke.py" "${FONT_ARGS[@]}"
+  python3 "$ROOT_DIR/tests/browser_icon_strokes.py"
 else
   printf 'SKIP: Browser/font rendering not requested; add --browser for fixture checks.\n'
 fi

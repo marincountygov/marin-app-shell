@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.2
+
+- Default missing SVG stroke widths to 4 for legacy 48x48 viewBoxes; retain 2 for canonical 24x24 Lucide icons. Apply this to header templates, initial app icons, and catalog-rendered icons without changing their geometry.
+- Preserve explicit SVG stroke widths and add the matching CSS fallback for late-inserted legacy icons with the canonical `viewBox="0 0 48 48"` spelling.
+- Add source/distribution unit tests and rendered browser regressions for both coordinate systems, explicit widths, catalog sanitization, and late-inserted icons.
+- Make the separate HTTP browser test read the current release version rather than hard-coding 1.1.0.
+- Keep the public component API, installer transaction behavior, and font/icon assets unchanged. The deferred TOC/layout-timing change is not included.
+
 ## 1.1.1 - 2026-10-02
 
 - Update the installer to keep `marin.yml` `platform.shell` synchronized with the installed shell version.

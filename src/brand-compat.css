@@ -35,6 +35,14 @@
   stroke-width: 2;
 }
 
+/* CSS-only fallback for app-owned icons inserted after shell initialization.
+   Use the canonical viewBox spelling here, or author an explicit stroke-width
+   in late-inserted SVGs. Never override an explicit width, including 2 or 0. */
+:is(.app-icon, .app-card__icon, .docs-brand-icon, .copy-button, .marinos-menu__icon, .marinos-banner__icon) svg[viewBox="0 0 48 48"]:not([stroke-width]),
+.menu-toggle__caret[viewBox="0 0 48 48"]:not([stroke-width]) {
+  stroke-width: 4;
+}
+
 :is(.app-icon, .app-card__icon, .docs-brand-icon, .copy-button, .marinos-menu__icon, .marinos-banner__icon) svg:not([stroke-linecap]),
 .menu-toggle__caret:not([stroke-linecap]) {
   stroke-linecap: round;
