@@ -15,3 +15,8 @@ Describe the shell change and whether it changes the public component API.
 - [ ] README and component documentation updated.
 - [ ] CHANGELOG updated.
 - [ ] Migration guidance added for any application-facing change.
+
+- [ ] Pinned brand/asset inputs and required local font hashes verified.
+- [ ] Real rendered fonts and Lucide icon parity checked.
+- [ ] Installer preservation, preflight and rollback tests passed.
+- [ ] Browser fixture versus HTTP/deployed checks reported accurately.

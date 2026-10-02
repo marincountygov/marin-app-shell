@@ -1,3 +1,8 @@
+> **1.1.0 installation:** Use `bash scripts/install.sh /path/to/app`, not a
+> manual `dist/`-only copy. The installer also synchronizes hash-verified fonts,
+> their supplied Open Sans license, and shell Lucide assets at standard app paths.
+> Read the current README for local source/cache requirements and recovery behavior.
+
 # Integration contract
 
 ## Required document structure
@@ -38,9 +43,13 @@ The vendored shell lives at `vendor/marinos/`. Its CSS resolves fonts one direct
 ```text
 vendor/fonts/Jost-wght.ttf
 vendor/fonts/open-sans/OpenSans-VariableFont_wdth,wght.woff2
+vendor/fonts/open-sans/OFL.txt
 ```
 
-This allows shell releases to replace `vendor/marinos/` without duplicating or moving the app's existing font assets.
+The installer verifies and synchronizes these files automatically from the release's
+pinned local source. They remain outside `vendor/marinos/`, so URLs are stable and
+unrelated fonts are preserved. Missing or mismatched required assets block installation.
+Use the installer for each upgrade rather than copying only `dist/`.
 
 ## Content Security Policy
 
@@ -67,7 +76,7 @@ Use the pinned shell version in `marin.yml`:
 
 ```yaml
 platform:
-  shell: 1.0.1
+  shell: 1.1.0
 ```
 
 The release in `vendor/marinos/manifest.json` must match `platform.shell`. Maintenance automation should reject a mismatch.

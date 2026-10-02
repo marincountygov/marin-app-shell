@@ -1,171 +1,182 @@
 # Marin App Shell
 
-Marin App Shell is the versioned runtime shared by MarinOS applications. It separates the parts that should remain consistent across applications from `marin-app-template`, which remains a starting point for new work.
+Marin App Shell is the pinned, locally installed runtime for independent MarinOS
+apps. It owns the banner, header, standard information sections, footer, navigation,
+shared styling, and shared behavior. Apps own their workflows, content, security
+configuration, and app-specific CSS/JavaScript.
 
-Applications vendor a pinned shell release into their own repository. They do not fetch a live shell from another site and do not require Node, a package manager, or a deployment build.
+## Version 1.1.0
 
-## What the shell owns
+This release restores the brand contract: first-party Open Sans for body/UI text,
+Jost for headings, canonical local Lucide geometry, and the established header
+spacing. The header identity remains a link to `./` (a full navigation that can
+reset unsaved in-memory work). Existing component names and attributes are unchanged.
 
-- MarinOS banner and catalog menu
-- Application header and responsive navigation
-- About, Security, Accessibility, and Updates section framework
-- Footer and Feedback control
-- Hash-based section routing
-- Shared Marin UI CSS and Pico baseline
-- Common copy, share, table sorting, document navigation, Updates, and Security behaviors
+## Install into an app
 
-Applications continue to own their primary workflow, application-specific content, `security.json`, CSS, JavaScript, and deployment.
+Keep this checkout and `marin-ui` beside each other, then run:
 
-## Distribution contract
-
-The committed `dist/` directory is the complete shell package. Copy it unchanged to:
-
-```text
-APP_REPOSITORY/vendor/marinos/
+```bash
+bash scripts/install.sh ../marin-unzipper
 ```
 
-The package contains:
+The installer automatically synchronizes the required fonts; no separate per-app
+font-copy step is needed. For another source location:
 
-```text
-vendor/marinos/
-├── marinos.css
-├── marinos.js
-├── manifest.json
-├── README.md
-└── licenses/
+```bash
+bash scripts/install.sh ../marin-unzipper --font-source /path/to/marin-ui
 ```
 
-The shell CSS expects the existing MarinOS font assets at stable application-level paths:
+Font sources must match the release's locked byte counts and SHA-256 hashes.
+A matching local cache at `fonts/` is preferred over a sibling checkout; an explicit
+`--font-source` takes precedence. An incomplete/mismatched cache fails with a clear
+error rather than silently substituting another typeface. Prepare a verified
+cache (also used by the root demo) when needed:
+
+```bash
+bash scripts/sync-fonts.sh ../marin-ui
+```
+
+Font binaries are hydrated from local source and ignored by Git. A fresh
+checkout needs either a matching local `marin-ui` checkout or a prepared cache.
+No script fetches fonts from the network. After installation the **app is fully
+self-contained** and needs neither source repository at runtime.
+
+### Managed paths
+
+The installer replaces `vendor/marinos/` and synchronizes only these companion files:
 
 ```text
 vendor/fonts/Jost-wght.ttf
 vendor/fonts/open-sans/OpenSans-VariableFont_wdth,wght.woff2
+vendor/fonts/open-sans/OFL.txt
+vendor/icons/lucide/layout-grid.svg
+vendor/icons/lucide/chevron-down.svg
+vendor/icons/lucide/copy.svg
+vendor/icons/lucide/check.svg
+vendor/icons/lucide/LICENSE
 ```
 
-Applications remain functional with fallback fonts when those files are missing, but published MarinOS apps should retain the self-hosted font files already present in the current template.
+Unrelated fonts, app-specific icons, other vendor libraries, `index.html`, app code,
+security files, and `marin.yml` are not changed. Update the app's version manually:
 
-Do not edit `vendor/marinos/` inside an application. Upgrade by replacing the entire directory with another tagged shell release.
+```yaml
+platform:
+  shell: 1.1.0
+```
+
+Inspect or verify without writing:
+
+```bash
+bash scripts/install.sh ../marin-unzipper --dry-run
+bash scripts/install.sh ../marin-unzipper --check
+```
+
+`--check` verifies the installed shell and companion hashes; it does not claim the
+app metadata, icon/catalog parity, deployment, or accessibility has been reviewed.
+
+All inputs are checked and staged before replacement. Handled filesystem errors
+and interrupts roll back managed paths. This is not a multi-directory atomic
+transaction: a power failure or forced kill can leave a `.marinos-install.*`
+backup directory and `.marinos-install.lock`. Stop concurrent work, inspect the
+lock's `transaction.txt`, and recover the saved `old/` paths before removing them.
+Never automatically delete a leftover backup or another process's lock.
 
 ## Minimal integration
-
-Load the shell before app-specific assets:
 
 ```html
 <link rel="stylesheet" href="vendor/marinos/marinos.css">
 <link rel="stylesheet" href="assets/app.css">
 <script src="vendor/marinos/marinos.js" defer></script>
 <script src="assets/app.js" defer></script>
-```
 
-Use the components in `body`:
-
-```html
 <marin-os-banner></marin-os-banner>
-
-<marin-app-header
-  app-name="Marin Unzipper"
-  app-description="Decrypt and decompress ZIP files locally in your browser."
-></marin-app-header>
-
+<marin-app-header app-name="APP_NAME" app-description="APP_DESCRIPTION">
+  <!-- Supply template[data-icon] from the app's vendored Lucide SVG. -->
+</marin-app-header>
 <main id="main" class="container app-main">
-  <section id="start" data-tab-section="start">
-    <!-- Application-owned workflow -->
-  </section>
-
-  <marin-app-info
-    app-name="Marin Unzipper"
-    repo="marin-unzipper"
-    security-src="security.json"
-  >
-    <template data-about>
-      <p>Application-specific About content.</p>
-    </template>
-    <template data-accessibility>
-      <p>Application-specific accessibility information.</p>
-    </template>
+  <section id="start" data-tab-section="start"><!-- App workflow --></section>
+  <marin-app-info app-name="APP_NAME" repo="APP_REPO" security-src="security.json">
+    <template data-about><p>App-specific About content.</p></template>
   </marin-app-info>
 </main>
-
-<marin-app-footer app-name="Marin Unzipper"></marin-app-footer>
+<marin-app-footer app-name="APP_NAME"></marin-app-footer>
 <marin-app-feedback></marin-app-feedback>
 ```
 
-The shell inserts the skip link, the main live-status region, and standard information-section markup. Components render into light DOM so the resulting HTML remains inspectable and standard hash links continue to work.
+Use one app-selected Lucide icon consistently in its header, favicon, and catalog
+entry. A missing custom icon uses the bundled Lucide `layout-grid`, not invented
+geometry. The shell does not rewrite app-specific icons or the separate MarinOS
+catalog. See [components](docs/components.md) and [integration](docs/integration.md).
 
-## Record the dependency
-
-A consuming app should replace template-tracking metadata with its pinned shell release:
-
-```yaml
-platform:
-  shell: 1.0.1
-```
-
-During migration, an app may retain `templateVersion` as provenance, but MarinOS maintenance should use `platform.shell` as the update target.
-
-## Install into an app
-
-From this repository:
-
-```bash
-./scripts/install.sh ../marin-unzipper
-```
-
-The installer atomically replaces `APP/vendor/marinos/`. It deliberately does not rewrite application HTML or `marin.yml`.
-
-## Local development
-
-No build is required to run a consuming app. Serve it over localhost so `fetch()` works:
-
-```bash
-python3 -m http.server 8765
-```
-
-For this repository's demonstration:
-
-```bash
-python3 -m http.server 8765
-```
-
-Then open `http://127.0.0.1:8765/`.
-
-The root demo uses fallback fonts unless the existing MarinOS fonts have been copied locally:
-
-```bash
-./scripts/sync-fonts.sh ../marin-app-template
-```
-
-## Shell development
-
-The shell source is maintained in:
+## Source layers and reproducible builds
 
 ```text
-src/marinos.js
-src/marinos.css
+vendor/pico.min.css                    pinned base
+vendor/marin-ui/app-brand.css          byte-identical reviewed UI snapshot
+vendor/marin-ui/lock.json              provenance and hashes, including fonts
+vendor/icons/lucide/                   only the four shell-owned icons + license
+src/brand-compat.css                   documented policy corrections pending upstream
+src/shell.css                         web-component integration and footer
+src/marinos.js                        behavior; icon map generated from SVG files
+             -> scripts/build.sh -> dist/
 ```
 
-Pico and license inputs are under `vendor/`. Regenerate `dist/` with:
+The current UI input is the supplied Marin Mentions 1.18.0 consumer snapshot,
+not an assertion that upstream `main` remains identical. The build uses only
+these pinned inputs, never whatever a sibling repo happens to contain.
+Font URL rebasing and removal of legacy SVG stroke CSS are counted adapters;
+upstream structure changes fail and require review rather than a fuzzy rewrite.
+
+An intentional upstream refresh is separate from an app installation:
 
 ```bash
-./scripts/build.sh
+bash scripts/sync-ui.sh ../marin-ui
+# Review the locked inputs, compatibility adapters, demo icon parity and metadata.
+bash scripts/build.sh
+bash scripts/check.sh
 ```
 
-Run the complete validation and browser smoke test with:
+The source checkout is read-only. If it is a Git checkout, commit/review its changes
+before importing. Update `MARIN_UI_VERSION`, `marin.yml`, demo references and docs
+when adopting another version; the import updates the version pin and lock but
+does not manufacture a completed visual review.
+
+## Validation and local review
 
 ```bash
-./scripts/check.sh
+bash scripts/check.sh
+bash scripts/check.sh --browser --font-source ../marin-ui
 ```
 
-The build uses Bash and Python only. JavaScript syntax validation uses Node when available. Browser smoke testing uses Python Playwright with a locally installed Chromium when available, with a best-effort Chromium fallback.
+The default checks do not mutate `dist/`: they verify reproducibility, input hashes,
+brand policy, source/manifest integrity, installer preflight, rollback, preservation
+of unrelated files, and deterministic output. Python 3.10+ and Bash are required.
+JavaScript syntax checks use Node when available and explicitly report a skip.
+No production Node/runtime package manager is introduced.
 
-## Component reference
+`--browser` requires Python Playwright, Chromium and real, hash-verified fonts. It
+runs an in-memory browser fixture: real local font bytes are loaded via Blob URLs,
+then decoded/rendered fonts, header geometry, icons, routes, menus, dark mode and
+focus are inspected. It is **not** a localhost navigation, network/CSP or deployed
+HTTP test. `tests/browser_http.py` provides a separate HTTP-loading check:
 
-See [docs/components.md](docs/components.md).
+```bash
+python3 tests/browser_http.py --font-source ../marin-ui
+```
 
-## Migration from the copied template structure
+For manual review of this repository, prepare the font cache, then serve the root:
 
-See [docs/migration.md](docs/migration.md).
+```bash
+bash scripts/sync-fonts.sh ../marin-ui
+python3 -m http.server 8765 --bind 127.0.0.1
+```
 
-## Versioning
+Open `http://127.0.0.1:8765/`. Confirm local font requests succeed, the app identity
+returns home, information routes work, and the page is usable with a keyboard at
+narrow widths in light/dark modes. Keep `font-src 'self'` in consuming apps; the
+production CSS contains no `local()`, CDN, Blob, or data font sources.
 
-See [docs/versioning.md](docs/versioning.md). The shell begins at `1.0.0` and uses semantic versioning. Component names, required attributes, standard section IDs, and the `vendor/marinos/` distribution contract are public API.
+See [versioning](docs/versioning.md), [migration](docs/migration.md) and
+[brand implementation](docs/brand.md). Generated `dist/` is committed unchanged;
+never patch vendor files in individual applications.

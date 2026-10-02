@@ -1,0 +1,46 @@
+/* Reviewed corrections to the pinned Marin UI 1.18.0 snapshot.
+   Remove these only after a reviewed upstream update includes equivalent fixes.
+   SVG paint/stroke declarations are removed by build.py's strict adapter so
+   canonical SVG attributes, not CSS, control their appearance. */
+:root {
+  /* Pico builds differ in which token they read. Keep both, and the actual
+     body/heading font-family consumers in the upstream brand stylesheet. */
+  --pico-font-family: var(--app-font-body);
+  --pico-font-family-sans-serif: var(--app-font-body);
+}
+
+/* Navigation and footer labels are UI copy, not heading/display text. */
+.marinos-menu__toggle,
+.app-footer__inner,
+.breadcrumb-nav,
+.site-footer {
+  font-family: var(--app-font-body);
+}
+
+/* Compatibility for 1.0.x app-owned icons inserted after shell initialization.
+   These rules supply only MISSING attributes; canonical Lucide SVG attributes
+   remain authoritative. Do not add unconditional paint/stroke overrides. */
+:is(.app-icon, .app-card__icon, .docs-brand-icon, .copy-button, .marinos-menu__icon, .marinos-banner__icon) svg:not([fill]),
+.menu-toggle__caret:not([fill]) {
+  fill: none;
+}
+
+:is(.app-icon, .app-card__icon, .docs-brand-icon, .copy-button, .marinos-menu__icon, .marinos-banner__icon) svg:not([stroke]),
+.menu-toggle__caret:not([stroke]) {
+  stroke: currentColor;
+}
+
+:is(.app-icon, .app-card__icon, .docs-brand-icon, .copy-button, .marinos-menu__icon, .marinos-banner__icon) svg:not([stroke-width]),
+.menu-toggle__caret:not([stroke-width]) {
+  stroke-width: 2;
+}
+
+:is(.app-icon, .app-card__icon, .docs-brand-icon, .copy-button, .marinos-menu__icon, .marinos-banner__icon) svg:not([stroke-linecap]),
+.menu-toggle__caret:not([stroke-linecap]) {
+  stroke-linecap: round;
+}
+
+:is(.app-icon, .app-card__icon, .docs-brand-icon, .copy-button, .marinos-menu__icon, .marinos-banner__icon) svg:not([stroke-linejoin]),
+.menu-toggle__caret:not([stroke-linejoin]) {
+  stroke-linejoin: round;
+}

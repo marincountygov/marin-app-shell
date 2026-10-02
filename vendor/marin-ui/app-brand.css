@@ -1,7 +1,7 @@
-/* Marin App Shell __SHELL_VERSION__; Marin UI __MARIN_UI_VERSION__ */
+/* MarinOS brand bundle v1.18.0 */
 @font-face {
   font-family: "Jost";
-  src: local("Jost"), url("../fonts/Jost-wght.ttf") format("truetype");
+  src: url("../vendor/fonts/Jost-wght.ttf") format("truetype");
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
@@ -9,7 +9,7 @@
 
 @font-face {
   font-family: "Open Sans";
-  src: local("Open Sans"), url("../fonts/open-sans/OpenSans-VariableFont_wdth,wght.woff2") format("woff2-variations");
+  src: url("../vendor/fonts/open-sans/OpenSans-VariableFont_wdth,wght.woff2") format("woff2-variations");
   font-style: normal;
   font-weight: 300 800;
   font-display: swap;
@@ -145,34 +145,11 @@ html {
   scroll-padding-top: 1rem;
 }
 
-
-/* Custom elements render into light DOM. The hosts are block-level so they
-   behave predictably before and after upgrade. */
-marin-os-banner,
-marin-app-header,
-marin-app-info,
-marin-app-footer,
-marin-app-feedback {
-  display: block;
-}
-
 body {
-  display: flex;
-  min-height: 100vh;
   margin: 0;
-  flex-direction: column;
   background: var(--app-bg-soft);
   color: var(--app-text);
   font-family: var(--app-font-body);
-}
-
-main#main {
-  width: 100%;
-  flex: 1 0 auto;
-}
-
-marin-app-footer {
-  margin-top: auto;
 }
 
 nav {
@@ -438,22 +415,15 @@ input[type="radio"] {
   min-width: 0;
 }
 
-.app-identity__home {
-  display: block;
-  color: inherit;
-  text-decoration: none;
-}
-
-.app-identity__home:hover,
-.app-identity__home:focus-visible {
-  color: inherit;
-  text-decoration: none;
-}
-
 .app-title-row {
   display: flex;
   align-items: center;
   gap: 1rem;
+}
+
+a.app-title-row {
+  color: inherit;
+  text-decoration: none;
 }
 
 .app-icon,
@@ -833,56 +803,19 @@ th[aria-sort="descending"] .sort-button::after {
 .app-footer__inner {
   max-width: var(--app-max-width);
   margin: 0 auto;
-  padding: 1rem;
+  padding: 1.25rem 1rem;
   font-family: var(--app-font-heading);
+  font-weight: 600;
 }
 
-.app-footer__local {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0 2rem;
-  font-weight: 400;
-}
-
-.app-footer__app-name {
-  flex: 0 0 auto;
-  font-weight: 400;
-}
-
-.app-footer__nav {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0 2rem;
-  margin: 0;
-}
-
-.app-footer__nav a,
-.app-footer__platform a {
-  display: inline-flex;
-  min-height: 40px;
-  align-items: center;
+.app-footer__inner a {
   color: inherit;
   text-decoration: none;
 }
 
-.app-footer__nav a {
-  font-weight: 400;
-}
-
-.app-footer__nav a:hover,
-.app-footer__platform a:hover {
+.app-footer__inner a:hover {
   color: var(--app-accent);
   text-decoration: underline;
-}
-
-.app-footer__platform {
-  margin-top: 0.125rem;
-}
-
-.app-footer__platform a {
-  font-weight: 600;
 }
 
 .app-feedback {
@@ -1366,20 +1299,6 @@ th[aria-sort="descending"] .sort-button::after {
 }
 
 @media (max-width: 720px) {
-  .app-footer__local {
-    align-items: flex-start;
-    gap: 0 1.25rem;
-  }
-
-  .app-footer__app-name {
-    flex-basis: 100%;
-    padding-top: 0.5rem;
-  }
-
-  .app-footer__nav {
-    gap: 0 1.25rem;
-  }
-
   .app-header__inner {
     align-items: stretch;
     flex-direction: column;
@@ -1390,7 +1309,7 @@ th[aria-sort="descending"] .sort-button::after {
     flex-direction: column;
   }
 
-  .app-nav[data-open] {
+  .app-nav[data-open="true"] {
     display: flex;
   }
 

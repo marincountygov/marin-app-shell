@@ -1,13 +1,18 @@
+> **1.1.0 installation:** Use `bash scripts/install.sh /path/to/app`, not a
+> manual `dist/`-only copy. The installer also synchronizes hash-verified fonts,
+> their supplied Open Sans license, and shell Lucide assets at standard app paths.
+> Read the current README for local source/cache requirements and recovery behavior.
+
 # Migrate an existing MarinOS app
 
-This migration is intentionally structural and should be performed once per app. Future routine updates replace `vendor/marinos/` rather than rewriting app HTML or CSS.
+This migration is intentionally structural and should be performed once per app. Future routine updates use the installer to replace `vendor/marinos/` and synchronize its managed font/icon companions rather than rewriting app HTML or CSS.
 
 ## 1. Create a branch
 
 ```bash
 git switch main
 git pull --ff-only
-git switch -c refactor/marin-app-shell-1.0.1
+git switch -c refactor/marin-app-shell-1.1.0
 ```
 
 ## 2. Install the shell
@@ -24,7 +29,10 @@ This creates or replaces:
 marin-unzipper/vendor/marinos/
 ```
 
-Do not remove the app's existing `vendor/fonts/` directory.
+The installer also synchronizes the two required fonts, Open Sans license, and four
+shell-owned Lucide icons/license at standard `vendor/fonts/` and `vendor/icons/lucide/`
+paths. It preserves unrelated files. Do not delete those existing directories.
+A sibling `marin-ui` (or explicit `--font-source`) supplies the hash-pinned font bytes.
 
 ## 3. Replace shared asset references
 
@@ -61,7 +69,7 @@ Replace the copied application header with:
   app-description="APP_DESCRIPTION"
 >
   <template data-icon>
-    <!-- Existing app icon SVG -->
+    <!-- Complete SVG from the app-selected local Lucide source, reused in its favicon/catalog -->
   </template>
 </marin-app-header>
 ```
@@ -130,7 +138,7 @@ Change the platform metadata to:
 
 ```yaml
 platform:
-  shell: 1.0.1
+  shell: 1.1.0
 ```
 
 `templateVersion` may remain temporarily as migration provenance but is no longer the update mechanism. Remove `platform.marin-ui` from consuming apps because the shell manifest records its Marin UI baseline.
@@ -144,7 +152,9 @@ python3 -m http.server 8765
 Review at minimum:
 
 - primary workflow;
-- responsive header and menu;
+- responsive header, outer padding, and menu;
+- local Open Sans/Jost requests and actual rendered fonts;
+- app icon parity across header, favicon, and the separate catalog;
 - About, Security, Accessibility, and Updates routes;
 - footer spacing and links;
 - keyboard order and Escape behavior;
