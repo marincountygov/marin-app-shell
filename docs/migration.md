@@ -1,21 +1,45 @@
-> **1.1.0 installation:** Use `bash scripts/install.sh /path/to/app`, not a
-> manual `dist/`-only copy. The installer also synchronizes hash-verified fonts,
-> their supplied Open Sans license, and shell Lucide assets at standard app paths.
-> Read the current README for local source/cache requirements and recovery behavior.
+> **1.1.1 installation:** Use `bash scripts/install.sh /path/to/app`, not a
+> manual `dist/`-only copy. Routine upgrades synchronize the shell, hash-verified
+> fonts, Open Sans license, shell Lucide assets, and an existing `marin.yml`
+> `platform.shell` scalar as one rollback-protected installation. A first-time
+> structural migration must explicitly add `platform.shell` before running the
+> installer; the installer will not invent that dependency declaration.
 
 # Migrate an existing MarinOS app
 
-This migration is intentionally structural and should be performed once per app. Future routine updates use the installer to replace `vendor/marinos/` and synchronize its managed font/icon companions rather than rewriting app HTML or CSS.
+This migration is intentionally structural and should be performed once per app.
+After this conversion, future compatible updates use the installer to replace
+`vendor/marinos/`, synchronize its managed font/icon companions, and update
+`platform.shell` rather than rewriting app HTML or CSS.
 
 ## 1. Create a branch
 
 ```bash
 git switch main
 git pull --ff-only
-git switch -c refactor/marin-app-shell-1.1.0
+git switch -c refactor/marin-app-shell-1.1.1
 ```
 
-## 2. Install the shell
+## 2. Declare the shell dependency
+
+Before the first App Shell installation, add one scalar shell declaration to the
+app's existing `marin.yml`:
+
+```yaml
+platform:
+  shell: 1.1.1
+```
+
+Preserve the app's other platform metadata for now. The installer requires this
+explicit declaration so it cannot silently convert an app that has not completed
+the structural migration. Missing, duplicate, or unsupported manifest structures
+are rejected before managed files are written.
+
+`templateVersion` may remain temporarily as migration provenance but is no longer
+the update mechanism. Remove `platform.marin-ui` from consuming apps because the
+shell manifest records its Marin UI baseline.
+
+## 3. Install the shell
 
 From a sibling `marin-app-shell` checkout:
 
@@ -33,8 +57,10 @@ The installer also synchronizes the two required fonts, Open Sans license, and f
 shell-owned Lucide icons/license at standard `vendor/fonts/` and `vendor/icons/lucide/`
 paths. It preserves unrelated files. Do not delete those existing directories.
 A sibling `marin-ui` (or explicit `--font-source`) supplies the hash-pinned font bytes.
+The installer also validates the declared `platform.shell`; for later upgrades it
+updates that scalar automatically to the installed release.
 
-## 3. Replace shared asset references
+## 4. Replace shared asset references
 
 Remove:
 
@@ -53,7 +79,7 @@ Add:
 
 Keep `assets/app.css` after the shell CSS and `assets/app.js` after the shell script.
 
-## 4. Replace shell-owned markup
+## 5. Replace shell-owned markup
 
 Replace the copied MarinOS banner with:
 
@@ -100,7 +126,7 @@ Replace the copied footer and Feedback link with:
 
 The shell inserts the skip link and status region. Remove their copied versions only after confirming the shell-generated equivalents appear.
 
-## 5. Preserve the application workflow
+## 6. Preserve the application workflow
 
 The primary workflow remains app-owned. Wrap it in the default routing section when it is not already:
 
@@ -112,7 +138,7 @@ The primary workflow remains app-owned. Wrap it in the default routing section w
 
 Do not move application-specific controls or results into shell components.
 
-## 6. Remove obsolete shared files
+## 7. Remove obsolete shared files
 
 After local review, delete the app-owned copies that the shell replaced:
 
@@ -131,17 +157,6 @@ assets/app.js
 security.json
 .well-known/security.txt
 ```
-
-## 7. Update `marin.yml`
-
-Change the platform metadata to:
-
-```yaml
-platform:
-  shell: 1.1.0
-```
-
-`templateVersion` may remain temporarily as migration provenance but is no longer the update mechanism. Remove `platform.marin-ui` from consuming apps because the shell manifest records its Marin UI baseline.
 
 ## 8. Serve and review
 
@@ -164,13 +179,12 @@ Review at minimum:
 
 ## 9. Validate the pinned release
 
-Confirm:
+Run the installer check from the shell repository:
 
 ```bash
-python3 - <<'PY'
-import json
-print(json.load(open('vendor/marinos/manifest.json'))['shellVersion'])
-PY
+bash scripts/install.sh ../marin-unzipper --check
 ```
 
-The result must match `platform.shell` in `marin.yml`.
+It verifies managed shell, font, and icon integrity and requires
+`vendor/marinos/manifest.json` `shellVersion` to match the app's
+`marin.yml` `platform.shell` value.

@@ -1,7 +1,8 @@
-> **1.1.0 installation:** Use `bash scripts/install.sh /path/to/app`, not a
-> manual `dist/`-only copy. The installer also synchronizes hash-verified fonts,
-> their supplied Open Sans license, and shell Lucide assets at standard app paths.
-> Read the current README for local source/cache requirements and recovery behavior.
+> **1.1.1 installation:** Use `bash scripts/install.sh /path/to/app`, not a
+> manual `dist/`-only copy. The installer synchronizes the shell, hash-verified
+> fonts, Open Sans license, shell Lucide assets, and the app's existing
+> `marin.yml` `platform.shell` value as one rollback-protected installation.
+> Read the current README for source/cache requirements and recovery behavior.
 
 # Integration contract
 
@@ -72,14 +73,29 @@ An app that disables the catalog or Updates behavior can use a narrower policy.
 
 ## Application metadata
 
-Use the pinned shell version in `marin.yml`:
+A shell-based app must already declare one scalar `platform.shell` value in
+`marin.yml`. For example, an app currently on 1.1.0 contains:
 
 ```yaml
 platform:
   shell: 1.1.0
 ```
 
-The release in `vendor/marinos/manifest.json` must match `platform.shell`. Maintenance automation should reject a mismatch.
+Installing 1.1.1 updates only that scalar to:
+
+```yaml
+platform:
+  shell: 1.1.1
+```
+
+The installer preserves unrelated supported YAML content and formatting rather
+than rewriting the manifest wholesale. Missing or duplicate `platform.shell`
+keys and unsupported YAML structures are rejected before application mutation;
+the installer does not silently perform a first-time migration.
+
+The release in `vendor/marinos/manifest.json` must match `platform.shell`.
+`bash scripts/install.sh /path/to/app --check` verifies that agreement in addition
+to managed shell, font, and icon integrity.
 
 ## No runtime central dependency
 

@@ -5,12 +5,18 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
-## Version 1.1.0
+## Version 1.1.1
 
-This release restores the brand contract: first-party Open Sans for body/UI text,
-Jost for headings, canonical local Lucide geometry, and the established header
-spacing. The header identity remains a link to `./` (a full navigation that can
-reset unsaved in-memory work). Existing component names and attributes are unchanged.
+Version 1.1.1 keeps the 1.1.0 runtime and brand contract unchanged and updates the
+installer so the app's existing `marin.yml` `platform.shell` value is synchronized
+with the installed shell release. The metadata update participates in installer
+validation and rollback. Existing component names, attributes, and runtime UI
+behavior are unchanged.
+
+Version 1.1.0 established the current brand contract: first-party Open Sans for
+body/UI text, Jost for headings, canonical local Lucide geometry, and the established
+header spacing. The header identity remains a link to `./` (a full navigation that
+can reset unsaved in-memory work).
 
 ## Install into an app
 
@@ -19,6 +25,12 @@ Keep this checkout and `marin-ui` beside each other, then run:
 ```bash
 bash scripts/install.sh ../marin-unzipper
 ```
+
+The target app must already contain a supported `marin.yml` with one
+`platform.shell` scalar. The installer updates only that scalar to the release being
+installed. It refuses missing, duplicate, or unsupported manifest structures rather
+than attempting a first-time structural migration. See [migration](docs/migration.md)
+for the one-time conversion of an older app.
 
 The installer automatically synchronizes the required fonts; no separate per-app
 font-copy step is needed. For another source location:
@@ -44,9 +56,11 @@ self-contained** and needs neither source repository at runtime.
 
 ### Managed paths
 
-The installer replaces `vendor/marinos/` and synchronizes only these companion files:
+The installer replaces `vendor/marinos/`, synchronizes only these companion files,
+and updates the existing `marin.yml` shell-version scalar:
 
 ```text
+vendor/marinos/
 vendor/fonts/Jost-wght.ttf
 vendor/fonts/open-sans/OpenSans-VariableFont_wdth,wght.woff2
 vendor/fonts/open-sans/OFL.txt
@@ -55,15 +69,13 @@ vendor/icons/lucide/chevron-down.svg
 vendor/icons/lucide/copy.svg
 vendor/icons/lucide/check.svg
 vendor/icons/lucide/LICENSE
+marin.yml -> platform.shell only
 ```
 
 Unrelated fonts, app-specific icons, other vendor libraries, `index.html`, app code,
-security files, and `marin.yml` are not changed. Update the app's version manually:
-
-```yaml
-platform:
-  shell: 1.1.0
-```
+and security files are not changed. Within `marin.yml`, unrelated content,
+comments, quoting, line endings, and file permissions are preserved wherever the
+supported manifest format permits.
 
 Inspect or verify without writing:
 
@@ -72,15 +84,20 @@ bash scripts/install.sh ../marin-unzipper --dry-run
 bash scripts/install.sh ../marin-unzipper --check
 ```
 
-`--check` verifies the installed shell and companion hashes; it does not claim the
-app metadata, icon/catalog parity, deployment, or accessibility has been reviewed.
+`--dry-run` reports the `platform.shell` transition and managed asset changes without
+writing them. `--check` verifies the installed shell and companion hashes and also
+requires `marin.yml` `platform.shell` to match the installed release. It does not
+claim icon/catalog parity, deployment, accessibility, or security review has been
+completed.
 
-All inputs are checked and staged before replacement. Handled filesystem errors
-and interrupts roll back managed paths. This is not a multi-directory atomic
-transaction: a power failure or forced kill can leave a `.marinos-install.*`
-backup directory and `.marinos-install.lock`. Stop concurrent work, inspect the
-lock's `transaction.txt`, and recover the saved `old/` paths before removing them.
-Never automatically delete a leftover backup or another process's lock.
+All inputs are checked and staged before replacement. The manifest update is part
+of the same rollback-protected installation and is committed last after the managed
+assets are prepared. Handled filesystem errors and interrupts roll back managed
+paths and the original manifest. This is not a filesystem-wide atomic transaction:
+a power failure or forced kill can leave a `.marinos-install.*` backup directory
+and `.marinos-install.lock`. Stop concurrent work, inspect the lock's
+`transaction.txt`, and recover the saved `old/` paths before removing them. Never
+automatically delete a leftover backup or another process's lock.
 
 ## Minimal integration
 
