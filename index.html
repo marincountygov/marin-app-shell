@@ -28,7 +28,7 @@
       app-description="A versioned, locally vendored runtime for MarinOS applications."
     >
       <template data-icon>
-        <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" x2="12" y1="22" y2="12"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
       </template>
     </marin-app-header>
 
@@ -97,10 +97,10 @@
 
         <article class="app-card">
           <h3>Distribution contract</h3>
-          <p>Copy the complete <code>dist/</code> directory into <code>vendor/marinos/</code>. Do not edit vendored files inside an app.</p>
+          <p>Run <code>scripts/install.sh</code> to install <code>vendor/marinos/</code> and synchronize the required local fonts. Do not edit vendored files inside an app.</p>
           <dl class="details">
             <dt>Shell release</dt>
-            <dd><code>1.0.1</code></dd>
+            <dd><code>1.1.0</code></dd>
             <dt>Marin UI baseline</dt>
             <dd><code>1.18.0</code></dd>
             <dt>Runtime</dt>

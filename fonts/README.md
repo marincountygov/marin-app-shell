@@ -1,14 +1,18 @@
-# Local demo fonts
+# Verified local font cache
 
-The shell distribution references the existing MarinOS font contract rather than duplicating font binaries:
-
-- `vendor/fonts/Jost-wght.ttf`
-- `vendor/fonts/open-sans/OpenSans-VariableFont_wdth,wght.woff2`
-
-For this repository's root demo, those relative URLs resolve into this `fonts/` directory. Populate it locally from an existing MarinOS checkout:
+Prepare a cache for the demo or offline installation:
 
 ```bash
-./scripts/sync-fonts.sh ../marin-app-template
+bash scripts/sync-fonts.sh ../marin-ui
 ```
 
-The demo and applications remain usable with system fallback fonts when these files are absent.
+The command verifies both fonts and the Open Sans license against
+`vendor/marin-ui/lock.json`, then copies them here. `install.sh` can also read the
+sibling `marin-ui` directly; a pre-existing cache must be complete and hash-valid.
+The root demo's `dist/marinos.css` resolves its `../fonts/` URLs to this directory.
+Applications receive the same files at their standard `vendor/fonts/` paths.
+
+Cache binaries are ignored by Git. Missing fonts are a validation failure for
+installation/render testing, not an approved fallback-font release. No network
+font fetch is implemented. Preserve any separate source licensing notices when
+preparing a release; the existing Jost font carries its embedded OFL notice.

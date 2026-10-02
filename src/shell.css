@@ -1,0 +1,124 @@
+/* Marin App Shell __SHELL_VERSION__: component integration only.
+   General visual rules come from the locked, unmodified Marin UI input. */
+marin-os-banner,
+marin-app-header,
+marin-app-info,
+marin-app-footer,
+marin-app-feedback {
+  display: block;
+}
+
+/* Pico applies this only to body > header/footer. Component hosts change that
+   relationship, so retain the established outer spacing explicitly. */
+marin-app-header > .app-header,
+marin-app-footer > .app-footer {
+  padding-block: var(--pico-block-spacing-vertical);
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+main#main {
+  width: 100%;
+  flex: 1 0 auto;
+}
+
+marin-app-footer {
+  margin-top: auto;
+}
+
+/* The anchor itself is the flex row; do not add a nested title-row wrapper. */
+.app-identity__home {
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-identity__home:hover,
+.app-identity__home:focus-visible {
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-footer {
+  border-top: 1px solid var(--app-border);
+  background: var(--app-surface);
+  color: var(--app-muted);
+}
+
+.app-footer__inner {
+  max-width: var(--app-max-width);
+  margin: 0 auto;
+  padding: 1rem;
+  font-family: var(--app-font-body);
+  font-weight: 400;
+}
+
+.app-footer__local {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 2rem;
+  font-weight: 400;
+}
+
+.app-footer__app-name {
+  flex: 0 0 auto;
+  font-weight: 400;
+}
+
+.app-footer__nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 2rem;
+  margin: 0;
+}
+
+.app-footer__nav a,
+.app-footer__platform a {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-footer__nav a {
+  font-weight: 400;
+}
+
+.app-footer__nav a:hover,
+.app-footer__platform a:hover {
+  color: var(--app-accent);
+  text-decoration: underline;
+}
+
+.app-footer__platform {
+  margin-top: 0.125rem;
+}
+
+.app-footer__platform a {
+  font-weight: 600;
+}
+
+
+@media (max-width: 720px) {
+  .app-footer__local {
+    align-items: flex-start;
+    gap: 0 1.25rem;
+  }
+  .app-footer__app-name {
+    flex-basis: 100%;
+    padding-top: 0.5rem;
+  }
+  .app-footer__nav {
+    gap: 0 1.25rem;
+  }
+  /* The component uses a boolean attribute, not data-open="true". */
+  .app-nav[data-open] {
+    display: flex;
+  }
+}

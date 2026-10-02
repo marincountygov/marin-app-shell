@@ -4,3 +4,8 @@ Thumbs.db
 *.tmp
 .dist.*
 __pycache__/
+
+# Reproducible local font cache, populated from a hash-verified Marin UI checkout.
+/fonts/**/*.ttf
+/fonts/**/*.woff2
+/fonts/open-sans/OFL.txt

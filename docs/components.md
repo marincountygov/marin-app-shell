@@ -45,15 +45,23 @@ Attributes:
 
 ### Custom icon
 
-Provide an inert template. The shell clones it into the icon container.
+Provide an inert template. The shell clones it into the icon container. Copy the complete SVG from the app's vendored Lucide file, including presentation attributes. Reuse that exact geometry in the favicon and MarinOS catalog entry.
 
 ```html
 <marin-app-header app-name="Example" app-description="Example description.">
   <template data-icon>
-    <svg viewBox="0 0 24 24" aria-hidden="true">...</svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
   </template>
 </marin-app-header>
 ```
+
+The rendered identity layout is `.app-identity > a.app-identity__home.app-title-row`,
+with the icon and title-copy as direct children. The anchor keeps visible focus
+and `href="./"`. Do not target its former extra wrapper from app CSS.
+
+Missing icon templates fall back to the bundled Lucide `layout-grid`. Older
+1.0.x templates that omit root presentation attributes receive defaults, but
+app-specific icon validation remains the app's responsibility.
 
 ### Additional navigation links
 
