@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.2 - 2026-10-02
+
+- Fix the shared cross-app menu's fallback app list: `FALLBACK_APPS` said `MarinMagic` and `MarinDocs`, squashed CamelCase that didn't match those apps' real display name (`Marin Magic`, `Marin Docs`, as shown everywhere else — MarinOS's own catalog, their own headers and titles). No other change.
+
 ## 1.1.1 - 2026-10-02
 
 - Update the installer to keep `marin.yml` `platform.shell` synchronized with the installed shell version.
