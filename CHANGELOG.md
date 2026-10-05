@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.2.1 - 2026-10-05
+
+- Read recognized `alpha`, `beta`, and `live` maturity status from the consuming app's local `marin.yml` `project.status` and render the shared status badge beside `.app-title`.
+- Keep catalog matching as the compatibility fallback when the local manifest is unavailable or has no recognized maturity value; catalog-backed MarinOS menu badges are unchanged.
+- Keep the application-name home link and status-guidance link separate, and add browser coverage for both manifest-backed and catalog-fallback header badges.
+- The deferred Alpha dark-mode contrast adjustment is not included.
+
+## 1.2.0 - 2026-10-05
+
+- Import the reviewed Marin UI 1.19.0 baseline, including the shared Alpha/Beta/Live app-status presentation.
+- Render catalog-backed app maturity badges in the MarinOS menu and beside the current application's name, with optional `app-id` matching for local development and URL matching as the production fallback.
+- Render the MarinOS banner's default Alpha marker with the shared status-badge component while preserving arbitrary legacy `label` values as the existing superscript fallback.
+- Change the generated header identity so only the `.app-title` application name links to `./`; the icon, subtitle, and adjacent status badge are not part of the home link.
+- Bump the catalog cache shape to v3 and extend browser/static validation for status rendering and the updated header identity.
+
 ## 1.1.3 - 2026-10-05
 
 - Default missing SVG stroke widths to 4 for legacy 48x48 viewBoxes; retain 2 for canonical 24x24 Lucide icons. Apply this to header templates, initial app icons, and catalog-rendered icons without changing their geometry.

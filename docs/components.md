@@ -14,17 +14,19 @@ Optional attributes:
 
 | Attribute | Default | Purpose |
 | --- | --- | --- |
-| `label` | `ALPHA` | Small release label shown after MarinOS. Use an empty value to omit it. |
+| `label` | `ALPHA` | MarinOS release marker. `alpha`, `beta`, or `live` uses the shared status badge; another non-empty value retains the legacy superscript treatment. |
 | `catalog-url` | MarinOS `catalog.json` | Catalog source used to refresh the menu. |
 | `browse-url` | MarinOS home | Destination for “Browse all in MarinOS.” |
 
 The shell keeps bundled fallback links when the catalog request fails or is unavailable.
+Recognized catalog `status` values (`alpha`, `beta`, `live`) render as `.app-status`
+badges beside application names. Unknown or missing values render no badge.
 
 ## `marin-app-header`
 
 Renders the semantic application header, app identity, mobile menu control, and top navigation.
 
-The complete app identity is a link to `./`. Selecting the app icon, name, or description returns the application to its root URL and default on-load content.
+Only the application name links to `./`; the icon and description remain plain content. This keeps the home navigation clear while allowing the adjacent maturity-status badge to link independently to MarinOS status guidance.
 
 ```html
 <marin-app-header
@@ -38,6 +40,7 @@ Attributes:
 | Attribute | Required | Default | Purpose |
 | --- | --- | --- | --- |
 | `app-name` | Yes | `Application` | Visible H1 and application identity. |
+| `app-id` | No | None | Stable MarinOS catalog ID used to match the current app locally. Production falls back to URL matching. |
 | `app-description` | No | None | Subtitle below the app name. |
 | `standard-links` | No | `about updates` | Space- or comma-separated standard links included in the top navigation. |
 | `navigation-label` | No | `Application navigation` | Accessible label for the navigation landmark. |
@@ -55,9 +58,17 @@ Provide an inert template. The shell clones it into the icon container. Copy the
 </marin-app-header>
 ```
 
-The rendered identity layout is `.app-identity > a.app-identity__home.app-title-row`,
-with the icon and title-copy as direct children. The anchor keeps visible focus
-and `href="./"`. Do not target its former extra wrapper from app CSS.
+The rendered identity layout is `.app-identity > .app-title-row`, with the icon and
+title-copy as direct children. Inside the H1, `.app-title__link[href="./"]` is the
+application home link. When the app's local `marin.yml` has a recognized
+`project.status` (`alpha`, `beta`, or `live`), the shell appends
+`.app-status.app-title__status` beside that link and points it to MarinOS `#status`
+guidance.
+
+The local manifest is authoritative for the header badge. If it is unavailable or
+contains no recognized maturity value, the shell retains the 1.2.0 catalog-matching
+behavior as a compatibility fallback. `app-id` is optional but recommended for local
+testing of that fallback, where a localhost URL cannot match the deployed catalog URL.
 
 Missing icon templates fall back to the bundled Lucide `layout-grid`. Older
 1.0.x templates that omit root presentation attributes receive defaults, but

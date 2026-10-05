@@ -5,7 +5,8 @@ remain the public API. Version 1.1.0 added installer-managed companion assets an
 corrected shared presentation without requiring new component markup. Version
 1.1.1 keeps that runtime API and presentation unchanged while making the installer
 synchronize the consuming app's existing `marin.yml` `platform.shell` value with
-the installed release.
+the installed release. Version 1.2.0 adds catalog-backed Alpha/Beta/Live status
+rendering and adopts the reviewed Marin UI 1.19.0 baseline.
 
 Patch releases fix compatible defects. Minor releases add compatible capabilities
 or intentionally change presentation and therefore still require visual review.
@@ -25,7 +26,7 @@ Major releases change required component markup, routes, or deployment paths.
 
 ## Consumer changes
 
-For a compatible 1.1.1 install, expected managed changes are:
+For a compatible 1.2.0 install, expected managed changes are:
 
 ```text
 vendor/marinos/**

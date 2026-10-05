@@ -11,15 +11,17 @@ not replace apps' selected icons. Owners should reconcile that wording upstream.
 
 ## What is pinned
 
-`vendor/marin-ui/app-brand.css` is byte-identical to the supplied Marin Mentions
-1.18.0 snapshot. The lock states that provenance honestly. The default build
-checks hashes; it does not download or automatically adopt upstream `main`.
-Marin UI remains the implementation source for future explicitly reviewed imports.
+`vendor/marin-ui/app-brand.css` is byte-identical to the supplied Marin UI 1.19.0
+checkout. `vendor/marin-ui/lock.json` records the imported `BRAND_VERSION`, file
+hashes, and provenance. The default build checks those hashes; it does not download
+or automatically adopt upstream `main`.
 
 The old shell copied and edited the entire UI stylesheet. Version 1.1.0 removed
 that fork (`src/marinos.css`) in favor of an upstream input and small, named adapters.
-Version 1.1.1 does not change those pinned brand inputs or the runtime presentation;
-it changes installation metadata handling only.
+Version 1.2.0 explicitly refreshes that pinned input to Marin UI 1.19.0 so the shell
+uses the canonical Alpha/Beta/Live status-badge presentation rather than copying it
+into a shell-specific override. The pending Alpha dark-mode contrast refinement is
+not part of this import.
 
 ## Font paths and consumption
 
@@ -66,11 +68,20 @@ favicon and local catalog. `demo/catalog-entry.json` supplies that geometry for 
 separate review of the real `marin-os/catalog.json`; this release does not edit that
 other repository or presume the shell already has a published catalog entry.
 
-## Header spacing
+## Header identity and status
 
-`.app-title-row` is now the home anchor, not a nested div inside a block anchor.
-The inner header, icon size, title-row gap and gold border retain the shared UI
-values. Pico also used `body > header`/`body > footer` to apply outer block padding.
+Marin UI 1.19.0 makes `.app-title-row` a plain flex container. Only the application
+name uses `.app-title__link` to navigate to `./`; the icon and subtitle are not part
+of that link. This allows `.app-title__status` to be a separate link to MarinOS's
+status guidance without invalid nested anchors. The inner header, icon size,
+title-row gap, and gold border retain the shared UI values.
+
+Alpha/Beta/Live badge colors come directly from the pinned Marin UI input. The shell
+adds no additional status-color override. Catalog status is used at runtime because
+a static browser page does not parse `marin.yml`; consuming repositories keep the
+catalog value synchronized with their canonical `project.status`.
+
+Pico also used `body > header`/`body > footer` to apply outer block padding.
 Custom-element hosts changed that direct-child relationship. `src/shell.css`
 explicitly restores the same outer padding on the generated header/footer.
 

@@ -1,4 +1,4 @@
-> **1.1.1 installation:** Use `bash scripts/install.sh /path/to/app`, not a
+> **1.2.0 installation:** Use `bash scripts/install.sh /path/to/app`, not a
 > manual `dist/`-only copy. Routine upgrades synchronize the shell, hash-verified
 > fonts, Open Sans license, shell Lucide assets, and an existing `marin.yml`
 > `platform.shell` scalar as one rollback-protected installation. A first-time
@@ -17,7 +17,7 @@ After this conversion, future compatible updates use the installer to replace
 ```bash
 git switch main
 git pull --ff-only
-git switch -c refactor/marin-app-shell-1.1.1
+git switch -c refactor/marin-app-shell-1.2.0
 ```
 
 ## 2. Declare the shell dependency
@@ -27,7 +27,7 @@ app's existing `marin.yml`:
 
 ```yaml
 platform:
-  shell: 1.1.1
+  shell: 1.2.0
 ```
 
 Preserve the app's other platform metadata for now. The installer requires this
@@ -91,6 +91,7 @@ Replace the copied application header with:
 
 ```html
 <marin-app-header
+  app-id="APP_ID"
   app-name="APP_NAME"
   app-description="APP_DESCRIPTION"
 >
@@ -99,6 +100,8 @@ Replace the copied application header with:
   </template>
 </marin-app-header>
 ```
+
+Use the stable MarinOS catalog ID for `APP_ID` when available. This lets the status badge resolve while testing on localhost; deployed apps also fall back to URL matching.
 
 Replace copied About, Security, Accessibility, and Updates sections with one component:
 

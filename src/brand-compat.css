@@ -1,4 +1,4 @@
-/* Reviewed corrections to the pinned Marin UI 1.18.0 snapshot.
+/* Reviewed corrections to the pinned Marin UI 1.19.0 input.
    Remove these only after a reviewed upstream update includes equivalent fixes.
    SVG paint/stroke declarations are removed by build.py's strict adapter so
    canonical SVG attributes, not CSS, control their appearance. */

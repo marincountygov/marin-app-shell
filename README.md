@@ -5,25 +5,32 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
-## Version 1.1.3
+## Version 1.2.1
 
-Version 1.1.3 fixes legacy 48x48 icon stroke defaults while preserving explicit
-widths and canonical 24x24 Lucide icons. It does not change component attributes,
-font assets, installer behavior, or TOC timing. See
-[Icon stroke compatibility](docs/icon-compatibility.md) for the upgrade contract.
+Version 1.2.1 makes the local application header read the recognized `alpha`, `beta`,
+or `live` value from the app's own `marin.yml` `project.status` and render the shared
+status badge beside `.app-title`. Catalog matching remains as the compatibility fallback
+when the local manifest is unavailable or does not contain a recognized maturity value.
 
-## Version 1.1.1
+Version 1.2.0 imports the reviewed Marin UI 1.19.0 baseline and adds MarinOS
+application-maturity status rendering. Catalog entries with `alpha`, `beta`, or
+`live` status render the shared `.app-status` badge in the MarinOS menu. The current
+application receives the same badge beside its name when the shell can match it to
+the catalog.
 
-Version 1.1.1 keeps the 1.1.0 runtime and brand contract unchanged and updates the
-installer so the app's existing `marin.yml` `platform.shell` value is synchronized
-with the installed shell release. The metadata update participates in installer
-validation and rollback. Existing component names, attributes, and runtime UI
-behavior are unchanged.
+Only the `.app-title` application name now links to `./`; the icon and subtitle are
+not part of the home link. This lets the status badge link independently to MarinOS
+status guidance without nested links. Existing component elements remain valid; an
+optional `app-id` on `marin-app-header` improves local-development matching when the
+page URL cannot match the production catalog URL.
 
-Version 1.1.0 established the current brand contract: first-party Open Sans for
-body/UI text, Jost for headings, canonical local Lucide geometry, and the established
-header spacing. The header identity remains a link to `./` (a full navigation that
-can reset unsaved in-memory work).
+Version 1.1.3 fixed legacy 48x48 icon stroke defaults while preserving explicit
+widths and canonical 24x24 Lucide icons. See
+[Icon stroke compatibility](docs/icon-compatibility.md) for that upgrade contract.
+
+Version 1.1.1 established installer synchronization of the consuming app's existing
+`marin.yml` `platform.shell` value. Version 1.1.0 established the pinned brand, font,
+and icon pipeline.
 
 ## Install into an app
 
@@ -115,7 +122,7 @@ automatically delete a leftover backup or another process's lock.
 <script src="assets/app.js" defer></script>
 
 <marin-os-banner></marin-os-banner>
-<marin-app-header app-name="APP_NAME" app-description="APP_DESCRIPTION">
+<marin-app-header app-name="APP_NAME" app-description="APP_DESCRIPTION" app-id="APP_ID">
   <!-- Supply template[data-icon] from the app's vendored Lucide SVG. -->
 </marin-app-header>
 <main id="main" class="container app-main">
@@ -146,9 +153,9 @@ src/marinos.js                        behavior; icon map generated from SVG file
              -> scripts/build.sh -> dist/
 ```
 
-The current UI input is the supplied Marin Mentions 1.18.0 consumer snapshot,
-not an assertion that upstream `main` remains identical. The build uses only
-these pinned inputs, never whatever a sibling repo happens to contain.
+The current UI input is an explicit import of the supplied Marin UI 1.19.0 checkout.
+The lock records its hashes and provenance. The build uses only these pinned inputs,
+never whatever a sibling repo happens to contain.
 Font URL rebasing and removal of legacy SVG stroke CSS are counted adapters;
 upstream structure changes fail and require review rather than a fuzzy rewrite.
 

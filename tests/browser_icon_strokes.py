@@ -101,7 +101,10 @@ class IconStrokeTests(unittest.TestCase):
         self.assertEqual(svg.get_attribute("viewBox"), "0 0 48 48")
         self.assertEqual(svg.evaluate("el => el.innerHTML"), LEGACY_SHAPE)
         self.assertEqual(svg.locator("circle").evaluate("el => getComputedStyle(el).strokeWidth"), "4px")
-        self.assertEqual(self.page.locator(".app-identity__home").get_attribute("href"), "./")
+        self.assertEqual(self.page.locator(".app-title__link").get_attribute("href"), "./")
+        self.assertEqual(self.page.locator(".app-title__link").inner_text(), "Test App")
+        self.assertTrue(self.page.locator(".app-icon").evaluate("el => el.closest('a') === null"))
+        self.assertTrue(self.page.locator(".app-subtitle").evaluate("el => el.closest('a') === null"))
 
     def test_canonical_header_and_shell_controls_remain_two(self):
         self.load(CANONICAL)

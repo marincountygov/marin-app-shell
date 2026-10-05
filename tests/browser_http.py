@@ -69,12 +69,12 @@ def main() -> None:
                     page.locator("#app-nav a[href='#about']").click()
                     page.wait_for_function("!document.getElementById('about').hidden")
                     page.evaluate("window.__homeNavigationProbe = true")
-                    page.locator(".app-identity__home").click()
+                    page.locator(".app-title__link").click()
                     page.wait_for_url(base)
                     page.wait_for_function("Boolean(window.MarinAppShell) && !document.getElementById('start').hidden")
-                    require(page.evaluate("window.__homeNavigationProbe === undefined"), "Identity did not do a full home navigation")
+                    require(page.evaluate("window.__homeNavigationProbe === undefined"), "Application name did not do a full home navigation")
                     require(not errors and not failures, f"HTTP errors: {errors}; failed requests: {failures}")
-                    print("browser_http.py: PASS (local HTTP assets/fonts, project subpath, full identity-to-home navigation)")
+                    print("browser_http.py: PASS (local HTTP assets/fonts, project subpath, full app-name-to-home navigation)")
                 finally:
                     browser.close()
         finally:

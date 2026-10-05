@@ -18,7 +18,7 @@ from build import adapt_brand, icons, verify_distribution
 ICON = (ROOT / "vendor/icons/lucide/layout-grid.svg").read_text().strip()
 HTML = '''<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Shell fixture</title></head><body>
 <marin-os-banner catalog-url="catalog.json"></marin-os-banner>
-<marin-app-header app-name="Test App" app-description="Test description">
+<marin-app-header app-id="test-app" app-name="Test App" app-description="Test description">
 <template data-icon>__ICON__</template></marin-app-header>
 <main id="main" class="container app-main">
 <section id="start" data-tab-section="start"><h2 id="heading-sample">Start</h2>
@@ -89,17 +89,27 @@ def prepare(page: Page, fonts: dict[str, Path], legacy: bool = False) -> list[st
     legacy_icon = re.sub(r'<svg[^>]*>', '<svg viewBox="0 0 24 24">', ICON, count=1)
     page.set_content(HTML.replace("__ICON__", legacy_icon if legacy else ICON).replace("__LEGACY_ICON__", legacy_icon))
     page.add_style_tag(content=font_css(page, (ROOT / "dist/marinos.css").read_text(), fonts))
-    catalog = [{"name": "Another App", "url": "https://example.test/other/", "icon": {"viewBox":"0 0 24 24", "markup":icons(ROOT)["layout-grid"]}},
-               {"name": "Untrusted icon", "url": "https://example.test/untrusted/", "icon": {"viewBox":"0 0 24 24", "markup":'<script>window.badIcon=true</script><path d="M0 0" onload="window.badIcon=true"/>'}}]
+    catalog = [{"id":"test-app", "name":"Test App", "url":"https://example.test/test-app/", "status":"beta", "icon":{"viewBox":"0 0 24 24", "markup":icons(ROOT)["layout-grid"]}},
+               {"id":"another-app", "name":"Another App", "url":"https://example.test/other/", "status":"alpha", "icon":{"viewBox":"0 0 24 24", "markup":icons(ROOT)["layout-grid"]}},
+               {"id":"live-app", "name":"Live App", "url":"https://example.test/live/", "status":"live"},
+               {"id":"invalid-app", "name":"Invalid App", "url":"https://example.test/invalid/", "status":"active"},
+               {"id":"untrusted", "name":"Untrusted icon", "url":"https://example.test/untrusted/", "status":"beta", "icon":{"viewBox":"0 0 24 24", "markup":'<script>window.badIcon=true</script><path d="M0 0" onload="window.badIcon=true"/>'}}]
     security = json.loads((ROOT / "security.json").read_text())
     commits = [{"html_url":"https://example.test/commit", "commit":{"message":"Test release", "author":{"date":"2026-10-01T12:00:00Z"}}}]
-    page.evaluate('''([catalog, security, commits]) => {
+    manifest = "schema: 1\nproject:\n  name: Test App\n  status: beta\n"
+    page.evaluate('''([catalog, security, commits, manifest, omitManifest]) => {
       window.fetch = async input => {
         const url = String(input);
+        if (url.includes('marin.yml')) {
+          return new Response(omitManifest ? '' : manifest, {
+            status: omitManifest ? 404 : 200,
+            headers:{'Content-Type':'text/yaml'}
+          });
+        }
         const data = url.includes('catalog.json') ? catalog : url.includes('security.json') ? security : url.includes('api.github.com') ? commits : null;
         return new Response(JSON.stringify(data), {status: data ? 200 : 404, headers:{'Content-Type':'application/json'}});
       };
-    }''', [catalog, security, commits])
+    }''', [catalog, security, commits, manifest, legacy])
     page.add_script_tag(content=(ROOT / "dist/marinos.js").read_text())
     page.wait_for_function("Boolean(window.MarinAppShell)")
     return errors
@@ -142,8 +152,16 @@ def run_test(source: Path | None, screenshots: Path | None) -> None:
                     require(page.evaluate("window.MarinAppShell.version") == manifest["shellVersion"], "Wrong runtime version")
                     require(page.locator(".skip-link").count()==1 and page.locator("#app-status-message").count()==1, "Shared accessibility infrastructure missing")
                     require(page.locator("#start").is_visible() and page.locator("#about").is_hidden(), "Default route broken")
-                    require(page.locator(".app-identity > a.app-identity__home.app-title-row[href='./']").count()==1, "Identity flex anchor missing")
-                    require(page.locator(".app-identity__home > .app-icon").count()==1, "Extra identity wrapper returned")
+                    require(page.locator(".app-identity > .app-title-row").count()==1, "Identity title row missing")
+                    require(page.locator(".app-title-row > .app-icon").count()==1, "Identity icon placement drift")
+                    require(page.locator(".app-title .app-title__link[href='./']").count()==1, "Application name home link missing")
+                    require(page.locator(".app-icon").evaluate("el=>el.closest('a')===null"), "Application icon must not be part of the home link")
+                    require(page.locator(".app-subtitle").evaluate("el=>el.closest('a')===null"), "Application subtitle must not be part of the home link")
+                    require(page.locator(".app-title__status[data-status='beta']").count()==1, "Current app status badge missing")
+                    expected_status_source = "catalog" if width == 320 else "manifest"
+                    require(page.locator(".app-title__status").get_attribute("data-marinos-status")==expected_status_source, f"Wrong local status source: expected {expected_status_source}")
+                    require(page.locator(".app-title__status").get_attribute("href").endswith("/marin-os/#status"), "Current app status link is wrong")
+                    require(page.locator(".marinos-banner__status[data-status='alpha']").count()==1, "MarinOS banner status badge missing")
                     require(page.locator(".app-footer__nav a").all_text_contents() == ["About","Security","Accessibility","Updates"], "Footer navigation drift")
                     for selector in (".app-icon svg", ".app-card__icon svg", ".marinos-banner__icon svg", ".menu-toggle__caret"):
                         svg = page.locator(selector).first
@@ -156,10 +174,10 @@ def run_test(source: Path | None, screenshots: Path | None) -> None:
                     require(page.locator("#late-icon svg").evaluate("el=>getComputedStyle(el).strokeWidth")=="2px", "Late legacy icon fallback failed")
                     require(page.locator("#late-icon svg").evaluate("el=>getComputedStyle(el).fill")=="none", "Late legacy icon filled unexpectedly")
                     require(page.evaluate("document.documentElement.scrollWidth <= innerWidth + 1"), f"Horizontal overflow at {width}")
-                    # Keyboard focus remains visible on the identity link.
+                    # Keyboard focus remains visible on the application-name home link.
                     page.keyboard.press("Tab"); page.keyboard.press("Tab"); page.keyboard.press("Tab")
-                    require(page.locator(".app-identity__home").evaluate("el=>el===document.activeElement"), "Identity is not the third keyboard stop")
-                    require(page.locator(".app-identity__home").evaluate("el=>getComputedStyle(el).outlineStyle") != "none", "Identity focus is invisible")
+                    require(page.locator(".app-title__link").evaluate("el=>el===document.activeElement"), "Application name is not the third keyboard stop")
+                    require(page.locator(".app-title__link").evaluate("el=>getComputedStyle(el).outlineStyle") != "none", "Application name focus is invisible")
                     if width < 721:
                         require(page.locator("#app-nav").is_hidden(), "Mobile menu should be collapsed")
                         page.locator("#menu-toggle").click()
@@ -174,6 +192,11 @@ def run_test(source: Path | None, screenshots: Path | None) -> None:
                     require(page.locator("#updates .copy-icon").first.get_attribute("fill")=="none", "Updates icon fill incorrect")
                     page.locator(".marinos-menu__toggle").click()
                     page.get_by_text("Another App",exact=True).wait_for()
+                    require(page.locator("#marinos-menu-panel .marinos-menu__status[data-status='alpha']").count()==1, "Alpha menu status missing")
+                    require(page.locator("#marinos-menu-panel .marinos-menu__status[data-status='beta']").count()==2, "Beta menu statuses missing")
+                    require(page.locator("#marinos-menu-panel .marinos-menu__status[data-status='live']").count()==1, "Live menu status missing")
+                    require(page.locator("#marinos-menu-panel a[href='https://example.test/invalid/'] .marinos-menu__status").count()==0, "Invalid status should be omitted")
+                    require(page.locator("#marinos-menu-panel .marinos-menu__name").count()==5, "Menu names are not wrapped consistently")
                     require(page.locator("#marinos-menu-panel script, #marinos-menu-panel [onload]").count()==0, "Catalog sanitizer regression")
                     require(page.evaluate("!window.badIcon"), "Untrusted catalog script executed")
                     page.keyboard.press("Escape")

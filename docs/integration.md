@@ -71,21 +71,47 @@ A meta-delivered CSP that enables all shell features needs an appropriate `conne
 
 An app that disables the catalog or Updates behavior can use a narrower policy.
 
+
+## Application maturity status
+
+For cataloged MarinOS applications, maturity uses the enum `alpha`, `beta`, or
+`live`. The repository-level value belongs in `marin.yml` under `project.status`,
+and the corresponding MarinOS `catalog.json` entry must be kept synchronized with it.
+
+The local app header reads the recognized `alpha`, `beta`, or `live` value from
+`marin.yml` `project.status` and renders that status beside the app name. This is a
+narrow read of the known manifest scalar, not a general-purpose browser YAML parser.
+The MarinOS menu continues to read status from the central catalog. If the local
+manifest is unavailable or has no recognized maturity value, the shell falls back to
+catalog matching: production matches by URL, while local development can use `app-id`
+as the stable catalog ID.
+
+```html
+<marin-app-header
+  app-id="marin-unzipper"
+  app-name="Marin Unzipper"
+  app-description="Decrypt and decompress ZIP files locally in your browser."
+></marin-app-header>
+```
+
+Unknown or missing catalog statuses are omitted rather than rendered as an
+unrecognized badge.
+
 ## Application metadata
 
 A shell-based app must already declare one scalar `platform.shell` value in
-`marin.yml`. For example, an app currently on 1.1.0 contains:
+`marin.yml`. For example, an app currently on 1.1.2 contains:
 
 ```yaml
 platform:
-  shell: 1.1.0
+  shell: 1.1.2
 ```
 
-Installing 1.1.1 updates only that scalar to:
+Installing 1.2.0 updates only that scalar to:
 
 ```yaml
 platform:
-  shell: 1.1.1
+  shell: 1.2.0
 ```
 
 The installer preserves unrelated supported YAML content and formatting rather

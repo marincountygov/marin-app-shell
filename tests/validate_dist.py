@@ -32,6 +32,10 @@ def validate(root: Path = ROOT) -> None:
     require(any("font-family: var(--app-font-body)" in b for b in body_rules), "Body does not consume Open Sans token")
     require(re.search(r"h1,\s*h2,\s*h3,\s*h4,\s*h5,\s*h6,\s*\.app-title\s*\{[^{}]*font-family: var\(--app-font-heading\)", css) is not None,
             "Heading selectors do not consume Jost token")
+    for status in ("alpha", "beta", "live"):
+        require(f'.app-status[data-status="{status}"]' in css, f"Missing MarinOS {status} status styling")
+    for marker in ("marinos-menu__status", "app-title__status", "marinos-banner__status", "marinos-catalog-cache-v3"):
+        require(marker in js, f"Missing status runtime marker: {marker}")
     for selector in (".marinos-menu__icon svg", ".marinos-banner__icon svg", ".menu-toggle__caret",
                      ".app-icon svg,\n.app-card__icon svg", ".copy-button svg", ".docs-brand-icon svg"):
         blocks = re.findall(r"^" + re.escape(selector) + r"\s*\{([^{}]*)\}", css, re.M)
