@@ -63,6 +63,13 @@ Missing icon templates fall back to the bundled Lucide `layout-grid`. Older
 1.0.x templates that omit root presentation attributes receive defaults, but
 app-specific icon validation remains the app's responsibility.
 
+Since 1.1.3, a missing root `stroke-width` defaults to `4` for a 48x48 viewBox
+and `2` otherwise. The shell never overwrites an explicit root stroke width or
+changes the icon's viewBox or path geometry. The same defaults apply to catalog
+icons. This is legacy compatibility, not a change to the canonical 24x24 Lucide
+standard. See [Icon stroke compatibility](icon-compatibility.md) for upgrade,
+late-inserted SVG, and testing details.
+
 ### Additional navigation links
 
 Additional links are placed before the standard links. Duplicate `href` values are removed.

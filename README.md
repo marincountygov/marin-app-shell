@@ -5,6 +5,13 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.1.3
+
+Version 1.1.3 fixes legacy 48x48 icon stroke defaults while preserving explicit
+widths and canonical 24x24 Lucide icons. It does not change component attributes,
+font assets, installer behavior, or TOC timing. See
+[Icon stroke compatibility](docs/icon-compatibility.md) for the upgrade contract.
+
 ## Version 1.1.1
 
 Version 1.1.1 keeps the 1.1.0 runtime and brand contract unchanged and updates the

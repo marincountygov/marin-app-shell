@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.3 - 2026-10-05
+
+- Default missing SVG stroke widths to 4 for legacy 48x48 viewBoxes; retain 2 for canonical 24x24 Lucide icons. Apply this to header templates, initial app icons, and catalog-rendered icons without changing their geometry.
+- Preserve explicit SVG stroke widths and add the matching CSS fallback for late-inserted legacy icons with the canonical `viewBox="0 0 48 48"` spelling.
+- Add source/distribution unit tests and rendered browser regressions for both coordinate systems, explicit widths, catalog sanitization, and late-inserted icons.
+- Make the separate HTTP browser test read the current release version rather than hard-coding 1.1.0.
+- Keep the public component API, installer transaction behavior, and font/icon assets unchanged. The deferred TOC/layout-timing change is not included.
+
 ## 1.1.2 - 2026-10-02
 
 - Fix the shared cross-app menu's fallback app list: `FALLBACK_APPS` said `MarinMagic` and `MarinDocs`, squashed CamelCase that didn't match those apps' real display name (`Marin Magic`, `Marin Docs`, as shown everywhere else — MarinOS's own catalog, their own headers and titles). No other change.
