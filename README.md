@@ -5,6 +5,14 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.4.0
+
+Version 1.4.0 shows the accessibility score as a color-banded gauge (with the number and band word always printed).
+
+## Version 1.3.0
+
+Version 1.3.0 adds each app's Google Lighthouse accessibility score, the WCAG 2.2 Level AA statement, and an accessibility issue link to the standard Accessibility section.
+
 ## Version 1.2.2
 
 Version 1.2.2 improves the Alpha status badge in dark mode by using the County gold

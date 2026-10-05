@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.4.0 - 2026-10-05
+
+- The Accessibility section's score now shows as a gauge (a ring with the number inside and the band word beside it): good 90-100 green, needs improvement 50-89 orange, poor 0-49 red, matching Lighthouse. Color is never the only signal; the number and band word are always printed, and the colors keep 4.5:1 contrast in light and dark.
+- A "Lighthouse results" link beside the score opens PageSpeed Insights' own report for the tested address (a live re-run, so it can differ slightly from the stored score).
+- The `.app-score` styles are carried in the shell as a narrowly scoped compatibility addition. Marin UI stays pinned at 1.19.0; the same styles ship upstream in Marin UI 1.21.0 and can be dropped here when the pinned baseline is refreshed.
+
+## 1.3.0 - 2026-10-05
+
+- The standard Accessibility section in `<marin-app-info>` now shows the app's Google Lighthouse accessibility score, read live from MarinOS's shared `data/lighthouse.json` by catalog id (`app-id` on `<marin-app-info>` or `<marin-app-header>`, `<body data-app-id>`, or URL matching).
+- The section states that the app targets WCAG 2.2 Level AA, explains that the score is automated testing and not WCAG conformance, and links to report an accessibility issue.
+- A failed scan keeps showing the last successful score with its date, an old score is marked out of date, and an app with no score says so. A failure is never shown as a low score.
+- New optional `app-id` attribute on `<marin-app-info>`. Apps that provide their own `<template data-accessibility>` keep that text, shown after the standard line.
+- The old default text for this section is replaced.
+
 ## 1.2.2 - 2026-10-05
 
 - Improve dark-mode Alpha status badges in App Shell with the County gold background and black text, providing stronger contrast while leaving Beta and Live unchanged.
