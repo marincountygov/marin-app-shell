@@ -1626,7 +1626,7 @@ th[aria-sort="descending"] .sort-button::after {
   stroke-linejoin: round;
 }
 
-/* Marin App Shell 1.2.1: component integration only.
+/* Marin App Shell 1.2.2: component integration only.
    General visual rules come from the locked, unmodified Marin UI input. */
 marin-os-banner,
 marin-app-header,
@@ -1736,5 +1736,15 @@ marin-app-footer {
   /* The component uses a boolean attribute, not data-open="true". */
   .app-nav[data-open] {
     display: flex;
+  }
+}
+
+/* App Shell 1.2.2 compatibility override. Marin UI 1.19.0 uses gold text on
+   a tinted dark surface for Alpha. Use the County-approved black-on-gold
+   pairing here until the shared UI baseline adopts the same treatment. */
+@media (prefers-color-scheme: dark) {
+  .app-status[data-status="alpha"] {
+    background: var(--app-warning);
+    color: var(--marin-black);
   }
 }

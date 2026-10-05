@@ -110,3 +110,13 @@ marin-app-footer {
     display: flex;
   }
 }
+
+/* App Shell 1.2.2 compatibility override. Marin UI 1.19.0 uses gold text on
+   a tinted dark surface for Alpha. Use the County-approved black-on-gold
+   pairing here until the shared UI baseline adopts the same treatment. */
+@media (prefers-color-scheme: dark) {
+  .app-status[data-status="alpha"] {
+    background: var(--app-warning);
+    color: var(--marin-black);
+  }
+}

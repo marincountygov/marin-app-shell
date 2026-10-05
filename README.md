@@ -5,7 +5,11 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
-## Version 1.2.1
+## Version 1.2.2
+
+Version 1.2.2 improves the Alpha status badge in dark mode by using the County gold
+background with black text. This compatibility override is local to App Shell; Marin UI
+1.19.0 remains pinned unchanged, and Beta/Live presentation is unaffected.
 
 Version 1.2.1 makes the local application header read the recognized `alpha`, `beta`,
 or `live` value from the app's own `marin.yml` `project.status` and render the shared

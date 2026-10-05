@@ -34,6 +34,8 @@ def validate(root: Path = ROOT) -> None:
             "Heading selectors do not consume Jost token")
     for status in ("alpha", "beta", "live"):
         require(f'.app-status[data-status="{status}"]' in css, f"Missing MarinOS {status} status styling")
+    require(re.search(r'@media \(prefers-color-scheme: dark\) \{[\s\S]*?\.app-status\[data-status="alpha"\] \{[\s\S]*?background: var\(--app-warning\);[\s\S]*?color: var\(--marin-black\);', css) is not None,
+            "Missing App Shell dark-mode Alpha contrast override")
     for marker in ("marinos-menu__status", "app-title__status", "marinos-banner__status", "marinos-catalog-cache-v3"):
         require(marker in js, f"Missing status runtime marker: {marker}")
     for selector in (".marinos-menu__icon svg", ".marinos-banner__icon svg", ".menu-toggle__caret",

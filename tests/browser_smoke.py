@@ -162,6 +162,10 @@ def run_test(source: Path | None, screenshots: Path | None) -> None:
                     require(page.locator(".app-title__status").get_attribute("data-marinos-status")==expected_status_source, f"Wrong local status source: expected {expected_status_source}")
                     require(page.locator(".app-title__status").get_attribute("href").endswith("/marin-os/#status"), "Current app status link is wrong")
                     require(page.locator(".marinos-banner__status[data-status='alpha']").count()==1, "MarinOS banner status badge missing")
+                    if scheme == "dark":
+                        alpha = page.locator(".marinos-banner__status[data-status='alpha']")
+                        require(alpha.evaluate("el=>getComputedStyle(el).backgroundColor") == "rgb(229, 181, 59)", "Dark-mode Alpha background is not County gold")
+                        require(alpha.evaluate("el=>getComputedStyle(el).color") == "rgb(0, 0, 0)", "Dark-mode Alpha text is not black")
                     require(page.locator(".app-footer__nav a").all_text_contents() == ["About","Security","Accessibility","Updates"], "Footer navigation drift")
                     for selector in (".app-icon svg", ".app-card__icon svg", ".marinos-banner__icon svg", ".menu-toggle__caret"):
                         svg = page.locator(selector).first

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.2 - 2026-10-05
+
+- Improve dark-mode Alpha status badges in App Shell with the County gold background and black text, providing stronger contrast while leaving Beta and Live unchanged.
+- Keep Marin UI 1.19.0 pinned unchanged; this is a narrowly scoped App Shell compatibility override that can be removed when the shared UI baseline adopts the same treatment.
+- Add static and rendered browser coverage for the dark-mode Alpha treatment.
+
 ## 1.2.1 - 2026-10-05
 
 - Read recognized `alpha`, `beta`, and `live` maturity status from the consuming app's local `marin.yml` `project.status` and render the shared status badge beside `.app-title`.
