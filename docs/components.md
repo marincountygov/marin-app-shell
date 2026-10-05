@@ -113,6 +113,7 @@ Attributes:
 | --- | --- | --- | --- |
 | `app-name` | Recommended | `This application` | Used in standard explanatory text and Updates labels. |
 | `repo` | Required for Updates | None | GitHub repository name or `owner/repo`. |
+| `app-id` | No | From `<marin-app-header app-id>`, `<body data-app-id>`, or URL match | MarinOS catalog ID used to find this app's Lighthouse accessibility score in MarinOS's shared `data/lighthouse.json`. |
 | `security-src` | No | `security.json` | Same-origin security configuration path. |
 | `sections` | No | `about security accessibility updates` | Standard sections to generate, in order. |
 | `security-standard-url` | No | MarinOS security standard | Security-standard link. |
