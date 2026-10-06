@@ -161,22 +161,38 @@ When omitted, the shell provides generic shared-interface and reporting language
 
 ## `marin-app-footer`
 
-Renders the local app identity, standard information navigation, and MarinOS platform link.
+Renders the local app identity, required information navigation, and the MarinOS platform link.
 
 ```html
 <marin-app-footer app-name="Marin Unzipper"></marin-app-footer>
 ```
+
+Every footer includes **About**, **Security**, **Accessibility**, and **Updates**. These are required MarinOS destinations and cannot be removed. The app name is intentionally text, not a link, and the standard links use anchors within the current `index.html`.
 
 Attributes:
 
 | Attribute | Required | Default | Purpose |
 | --- | --- | --- | --- |
 | `app-name` | Yes | `Application` | Visible app name and navigation label. |
-| `links` | No | `about security accessibility updates` | Standard footer links to include. |
+| `links` | No | `about security accessibility updates` | Legacy ordering hint for the standard links. Missing required destinations are appended automatically. |
 | `platform-name` | No | `MarinOS` | Platform link label. |
 | `platform-url` | No | MarinOS home | Platform link destination. |
+| `hide-platform-link` | No | absent | Boolean attribute that omits the separate bottom platform link. The local app name and required information links remain. |
 
-The app name is intentionally text, not a link. Standard links use anchors within the current `index.html`.
+### Additional footer links
+
+Apps with local destinations that belong in the footer can prepend them with a `data-footer-links` template. Only top-level anchors with a non-empty `href` and label are accepted. Duplicate destinations are suppressed, and the four required standard links always follow the app-specific links.
+
+```html
+<marin-app-footer app-name="MarinOS" hide-platform-link>
+  <template data-footer-links>
+    <a href="#projects">Projects</a>
+    <a href="#status">Status</a>
+  </template>
+</marin-app-footer>
+```
+
+That renders the local footer navigation in this order: **Projects**, **Status**, **About**, **Security**, **Accessibility**, **Updates**. The separate bottom MarinOS link is omitted because the application is itself the MarinOS platform home. Ordinary applications should keep the default component with no template and no `hide-platform-link`.
 
 ## `marin-app-feedback`
 

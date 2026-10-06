@@ -5,6 +5,14 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.5.0
+
+Version 1.5.0 makes About, Security, Accessibility, and Updates required footer
+links for every MarinOS app. Apps can prepend app-specific links with
+`template[data-footer-links]`, and platform-level apps can omit the separate
+bottom MarinOS platform link with `hide-platform-link`. The default footer for
+ordinary applications is unchanged.
+
 ## Version 1.4.0
 
 Version 1.4.0 shows the accessibility score as a color-banded gauge (with the number and band word always printed).

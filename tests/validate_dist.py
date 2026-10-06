@@ -38,6 +38,8 @@ def validate(root: Path = ROOT) -> None:
             "Missing App Shell dark-mode Alpha contrast override")
     for marker in ("marinos-menu__status", "app-title__status", "marinos-banner__status", "marinos-catalog-cache-v3"):
         require(marker in js, f"Missing status runtime marker: {marker}")
+    for marker in ("template[data-footer-links]", "hide-platform-link"):
+        require(marker in js, f"Missing footer extension runtime marker: {marker}")
     for selector in (".marinos-menu__icon svg", ".marinos-banner__icon svg", ".menu-toggle__caret",
                      ".app-icon svg,\n.app-card__icon svg", ".copy-button svg", ".docs-brand-icon svg"):
         blocks = re.findall(r"^" + re.escape(selector) + r"\s*\{([^{}]*)\}", css, re.M)

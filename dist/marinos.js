@@ -6,7 +6,7 @@
     return;
   }
 
-  const SHELL_VERSION = "1.4.0";
+  const SHELL_VERSION = "1.5.0";
   const MARIN_UI_VERSION = "1.19.0";
   const MARINOS_URL = "https://marincountygov.github.io/marin-os/";
   const MARINOS_STATUS_URL = `${MARINOS_URL}#status`;
@@ -680,9 +680,16 @@
       if (this.dataset.rendered === "true") return;
 
       const appName = normalizedAttribute(this, "app-name", "Application");
-      const links = parseTokenList(this.getAttribute("links"), "about security accessibility updates").filter(
+      const requestedLinks = parseTokenList(this.getAttribute("links"), "about security accessibility updates").filter(
         (key, index, values) => STANDARD_LINKS[key] && values.indexOf(key) === index
       );
+      // About, Security, Accessibility, and Updates are required for every
+      // MarinOS app. Keep legacy `links` ordering, but never let it omit one.
+      const links = [
+        ...requestedLinks,
+        ...Object.keys(STANDARD_LINKS).filter((key) => !requestedLinks.includes(key)),
+      ];
+      const extraLinksTemplate = this.querySelector("template[data-footer-links]");
       const platformName = normalizedAttribute(this, "platform-name", "MarinOS");
       const platformUrl = normalizedAttribute(this, "platform-url", MARINOS_URL);
 
@@ -702,27 +709,64 @@
       name.textContent = appName;
       local.append(name);
 
-      if (links.length) {
-        const navigation = document.createElement("nav");
-        navigation.className = "app-footer__nav";
-        navigation.setAttribute("aria-label", `${appName} information`);
-        links.forEach((key) => {
+      const navigation = document.createElement("nav");
+      navigation.className = "app-footer__nav";
+      navigation.setAttribute("aria-label", `${appName} information`);
+
+      // App-owned footer links are intentionally narrow: only top-level anchors
+      // with an href and visible label are accepted, and they are prepended to
+      // the required standard links. Rebuild rather than clone arbitrary markup.
+      const requiredDestinations = new Set(links.map((key) => `#${key}`));
+      const seenExtraDestinations = new Set();
+      if (extraLinksTemplate instanceof HTMLTemplateElement) {
+        Array.from(extraLinksTemplate.content.children).forEach((source) => {
+          if (!(source instanceof HTMLAnchorElement)) return;
+          const href = source.getAttribute("href")?.trim() || "";
+          const label = source.textContent?.trim() || "";
+          if (!href || !label) return;
+
+          let destinationKey;
+          if (href.startsWith("#")) {
+            destinationKey = href.toLowerCase();
+          } else {
+            let destination;
+            try {
+              destination = new URL(href, window.location.href);
+            } catch {
+              return;
+            }
+            if (!["http:", "https:"].includes(destination.protocol)) return;
+            destinationKey = destination.href;
+          }
+          if (requiredDestinations.has(destinationKey) || seenExtraDestinations.has(destinationKey)) return;
+
+          seenExtraDestinations.add(destinationKey);
           const link = document.createElement("a");
-          link.href = `#${key}`;
-          link.textContent = STANDARD_LINKS[key];
+          link.setAttribute("href", href);
+          link.textContent = label;
           navigation.append(link);
         });
-        local.append(navigation);
       }
 
-      const platform = document.createElement("div");
-      platform.className = "app-footer__platform";
-      const platformLink = document.createElement("a");
-      platformLink.href = platformUrl;
-      platformLink.textContent = platformName;
-      platform.append(platformLink);
+      links.forEach((key) => {
+        const link = document.createElement("a");
+        link.href = `#${key}`;
+        link.textContent = STANDARD_LINKS[key];
+        navigation.append(link);
+      });
+      local.append(navigation);
 
-      inner.append(local, platform);
+      inner.append(local);
+      if (!this.hasAttribute("hide-platform-link")) {
+        const platform = document.createElement("div");
+        platform.className = "app-footer__platform";
+        const platformLink = document.createElement("a");
+        platformLink.href = platformUrl;
+        platformLink.textContent = platformName;
+        platform.append(platformLink);
+        inner.append(platform);
+      }
+
       footer.append(inner);
       this.replaceChildren(footer);
       this.dataset.rendered = "true";

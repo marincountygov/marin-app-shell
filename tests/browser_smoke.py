@@ -29,6 +29,15 @@ HTML = '''<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Shel
 <template data-about><p>Custom About content.</p></template>
 <template data-accessibility><p>Custom accessibility content.</p></template></marin-app-info>
 </main><marin-app-footer app-name="Test App"></marin-app-footer>
+<div hidden id="footer-contract-fixtures">
+<marin-app-footer id="custom-footer" app-name="MarinOS" hide-platform-link>
+<template data-footer-links>
+<a href="#projects">Projects</a><a href="#status">Status</a>
+<a href="#about">Duplicate About</a><a href="#projects">Duplicate Projects</a>
+<span>Ignored non-link</span>
+</template></marin-app-footer>
+<marin-app-footer id="legacy-footer" app-name="Legacy Footer" links="updates"></marin-app-footer>
+</div>
 <marin-app-feedback href="https://example.test/feedback"></marin-app-feedback></body></html>'''
 
 
@@ -166,7 +175,15 @@ def run_test(source: Path | None, screenshots: Path | None) -> None:
                         alpha = page.locator(".marinos-banner__status[data-status='alpha']")
                         require(alpha.evaluate("el=>getComputedStyle(el).backgroundColor") == "rgb(229, 181, 59)", "Dark-mode Alpha background is not County gold")
                         require(alpha.evaluate("el=>getComputedStyle(el).color") == "rgb(0, 0, 0)", "Dark-mode Alpha text is not black")
-                    require(page.locator(".app-footer__nav a").all_text_contents() == ["About","Security","Accessibility","Updates"], "Footer navigation drift")
+                    default_footer = page.locator("marin-app-footer:not(#custom-footer):not(#legacy-footer)")
+                    require(default_footer.locator(".app-footer__nav a").all_text_contents() == ["About","Security","Accessibility","Updates"], "Footer navigation drift")
+                    require(default_footer.locator(".app-footer__platform a").all_text_contents() == ["MarinOS"], "Default platform link drift")
+                    require(page.locator("#custom-footer .app-footer__nav a").all_text_contents() == ["Projects","Status","About","Security","Accessibility","Updates"], "Custom footer links are not prepended to the required set")
+                    require(page.locator("#custom-footer .app-footer__platform").count() == 0, "hide-platform-link did not suppress the platform link")
+                    require(page.locator("#custom-footer .app-footer__app-name").all_text_contents() == ["MarinOS"], "Custom footer app name drift")
+                    require(page.locator("#custom-footer template[data-footer-links]").count() == 0, "Footer template remained after render")
+                    require(page.locator("#legacy-footer .app-footer__nav a").all_text_contents() == ["Updates","About","Security","Accessibility"], "Required footer links can still be omitted by legacy links ordering")
+                    require(page.locator("#legacy-footer .app-footer__platform a").all_text_contents() == ["MarinOS"], "Legacy footer lost the default platform link")
                     for selector in (".app-icon svg", ".app-card__icon svg", ".marinos-banner__icon svg", ".menu-toggle__caret"):
                         svg = page.locator(selector).first
                         for key, value in SVG_ATTRIBUTES.items():
@@ -189,7 +206,7 @@ def run_test(source: Path | None, screenshots: Path | None) -> None:
                         page.keyboard.press("Escape")
                         require(page.locator("#app-nav").is_hidden(), "Escape failed to close mobile menu")
                     for route in ("about","security","accessibility","updates"):
-                        page.locator(f".app-footer__nav a[href='#{route}']").click()
+                        default_footer.locator(f".app-footer__nav a[href='#{route}']").click()
                         page.wait_for_function("id=>!document.getElementById(id).hidden",arg=route)
                     page.locator("#updates .copy-icon").first.wait_for()
                     require(page.locator("#updates .copy-icon").first.evaluate("el=>getComputedStyle(el).strokeWidth")=="2px", "Updates icon is not Lucide stroke 2")
@@ -207,7 +224,7 @@ def run_test(source: Path | None, screenshots: Path | None) -> None:
                     require(page.locator("#marinos-menu-panel").is_hidden(), "Catalog Escape regression")
                     if screenshots:
                         screenshots.mkdir(parents=True, exist_ok=True)
-                        page.locator(".app-footer__nav a[href='#about']").click()
+                        default_footer.locator(".app-footer__nav a[href='#about']").click()
                         page.wait_for_function("!document.getElementById('about').hidden")
                         page.screenshot(path=str(screenshots / f"{width}-{scheme}.png"),full_page=True)
                     require(not errors, f"Uncaught browser errors: {errors}")

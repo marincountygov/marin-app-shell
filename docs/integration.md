@@ -72,6 +72,23 @@ A meta-delivered CSP that enables all shell features needs an appropriate `conne
 An app that disables the catalog or Updates behavior can use a narrower policy.
 
 
+## Footer contract
+
+Every MarinOS application footer includes the standard **About**, **Security**, **Accessibility**, and **Updates** links. The `links` attribute is retained as a compatibility ordering hint, but it cannot remove a required destination.
+
+Application-specific footer destinations may be prepended with top-level anchors inside `template[data-footer-links]`. Use this only for durable local navigation that belongs alongside the standard information links. Duplicate destinations are suppressed.
+
+```html
+<marin-app-footer app-name="MarinOS" hide-platform-link>
+  <template data-footer-links>
+    <a href="#projects">Projects</a>
+    <a href="#status">Status</a>
+  </template>
+</marin-app-footer>
+```
+
+`hide-platform-link` suppresses only the separate bottom MarinOS platform link. It does not remove the local app name or any required information link. This is intended for the MarinOS platform home and comparable platform-level pages; ordinary applications should keep the default footer.
+
 ## Application maturity status
 
 For cataloged MarinOS applications, maturity uses the enum `alpha`, `beta`, or

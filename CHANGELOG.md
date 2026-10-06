@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.5.0 - 2026-10-05
+
+- Require the standard About, Security, Accessibility, and Updates footer links for every MarinOS application; legacy `links` ordering is retained but can no longer omit a required destination.
+- Add `<template data-footer-links>` for app-specific footer links. Valid top-level anchors are prepended to the required standard set, with duplicate destinations suppressed.
+- Add the `hide-platform-link` boolean attribute so platform-level applications such as the MarinOS home app can omit the separate bottom MarinOS link while keeping the local app name and required information links.
+- Keep the default footer markup and platform link unchanged for existing applications that do not opt into the new footer capabilities.
+
 ## 1.4.0 - 2026-10-05
 
 - The Accessibility section's score now shows as a gauge (a ring with the number inside and the band word beside it): good 90-100 green, needs improvement 50-89 orange, poor 0-49 red, matching Lighthouse. Color is never the only signal; the number and band word are always printed, and the colors keep 4.5:1 contrast in light and dark.

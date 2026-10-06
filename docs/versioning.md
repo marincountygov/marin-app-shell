@@ -6,7 +6,9 @@ corrected shared presentation without requiring new component markup. Version
 1.1.1 keeps that runtime API and presentation unchanged while making the installer
 synchronize the consuming app's existing `marin.yml` `platform.shell` value with
 the installed release. Version 1.2.0 adds catalog-backed Alpha/Beta/Live status
-rendering and adopts the reviewed Marin UI 1.19.0 baseline.
+rendering and adopts the reviewed Marin UI 1.19.0 baseline. Version 1.5.0 adds
+compatible footer-extension API for app-specific links and optional platform-link
+suppression while making the four standard information destinations mandatory.
 
 Patch releases fix compatible defects. Minor releases add compatible capabilities
 or intentionally change presentation and therefore still require visual review.
