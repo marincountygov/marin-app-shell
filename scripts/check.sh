@@ -29,6 +29,12 @@ if command -v node >/dev/null 2>&1; then
 else
   printf 'SKIP: Node unavailable; JavaScript syntax and icon-default unit checks not performed.\n' >&2
 fi
+if [[ -f "$ROOT_DIR/../marin-ui/scripts/check-contrast.js" ]] && command -v node >/dev/null 2>&1; then
+  printf 'Checking color contrast in light and dark mode...\n'
+  node "$ROOT_DIR/../marin-ui/scripts/check-contrast.js" "$ROOT_DIR/dist/marinos.css"
+else
+  printf 'SKIP: marin-ui checkout (scripts/check-contrast.js) not found next to this repo; contrast check not performed.\n' >&2
+fi
 printf 'Running release and installer regression tests...\n'
 python3 "$ROOT_DIR/tests/test_release.py"
 if [[ "$BROWSER" == 1 ]]; then
