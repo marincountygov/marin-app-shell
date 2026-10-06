@@ -141,6 +141,8 @@ The shell adds the About heading and a Related information list.
 
 The shell still owns the reporting, public-security summary, and technical links.
 
+The public-security summary opens with a "Built for" line. It comes from `project.audience` in the app's own `marin.yml` (`staff`, `public`, or `developers`), so there is nothing to write in `security.json`. If `marin.yml` can't be read, the line falls back to the label for the `profile` in `security.json`. A `publicSecurity.profile` string in `security.json` is no longer shown.
+
 ### Accessibility content
 
 ```html

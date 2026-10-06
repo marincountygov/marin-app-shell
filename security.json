@@ -79,7 +79,6 @@
     }
   ],
   "publicSecurity": {
-    "profile": "Static library and demonstration",
     "lastReviewed": "2026-09-29",
     "controls": ["HTTPS", "Content Security Policy", "Dependency monitoring", "Secret scanning"],
     "data": { "collectsPersonalData": false }
