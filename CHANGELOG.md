@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.0 - 2026-10-06
+
+- The Security section's "who is this for" line now comes from `project.audience` in the app's own `marin.yml` (staff, public, or developers) instead of a hand-written string in `security.json`, so it can't drift from the manifest. It reads "Built for: County staff" and so on. If `marin.yml` can't be read it falls back to the security profile's label. `publicSecurity.profile` is no longer shown.
+
 ## 1.6.0 - 2026-10-06
 
 - Every `[role="tablist"]` now gets the ARIA tabs keyboard pattern with no per-app JavaScript: one tab in the Tab order at a time (the selected one, or the first), Left/Right (Up/Down for `aria-orientation="vertical"`) with wrap, Home/End, and selection on focus. An app that handles those keys itself calls `preventDefault()` and the shared handler stands down. Apps no longer need their own copy.
