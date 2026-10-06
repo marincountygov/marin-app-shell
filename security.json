@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "lockfileRequired": false,
-    "runtimeCdnPolicy": "Dependencies are vendored into each application; no CDN is required.",
+    "runtimeCdnPolicy": "see marin-digital-standards/product-design/runtime-dependencies.md",
     "thirdPartyDependencyReview": true,
     "dependencyScanning": { "status": "enabled", "provider": "github-advanced-security" }
   },
