@@ -5,6 +5,14 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.6.0
+
+Version 1.6.0 adds the shared ARIA tabs keyboard pattern (arrow keys, Home/End, one Tab stop) to every `role="tablist"`, and includes the 1.5.1 contrast fix.
+
+## Version 1.5.1
+
+Version 1.5.1 fixes low-contrast accent text on tinted backgrounds (current nav link, hovered menu items) in light mode.
+
 ## Version 1.5.0
 
 Version 1.5.0 makes About, Security, Accessibility, and Updates required footer

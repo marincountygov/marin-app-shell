@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.6.0 - 2026-10-06
+
+- Every `[role="tablist"]` now gets the ARIA tabs keyboard pattern with no per-app JavaScript: one tab in the Tab order at a time (the selected one, or the first), Left/Right (Up/Down for `aria-orientation="vertical"`) with wrap, Home/End, and selection on focus. An app that handles those keys itself calls `preventDefault()` and the shared handler stands down. Apps no longer need their own copy.
+- Lighten the light-mode page background (`--app-bg-soft`) from `#f6f7f8` to `#fdfdfe` so accent links directly on it reach 4.54:1 (were 4.30:1). Dark mode is unchanged. Carried as a compatibility override like the 1.5.1 fix.
+- Includes the 1.5.1 contrast fix below.
+- `scripts/check.sh` also runs Marin UI's `check-contrast.js` against `dist/marinos.css` (both themes) when a `marin-ui` checkout sits next to this repo.
+
+## 1.5.1 - 2026-10-06
+
+- Fix low-contrast accent text on accent-tinted backgrounds: the current header-nav link and hover, hovered or focused menu items, the hovered Updates "Copy" button, and the current topic filter were about 3.6-4.2:1 in light mode (AA needs 4.5:1). They now use a darker blue in light mode (6.2:1 or better) and are unchanged in dark mode.
+- Carried in the shell as a narrowly scoped compatibility addition. Marin UI stays pinned at 1.19.0; the same fix ships upstream in Marin UI 1.22.0 and can be dropped here when the pinned baseline is refreshed.
+
 ## 1.5.0 - 2026-10-05
 
 - Require the standard About, Security, Accessibility, and Updates footer links for every MarinOS application; legacy `links` ordering is retained but can no longer omit a required destination.
