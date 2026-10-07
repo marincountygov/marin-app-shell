@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.9.0 - 2026-10-08
+
+- The Tech section now has a **Services used** part, between the software bill of materials and AI. It lists the outside services an app uses, what each is for, whether the visitor's browser or only the build calls it, and whether it receives visitor data. The list is declared in the app's own `marin.yml` (`services:`) and read from MarinOS's `data/tech.json`.
+- `services: none` shows "This application does not use outside services of its own." A missing declaration shows "Not documented" and is never treated as none. The shared calls every app makes (MarinOS data files and GitHub's public API for recent changes) are described once, in a note.
+
 ## 1.8.0 - 2026-10-07
 
 - New standard **Tech** section and footer link, between Accessibility and Updates. It reads MarinOS's shared `data/tech.json` (by catalog id) and shows the app's languages, dependencies and bundled components, software bill of materials (a link to the stored SPDX file), and whether it uses AI as part of the deployed service.
