@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.8.0 - 2026-10-07
+
+- New standard **Tech** section and footer link, between Accessibility and Updates. It reads MarinOS's shared `data/tech.json` (by catalog id) and shows the app's languages, dependencies and bundled components, software bill of materials (a link to the stored SPDX file), and whether it uses AI as part of the deployed service.
+- Missing or failed data is shown as "Not available", "Not documented" or "Unable to retrieve", never as zero, "No" or "none". A missing AI declaration is never shown as No.
+- New optional `<template data-tech>` for app-specific context. Tech is now part of the required footer set.
+
 ## 1.7.0 - 2026-10-06
 
 - The Security section's "who is this for" line now comes from `project.audience` in the app's own `marin.yml` (staff, public, or developers) instead of a hand-written string in `security.json`, so it can't drift from the manifest. It reads "Built for: County staff" and so on. If `marin.yml` can't be read it falls back to the security profile's label. `publicSecurity.profile` is no longer shown.

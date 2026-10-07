@@ -5,9 +5,9 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
-## Version 1.7.0
+## Version 1.8.0
 
-Version 1.7.0 builds the Security section's "Built for" line from `project.audience` in `marin.yml`, so it can't drift from the manifest. It includes the 1.6.0 ARIA tabs keyboard pattern and the 1.5.1 contrast fix.
+Version 1.8.0 adds the standard Tech section and footer link: languages, dependencies and bundled components, a link to the software bill of materials, and a declared AI-use statement, all read from MarinOS's shared `data/tech.json`. Version 1.7.0 builds the Security section's "Built for" line from `project.audience` in `marin.yml`, so it can't drift from the manifest. It includes the 1.6.0 ARIA tabs keyboard pattern and the 1.5.1 contrast fix.
 
 ## Version 1.5.1
 
