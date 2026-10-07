@@ -74,7 +74,7 @@ An app that disables the catalog or Updates behavior can use a narrower policy.
 
 ## Footer contract
 
-Every MarinOS application footer includes the standard **About**, **Security**, **Accessibility**, and **Updates** links. The `links` attribute is retained as a compatibility ordering hint, but it cannot remove a required destination.
+Every MarinOS application footer includes the standard **About**, **Security**, **Accessibility**, **Tech**, and **Updates** links. The `links` attribute is retained as a compatibility ordering hint, but it cannot remove a required destination.
 
 Application-specific footer destinations may be prepended with top-level anchors inside `template[data-footer-links]`. Use this only for durable local navigation that belongs alongside the standard information links. Duplicate destinations are suppressed.
 

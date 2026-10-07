@@ -153,6 +153,20 @@ The public-security summary opens with a "Built for" line. It comes from `projec
 
 When omitted, the shell provides generic shared-interface and reporting language. Each app remains responsible for testing its own workflow.
 
+### Tech content
+
+```html
+<template data-tech>
+  <p>Optional application-specific technology context.</p>
+</template>
+```
+
+The Tech section reads MarinOS's shared `data/tech.json` by catalog id (`app-id` on `<marin-app-info>` or `<marin-app-header>`, `<body data-app-id>`, or URL matching), the same way Accessibility reads its score. It shows, in order: **Languages** (GitHub's Languages API, as percentages), **Dependencies** (GitHub's dependency graph, with the direct/transitive split and a package table read from the stored SPDX file, plus **Bundled components** copied into the repository), **Software bill of materials** (format, version, date, package count, and a link to the SPDX file), and **AI**.
+
+AI means AI functionality in the deployed application, never tools used to build it. It comes from the `ai:` block in the app's own `marin.yml` and is declared, never inferred. The section prints **Uses AI: Yes**, **Uses AI: No**, or **AI use: Not documented**; a missing declaration is never shown as No. Missing or failed data is shown as "Not available" or "Unable to retrieve", never as zero or none. Vulnerability findings stay in Security.
+
+Apps do not provide the data. `marin-os` generates it with `scripts/tech.js` and its "Update tech data" workflow.
+
 ### Updates introduction
 
 ```html
@@ -169,7 +183,7 @@ Renders the local app identity, required information navigation, and the MarinOS
 <marin-app-footer app-name="Marin Unzipper"></marin-app-footer>
 ```
 
-Every footer includes **About**, **Security**, **Accessibility**, and **Updates**. These are required MarinOS destinations and cannot be removed. The app name is intentionally text, not a link, and the standard links use anchors within the current `index.html`.
+Every footer includes **About**, **Security**, **Accessibility**, **Tech**, and **Updates**. These are required MarinOS destinations and cannot be removed. The app name is intentionally text, not a link, and the standard links use anchors within the current `index.html`.
 
 Attributes:
 
@@ -194,7 +208,7 @@ Apps with local destinations that belong in the footer can prepend them with a `
 </marin-app-footer>
 ```
 
-That renders the local footer navigation in this order: **Projects**, **Status**, **About**, **Security**, **Accessibility**, **Updates**. The separate bottom MarinOS link is omitted because the application is itself the MarinOS platform home. Ordinary applications should keep the default component with no template and no `hide-platform-link`.
+That renders the local footer navigation in this order: **Projects**, **Status**, **About**, **Security**, **Accessibility**, **Tech**, **Updates**. The separate bottom MarinOS link is omitted because the application is itself the MarinOS platform home. Ordinary applications should keep the default component with no template and no `hide-platform-link`.
 
 ## `marin-app-feedback`
 

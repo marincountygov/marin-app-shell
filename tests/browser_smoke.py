@@ -176,13 +176,13 @@ def run_test(source: Path | None, screenshots: Path | None) -> None:
                         require(alpha.evaluate("el=>getComputedStyle(el).backgroundColor") == "rgb(229, 181, 59)", "Dark-mode Alpha background is not County gold")
                         require(alpha.evaluate("el=>getComputedStyle(el).color") == "rgb(0, 0, 0)", "Dark-mode Alpha text is not black")
                     default_footer = page.locator("marin-app-footer:not(#custom-footer):not(#legacy-footer)")
-                    require(default_footer.locator(".app-footer__nav a").all_text_contents() == ["About","Security","Accessibility","Updates"], "Footer navigation drift")
+                    require(default_footer.locator(".app-footer__nav a").all_text_contents() == ["About","Security","Accessibility","Tech","Updates"], "Footer navigation drift")
                     require(default_footer.locator(".app-footer__platform a").all_text_contents() == ["MarinOS"], "Default platform link drift")
-                    require(page.locator("#custom-footer .app-footer__nav a").all_text_contents() == ["Projects","Status","About","Security","Accessibility","Updates"], "Custom footer links are not prepended to the required set")
+                    require(page.locator("#custom-footer .app-footer__nav a").all_text_contents() == ["Projects","Status","About","Security","Accessibility","Tech","Updates"], "Custom footer links are not prepended to the required set")
                     require(page.locator("#custom-footer .app-footer__platform").count() == 0, "hide-platform-link did not suppress the platform link")
                     require(page.locator("#custom-footer .app-footer__app-name").all_text_contents() == ["MarinOS"], "Custom footer app name drift")
                     require(page.locator("#custom-footer template[data-footer-links]").count() == 0, "Footer template remained after render")
-                    require(page.locator("#legacy-footer .app-footer__nav a").all_text_contents() == ["Updates","About","Security","Accessibility"], "Required footer links can still be omitted by legacy links ordering")
+                    require(page.locator("#legacy-footer .app-footer__nav a").all_text_contents() == ["Updates","About","Security","Accessibility","Tech"], "Required footer links can still be omitted by legacy links ordering")
                     require(page.locator("#legacy-footer .app-footer__platform a").all_text_contents() == ["MarinOS"], "Legacy footer lost the default platform link")
                     for selector in (".app-icon svg", ".app-card__icon svg", ".marinos-banner__icon svg", ".menu-toggle__caret"):
                         svg = page.locator(selector).first
@@ -205,7 +205,7 @@ def run_test(source: Path | None, screenshots: Path | None) -> None:
                         require(page.locator("#app-nav").is_visible(), "Mobile menu failed to open")
                         page.keyboard.press("Escape")
                         require(page.locator("#app-nav").is_hidden(), "Escape failed to close mobile menu")
-                    for route in ("about","security","accessibility","updates"):
+                    for route in ("about","security","accessibility","tech","updates"):
                         default_footer.locator(f".app-footer__nav a[href='#{route}']").click()
                         page.wait_for_function("id=>!document.getElementById(id).hidden",arg=route)
                     page.locator("#updates .copy-icon").first.wait_for()

@@ -103,7 +103,7 @@ Replace the copied application header with:
 
 Use the stable MarinOS catalog ID for `APP_ID` when available. This lets the status badge resolve while testing on localhost; deployed apps also fall back to URL matching.
 
-Replace copied About, Security, Accessibility, and Updates sections with one component:
+Replace copied About, Security, Accessibility, Tech, and Updates sections with one component:
 
 ```html
 <marin-app-info
@@ -173,7 +173,7 @@ Review at minimum:
 - responsive header, outer padding, and menu;
 - local Open Sans/Jost requests and actual rendered fonts;
 - app icon parity across header, favicon, and the separate catalog;
-- About, Security, Accessibility, and Updates routes;
+- About, Security, Accessibility, Tech, and Updates routes;
 - footer spacing and links;
 - keyboard order and Escape behavior;
 - light and dark color schemes;
