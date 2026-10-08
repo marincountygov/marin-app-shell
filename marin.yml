@@ -14,3 +14,8 @@ platform:
 deployment:
   target: github-pages
   url: https://marincountygov.github.io/marin-app-shell/
+
+ai:
+  used: false
+
+services: none
