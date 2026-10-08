@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.10.0 - 2026-10-08
+
+- Tech pages show license names as GitHub reports them ("MIT License", not "MIT"). `data/tech.json` carries a `licenseNames` map from SPDX id to name; an id with no known name is shown as it is.
+- Marin App Shell and Marin UI have their own Tech details on MarinOS. In every app's Bundled components table, those two names link to them.
+- A hash that names an element inside a tab section (for example `#tech-marin-ui`) now opens that section and scrolls to the element. Before, any hash that was not a section name showed the first section.
+- New optional `data-tech-heading-level` on a Tech block sets its top heading level (default 3), so MarinOS can nest several apps' details on one page.
+
 ## 1.9.0 - 2026-10-08
 
 - The Tech section now has a **Services used** part, between the software bill of materials and AI. It lists the outside services an app uses, what each is for, whether the visitor's browser or only the build calls it, and whether it receives visitor data. The list is declared in the app's own `marin.yml` (`services:`) and read from MarinOS's `data/tech.json`.

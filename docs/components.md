@@ -165,6 +165,8 @@ The Tech section reads MarinOS's shared `data/tech.json` by catalog id (`app-id`
 
 AI means AI functionality in the deployed application, never tools used to build it. It comes from the `ai:` block in the app's own `marin.yml` and is declared, never inferred. The section prints **Uses AI: Yes**, **Uses AI: No**, or **AI use: Not documented**; a missing declaration is never shown as No. Missing or failed data is shown as "Not available" or "Unable to retrieve", never as zero or none. Vulnerability findings stay in Security.
 
+License ids are shown as the names in `tech.json`'s `licenseNames` (for example "MIT License"). **Marin App Shell** and **Marin UI** in the Bundled components table link to their own Tech details on MarinOS (`#tech-marin-app-shell`, `#tech-marin-ui`). A block nested inside another section can set `data-tech-heading-level` (2-5, default 3) to move its headings down.
+
 Apps do not provide the data. `marin-os` generates it with `scripts/tech.js` and its "Update tech data" workflow.
 
 ### Updates introduction
