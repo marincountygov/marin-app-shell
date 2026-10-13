@@ -35,6 +35,15 @@ if [[ -f "$ROOT_DIR/../marin-ui/scripts/check-contrast.js" ]] && command -v node
 else
   printf 'SKIP: marin-ui checkout (scripts/check-contrast.js) not found next to this repo; contrast check not performed.\n' >&2
 fi
+if [[ -f "$ROOT_DIR/../marin-ui/BRAND_VERSION" ]]; then
+  PINNED=$(tr -d '[:space:]' < "$ROOT_DIR/MARIN_UI_VERSION")
+  UPSTREAM=$(tr -d '[:space:]' < "$ROOT_DIR/../marin-ui/BRAND_VERSION")
+  if [[ "$PINNED" != "$UPSTREAM" && "$(printf '%s\n%s\n' "$PINNED" "$UPSTREAM" | sort -V | tail -n 1)" == "$UPSTREAM" ]]; then
+    printf 'WARN: Marin UI %s is newer than the pinned baseline %s; plan a baseline refresh (see docs/brand.md).\n' "$UPSTREAM" "$PINNED" >&2
+  else
+    printf 'Marin UI baseline is current (%s).\n' "$PINNED"
+  fi
+fi
 printf 'Running release and installer regression tests...\n'
 python3 "$ROOT_DIR/tests/test_release.py"
 if [[ "$BROWSER" == 1 ]]; then

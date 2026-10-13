@@ -195,6 +195,15 @@ def run_test(source: Path | None, screenshots: Path | None) -> None:
                     require(page.locator("#late-icon svg").evaluate("el=>getComputedStyle(el).strokeWidth")=="2px", "Late legacy icon fallback failed")
                     require(page.locator("#late-icon svg").evaluate("el=>getComputedStyle(el).fill")=="none", "Late legacy icon filled unexpectedly")
                     require(page.evaluate("document.documentElement.scrollWidth <= innerWidth + 1"), f"Horizontal overflow at {width}")
+                    # Each standards link appears once, so scanners do not report a redundant link.
+                    for route in ("security", "accessibility"):
+                        page.evaluate(f"location.hash = '#{route}'")
+                        page.wait_for_timeout(200)
+                    sec = page.locator("#security a[href$='security.txt']").count()
+                    wcag = page.locator("#accessibility a[href*='WCAG22']").count()
+                    require(sec <= 1 and wcag == 1, f"Repeated standards links: security.txt x{sec}, WCAG x{wcag}")
+                    page.evaluate("location.hash = ''")
+                    page.wait_for_timeout(100)
                     # The floating Feedback button hides while the footer is on screen, but stays reachable.
                     feedback = page.locator("a.app-feedback")
                     page.evaluate("document.getElementById('start').style.minHeight = '2400px'; window.scrollTo(0, 0)")
