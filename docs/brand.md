@@ -11,17 +11,16 @@ not replace apps' selected icons. Owners should reconcile that wording upstream.
 
 ## What is pinned
 
-`vendor/marin-ui/app-brand.css` is byte-identical to the supplied Marin UI 1.19.0
+`vendor/marin-ui/app-brand.css` is byte-identical to the supplied Marin UI 1.24.0
 checkout. `vendor/marin-ui/lock.json` records the imported `BRAND_VERSION`, file
 hashes, and provenance. The default build checks those hashes; it does not download
 or automatically adopt upstream `main`.
 
 The old shell copied and edited the entire UI stylesheet. Version 1.1.0 removed
 that fork (`src/marinos.css`) in favor of an upstream input and small, named adapters.
-Version 1.2.0 explicitly refreshes that pinned input to Marin UI 1.19.0 so the shell
+Version 1.2.0 explicitly refreshed that pinned input to Marin UI 1.19.0 so the shell
 uses the canonical Alpha/Beta/Live status-badge presentation rather than copying it
-into a shell-specific override. The pending Alpha dark-mode contrast refinement is
-not part of this import.
+into a shell-specific override.
 
 ## Font paths and consumption
 
@@ -70,14 +69,14 @@ other repository or presume the shell already has a published catalog entry.
 
 ## Header identity and status
 
-Marin UI 1.19.0 makes `.app-title-row` a plain flex container. Only the application
+Marin UI makes `.app-title-row` a plain flex container. Only the application
 name uses `.app-title__link` to navigate to `./`; the icon and subtitle are not part
 of that link. This allows `.app-title__status` to be a separate link to MarinOS's
 status guidance without invalid nested anchors. The inner header, icon size,
 title-row gap, and gold border retain the shared UI values.
 
-Alpha/Beta/Live badge colors come directly from the pinned Marin UI input. The shell
-adds no additional status-color override. Catalog status is used at runtime because
+Alpha/Beta/Live badge colors come directly from the pinned Marin UI input, including
+the dark-mode black-on-gold Alpha badge. The shell adds no status-color override. Catalog status is used at runtime because
 a static browser page does not parse `marin.yml`; consuming repositories keep the
 catalog value synchronized with their canonical `project.status`.
 
@@ -94,3 +93,13 @@ computed family string. Installer regression tests separately cover the
 `platform.shell` metadata update, preservation, failure handling, and rollback.
 An HTTP integration check remains separate; a brand check is not a full
 accessibility, security, or platform-availability certification.
+
+## Baseline refresh in 1.11.0
+
+Version 1.11.0 imports Marin UI 1.24.0. It contains the fixes the shell had been carrying
+as compatibility additions (1.2.2 Alpha badge in dark mode, 1.4.0 score gauge, 1.5.1 accent
+text on a tint, 1.6.0 lighter page background, 1.10.1 form control borders), so `src/shell.css`
+no longer holds them. `src/brand-compat.css` (icons, fonts) is unrelated and stays. When
+Marin UI releases a fix the shell needs before a refresh, add a labeled compatibility block
+to `src/shell.css` that names the Marin UI version carrying the fix, and remove it at the
+next refresh.

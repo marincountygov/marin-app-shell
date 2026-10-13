@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.11.0 - 2026-10-13
+
+- The pinned Marin UI baseline moves from 1.19.0 to 1.24.0.
+- The shell no longer carries its own copies of fixes that Marin UI now contains: the score gauge (1.4.0), accent text on a tint (1.5.1), the lighter page background (1.6.0), the form control border (1.10.1), and the dark-mode Alpha badge (1.2.2). Computed styles were compared before and after across the demo page and a real app, in light and dark mode: light mode is identical, and the only dark-mode difference is the Beta badge, which now uses the lighter blue text Marin UI always intended (its override had been in the wrong place in the file and never applied). The dark-mode Alpha badge is unchanged.
+- `docs/brand.md` explains how to add and later remove a compatibility block.
+- The floating Feedback button now hides when the page is scrolled until the footer appears, so it no longer covers footer links (it hid the Updates link on narrow screens). On a page too short to scroll, it stays. It remains in the keyboard order and shows itself when focused.
+
 ## 1.10.1 - 2026-10-13
 
 - Form control borders now reach 3:1 contrast in light and dark mode. Text inputs, date inputs, selects, checkboxes and radio buttons had a border of about 1.4:1 in light mode and 2.7:1 on a card in dark mode, below the 3:1 that WCAG 1.4.11 asks for the edge of a control. This adds Marin UI's new `--app-control-border` token (`#737d8c` light, `#7a8896` dark) and maps Pico's form border to it.

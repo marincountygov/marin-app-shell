@@ -228,6 +228,8 @@ Attributes:
 | `label` | `Feedback` | Visible link text. |
 | `target` | `_blank` | Link target. Use an empty value for same-window navigation. |
 
+While the page is scrolled so that the footer is on screen, the control hides itself (`data-over-footer` on the link, `opacity: 0`, no pointer events) so it cannot cover footer links. On a page too short to scroll it stays visible. It stays in the keyboard order and shows itself when it receives focus.
+
 ## Automatically provided infrastructure
 
 On initial load, the shell:

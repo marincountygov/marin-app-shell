@@ -5,9 +5,9 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
-## Version 1.10.1
+## Version 1.11.0
 
-Version 1.10.1 raises the border of form controls (text and date inputs, selects, checkboxes, radio buttons) to 3:1 contrast in light and dark mode. Version 1.10.0 shows license names (MIT License), links Marin App Shell and Marin UI to their Tech details on MarinOS, and lets a hash open an element inside a tab section. Version 1.9.0 adds a Services used part to the Tech section, declared in each app's `marin.yml`. Version 1.8.0 adds the standard Tech section and footer link: languages, dependencies and bundled components, a link to the software bill of materials, and a declared AI-use statement, all read from MarinOS's shared `data/tech.json`. Version 1.7.0 builds the Security section's "Built for" line from `project.audience` in `marin.yml`, so it can't drift from the manifest. It includes the 1.6.0 ARIA tabs keyboard pattern and the 1.5.1 contrast fix.
+Version 1.11.0 refreshes the pinned Marin UI baseline from 1.19.0 to 1.24.0. The shell no longer carries its own copies of the score gauge, the accent-text-on-tint colors, the lighter page background, the form control border, or the dark-mode Alpha badge, because Marin UI now has all of them. Nothing should look different, except the dark-mode Beta badge, which now uses the lighter blue text Marin UI intended. The floating Feedback button also hides while the footer is on screen so it cannot cover footer links. Version 1.10.1 raises the border of form controls (text and date inputs, selects, checkboxes, radio buttons) to 3:1 contrast in light and dark mode. Version 1.10.0 shows license names (MIT License), links Marin App Shell and Marin UI to their Tech details on MarinOS, and lets a hash open an element inside a tab section. Version 1.9.0 adds a Services used part to the Tech section, declared in each app's `marin.yml`. Version 1.8.0 adds the standard Tech section and footer link: languages, dependencies and bundled components, a link to the software bill of materials, and a declared AI-use statement, all read from MarinOS's shared `data/tech.json`. Version 1.7.0 builds the Security section's "Built for" line from `project.audience` in `marin.yml`, so it can't drift from the manifest. It includes the 1.6.0 ARIA tabs keyboard pattern and the 1.5.1 contrast fix.
 
 ## Version 1.5.1
 
@@ -33,14 +33,14 @@ Version 1.3.0 adds each app's Google Lighthouse accessibility score, the WCAG 2.
 
 Version 1.2.2 improves the Alpha status badge in dark mode by using the County gold
 background with black text. This compatibility override is local to App Shell; Marin UI
-1.19.0 remains pinned unchanged, and Beta/Live presentation is unaffected.
+the shell kept its own copy of this override until Version 1.11.0, when the same treatment arrived in Marin UI 1.24.0 and the copy was removed.
 
 Version 1.2.1 makes the local application header read the recognized `alpha`, `beta`,
 or `live` value from the app's own `marin.yml` `project.status` and render the shared
 status badge beside `.app-title`. Catalog matching remains as the compatibility fallback
 when the local manifest is unavailable or does not contain a recognized maturity value.
 
-Version 1.2.0 imports the reviewed Marin UI 1.19.0 baseline and adds MarinOS
+Version 1.2.0 imported the reviewed Marin UI 1.19.0 baseline and adds MarinOS
 application-maturity status rendering. Catalog entries with `alpha`, `beta`, or
 `live` status render the shared `.app-status` badge in the MarinOS menu. The current
 application receives the same badge beside its name when the shell can match it to
@@ -181,7 +181,7 @@ src/marinos.js                        behavior; icon map generated from SVG file
              -> scripts/build.sh -> dist/
 ```
 
-The current UI input is an explicit import of the supplied Marin UI 1.19.0 checkout.
+The current UI input is an explicit import of the supplied Marin UI 1.24.0 checkout.
 The lock records its hashes and provenance. The build uses only these pinned inputs,
 never whatever a sibling repo happens to contain.
 Font URL rebasing and removal of legacy SVG stroke CSS are counted adapters;
