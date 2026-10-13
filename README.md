@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.12.0
+
+Version 1.12.0 gives the MarinOS banner the same background and text colors as the footer in light and dark mode, instead of solid black. Version 1.11.1 is described below.
+
 ## Version 1.11.1
 
 Version 1.11.1 links `security.txt` and the WCAG 2.2 standard once each in the Security and Accessibility sections instead of twice. `scripts/check.sh` also warns when Marin UI has a newer version than the pinned baseline. Version 1.11.0 is described below.
