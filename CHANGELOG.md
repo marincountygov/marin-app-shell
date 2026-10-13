@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.10.1 - 2026-10-13
+
+- Form control borders now reach 3:1 contrast in light and dark mode. Text inputs, date inputs, selects, checkboxes and radio buttons had a border of about 1.4:1 in light mode and 2.7:1 on a card in dark mode, below the 3:1 that WCAG 1.4.11 asks for the edge of a control. This adds Marin UI's new `--app-control-border` token (`#737d8c` light, `#7a8896` dark) and maps Pico's form border to it.
+- `scripts/check.sh --browser` no longer stops on macOS's default bash when no font source is given.
+- Carried in the shell as a narrowly scoped compatibility addition. Marin UI stays pinned at 1.19.0; the same fix ships upstream in Marin UI 1.23.0 and can be dropped here when the pinned baseline is refreshed.
+
 ## 1.10.0 - 2026-10-08
 
 - Tech pages show license names as GitHub reports them ("MIT License", not "MIT"). `data/tech.json` carries a `licenseNames` map from SPDX id to name; an id with no known name is shown as it is.
