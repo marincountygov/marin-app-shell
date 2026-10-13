@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.12.1
+
+Version 1.12.1 refreshes the pinned Marin UI baseline from 1.24.0 to 1.25.0. Marin UI now has the banner colors that the shell was carrying as its own copy in 1.12.0, so that copy is removed. Nothing looks different. Version 1.12.0 is described below.
+
 ## Version 1.12.0
 
 Version 1.12.0 gives the MarinOS banner the same background and text colors as the footer in light and dark mode, instead of solid black. Version 1.11.1 is described below.
@@ -189,7 +193,7 @@ src/marinos.js                        behavior; icon map generated from SVG file
              -> scripts/build.sh -> dist/
 ```
 
-The current UI input is an explicit import of the supplied Marin UI 1.24.0 checkout.
+The current UI input is an explicit import of the supplied Marin UI 1.25.0 checkout.
 The lock records its hashes and provenance. The build uses only these pinned inputs,
 never whatever a sibling repo happens to contain.
 Font URL rebasing and removal of legacy SVG stroke CSS are counted adapters;
