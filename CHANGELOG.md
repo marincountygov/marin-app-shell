@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.12.0 - 2026-10-14
+
+- The MarinOS banner now has the same background and text colors as the footer in light and dark mode: a surface-colored bar with muted text and a line under it, instead of solid black with white text. The "MarinOS" menu button takes the bar's text color and turns accent blue on hover.
+- Carried in the shell as a narrowly scoped compatibility addition. Marin UI stays pinned at 1.24.0; the same change ships upstream in Marin UI 1.25.0 and can be dropped here when the pinned baseline is refreshed.
+
 ## 1.11.1 - 2026-10-13
 
 - The Security section links `security.txt` once (under "Report an issue") and the Accessibility section links the WCAG 2.2 standard once (under "Accessibility standard"). Both were linked twice in nearby text, which web accessibility scanners flag as a redundant link.
