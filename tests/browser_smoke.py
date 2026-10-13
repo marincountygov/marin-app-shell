@@ -195,6 +195,23 @@ def run_test(source: Path | None, screenshots: Path | None) -> None:
                     require(page.locator("#late-icon svg").evaluate("el=>getComputedStyle(el).strokeWidth")=="2px", "Late legacy icon fallback failed")
                     require(page.locator("#late-icon svg").evaluate("el=>getComputedStyle(el).fill")=="none", "Late legacy icon filled unexpectedly")
                     require(page.evaluate("document.documentElement.scrollWidth <= innerWidth + 1"), f"Horizontal overflow at {width}")
+                    # The floating Feedback button hides while the footer is on screen, but stays reachable.
+                    feedback = page.locator("a.app-feedback")
+                    page.evaluate("document.getElementById('start').style.minHeight = '2400px'; window.scrollTo(0, 0)")
+                    page.wait_for_timeout(150)
+                    require(feedback.get_attribute("data-over-footer") is None, "Feedback button hidden at the top of a long page")
+                    require(feedback.evaluate("el=>getComputedStyle(el).opacity") == "1", "Feedback button not visible at the top")
+                    page.evaluate("window.scrollTo(0, document.documentElement.scrollHeight)")
+                    page.wait_for_timeout(300)
+                    require(feedback.get_attribute("data-over-footer") is not None, "Feedback button still marked visible at the footer")
+                    require(feedback.evaluate("el=>getComputedStyle(el).opacity") == "0", "Feedback button covers the footer")
+                    feedback.focus()
+                    page.wait_for_timeout(300)
+                    require(feedback.evaluate("el=>getComputedStyle(el).opacity") == "1", "Feedback button not shown on keyboard focus")
+                    # Put keyboard navigation back at the start of the page for the checks below.
+                    page.evaluate("document.activeElement.blur(); document.body.setAttribute('tabindex','-1'); document.body.focus(); document.body.removeAttribute('tabindex')")
+                    page.evaluate("document.getElementById('start').style.minHeight = ''; window.scrollTo(0, 0)")
+                    page.wait_for_timeout(150)
                     # Keyboard focus remains visible on the application-name home link.
                     page.keyboard.press("Tab"); page.keyboard.press("Tab"); page.keyboard.press("Tab")
                     require(page.locator(".app-title__link").evaluate("el=>el===document.activeElement"), "Application name is not the third keyboard stop")
