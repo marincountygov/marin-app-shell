@@ -212,6 +212,10 @@ Apps with local destinations that belong in the footer can prepend them with a `
 
 That renders the local footer navigation in this order: **Projects**, **Status**, **About**, **Security**, **Accessibility**, **Tech**, **Updates**. The separate bottom MarinOS link is omitted because the application is itself the MarinOS platform home. Ordinary applications should keep the default component with no template and no `hide-platform-link`.
 
+## Loading messages
+
+Any "still loading" text, in the shell or in an app, reads `Loading {app name}…` (for example `Loading Marin Reach…`). The shell's own sections use `window.MarinAppShell.loadingMessage()`, which builds that text from the `app-name` on `<marin-app-info>`. Use it, or the same wording, for an app's own loading message rather than naming the data being loaded.
+
 ## `marin-app-feedback`
 
 Renders the fixed Feedback control.

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.12.2 - 2026-10-14
+
+- Loading messages in the Security, Accessibility, Tech and Updates sections now all say "Loading {app name}…", for example "Loading Marin Reach…", instead of "Loading security information…" and similar. They come from one helper, `window.MarinAppShell.loadingMessage()`, which apps can use for their own loading text so the wording is the same everywhere.
+
 ## 1.12.1 - 2026-10-14
 
 - The pinned Marin UI baseline moves from 1.24.0 to 1.25.0. Marin UI now has the MarinOS banner colors that the shell carried as its own compatibility block in 1.12.0, so that block is removed. Computed styles were compared before and after across the demo page and a real app in light and dark mode, and are identical.

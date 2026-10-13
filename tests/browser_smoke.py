@@ -159,6 +159,11 @@ def run_test(source: Path | None, screenshots: Path | None) -> None:
                     check_fonts(page)
                     header_parity(page, fonts)
                     require(page.evaluate("window.MarinAppShell.version") == manifest["shellVersion"], "Wrong runtime version")
+                    app_label = page.locator("marin-app-info").get_attribute("app-name")
+                    require(page.evaluate("window.MarinAppShell.loadingMessage()") == f"Loading {app_label}\u2026", "Loading message should name the app")
+                    shell_source = (ROOT / "src/marinos.js").read_text(encoding="utf-8")
+                    require(not any(old in shell_source for old in ("Loading security information", "Loading accessibility score", "Loading technology information", "Loading recent commits", "Loading latest commits")),
+                            "A section still uses its own loading wording")
                     require(page.locator(".skip-link").count()==1 and page.locator("#app-status-message").count()==1, "Shared accessibility infrastructure missing")
                     require(page.locator("#start").is_visible() and page.locator("#about").is_hidden(), "Default route broken")
                     require(page.locator(".app-identity > .app-title-row").count()==1, "Identity title row missing")
