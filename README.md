@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.12.2
+
+Version 1.12.2 makes every loading message in the shell's own sections say "Loading {app name}…" (for example "Loading Marin Reach…") instead of naming the kind of information. Version 1.12.1 is described below.
+
 ## Version 1.12.1
 
 Version 1.12.1 refreshes the pinned Marin UI baseline from 1.24.0 to 1.25.0. Marin UI now has the banner colors that the shell was carrying as its own copy in 1.12.0, so that copy is removed. Nothing looks different. Version 1.12.0 is described below.
