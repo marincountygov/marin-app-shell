@@ -57,6 +57,8 @@ Use the installer for each upgrade rather than copying only `dist/`.
 The shell itself is same-origin. Optional features can make these requests:
 
 - MarinOS catalog menu: `https://marincountygov.github.io/marin-os/catalog.json`
+- Accessibility section score: `https://marincountygov.github.io/marin-os/data/lighthouse.json`
+- Tech section: `https://marincountygov.github.io/marin-os/data/tech.json`
 - Updates section: `https://api.github.com`
 - Security section: the app's same-origin `security.json`
 
@@ -70,6 +72,10 @@ A meta-delivered CSP that enables all shell features needs an appropriate `conne
 ```
 
 An app that disables the catalog or Updates behavior can use a narrower policy.
+
+An app that lists the three MarinOS URLs individually (as `marin-app-template` does) must include the score and Tech URLs. If they are missing, the Accessibility and Tech sections show that they couldn't load.
+
+When the page is served from `localhost`, the Accessibility and Tech sections request `http://localhost:8935/data/lighthouse.json` and `http://localhost:8935/data/tech.json` (a local MarinOS server) instead. A CSP that follows the guidance above blocks those requests, so expect a blocked-request message in the console and a "couldn't load" note in those sections during local development. Check them on the deployed app.
 
 
 ## Footer contract
