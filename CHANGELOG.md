@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.11.1 - 2026-10-13
+
+- The Security section links `security.txt` once (under "Report an issue") and the Accessibility section links the WCAG 2.2 standard once (under "Accessibility standard"). Both were linked twice in nearby text, which web accessibility scanners flag as a redundant link.
+- `scripts/check.sh` warns, without failing, when a sibling `marin-ui` checkout has a newer `BRAND_VERSION` than the pinned `MARIN_UI_VERSION`, so the baseline does not fall behind unnoticed.
+
 ## 1.11.0 - 2026-10-13
 
 - The pinned Marin UI baseline moves from 1.19.0 to 1.24.0.

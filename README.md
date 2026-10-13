@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.11.1
+
+Version 1.11.1 links `security.txt` and the WCAG 2.2 standard once each in the Security and Accessibility sections instead of twice. `scripts/check.sh` also warns when Marin UI has a newer version than the pinned baseline. Version 1.11.0 is described below.
+
 ## Version 1.11.0
 
 Version 1.11.0 refreshes the pinned Marin UI baseline from 1.19.0 to 1.24.0. The shell no longer carries its own copies of the score gauge, the accent-text-on-tint colors, the lighter page background, the form control border, or the dark-mode Alpha badge, because Marin UI now has all of them. Nothing should look different, except the dark-mode Beta badge, which now uses the lighter blue text Marin UI intended. The floating Feedback button also hides while the footer is on screen so it cannot cover footer links. Version 1.10.1 raises the border of form controls (text and date inputs, selects, checkboxes, radio buttons) to 3:1 contrast in light and dark mode. Version 1.10.0 shows license names (MIT License), links Marin App Shell and Marin UI to their Tech details on MarinOS, and lets a hash open an element inside a tab section. Version 1.9.0 adds a Services used part to the Tech section, declared in each app's `marin.yml`. Version 1.8.0 adds the standard Tech section and footer link: languages, dependencies and bundled components, a link to the software bill of materials, and a declared AI-use statement, all read from MarinOS's shared `data/tech.json`. Version 1.7.0 builds the Security section's "Built for" line from `project.audience` in `marin.yml`, so it can't drift from the manifest. It includes the 1.6.0 ARIA tabs keyboard pattern and the 1.5.1 contrast fix.

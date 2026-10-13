@@ -562,9 +562,9 @@
           const technicalHeading = document.createElement("h3");
           technicalHeading.textContent = "Technical information";
           const technicalList = document.createElement("ul");
+          // security.txt is already linked under "Report an issue" above, so it is not repeated here.
           [
             [securityJson, "security.json"],
-            [securityContactUrl, "security.txt"],
           ].forEach(([href, label]) => {
             const item = document.createElement("li");
             const link = document.createElement("a");
@@ -588,11 +588,9 @@
 
         if (key === "accessibility") {
           const standardParagraph = document.createElement("p");
-          standardParagraph.append(document.createTextNode(`${appName} targets `));
-          const wcagLink = document.createElement("a");
-          wcagLink.href = WCAG_URL;
-          wcagLink.textContent = "WCAG 2.2 Level AA";
-          standardParagraph.append(wcagLink, document.createTextNode("."));
+          // The link to WCAG is given once, under "Accessibility standard" below; repeating the same
+          // link in nearby text only adds noise for people using a screen reader.
+          standardParagraph.textContent = `${appName} targets WCAG 2.2 Level AA.`;
           section.append(standardParagraph);
 
           if (templates.accessibility) section.append(templates.accessibility);
