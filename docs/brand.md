@@ -11,7 +11,7 @@ not replace apps' selected icons. Owners should reconcile that wording upstream.
 
 ## What is pinned
 
-`vendor/marin-ui/app-brand.css` is byte-identical to the supplied Marin UI 1.24.0
+`vendor/marin-ui/app-brand.css` is byte-identical to the supplied Marin UI 1.25.0
 checkout. `vendor/marin-ui/lock.json` records the imported `BRAND_VERSION`, file
 hashes, and provenance. The default build checks those hashes; it does not download
 or automatically adopt upstream `main`.
@@ -103,3 +103,7 @@ no longer holds them. `src/brand-compat.css` (icons, fonts) is unrelated and sta
 Marin UI releases a fix the shell needs before a refresh, add a labeled compatibility block
 to `src/shell.css` that names the Marin UI version carrying the fix, and remove it at the
 next refresh.
+
+## Baseline refresh in 1.12.1
+
+Version 1.12.0 carried the new MarinOS banner colors as a labeled compatibility block in `src/shell.css` because Marin UI 1.25.0 had not been imported yet. Version 1.12.1 imports Marin UI 1.25.0 and removes that block, following the process above. Computed styles were compared before and after and are identical.

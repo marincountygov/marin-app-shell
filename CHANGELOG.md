@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.12.1 - 2026-10-14
+
+- The pinned Marin UI baseline moves from 1.24.0 to 1.25.0. Marin UI now has the MarinOS banner colors that the shell carried as its own compatibility block in 1.12.0, so that block is removed. Computed styles were compared before and after across the demo page and a real app in light and dark mode, and are identical.
+
 ## 1.12.0 - 2026-10-14
 
 - The MarinOS banner now has the same background and text colors as the footer in light and dark mode: a surface-colored bar with muted text and a line under it, instead of solid black with white text. The "MarinOS" menu button takes the bar's text color and turns accent blue on hover.
