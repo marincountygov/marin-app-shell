@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "name": "Marin App Shell",
-  "shellVersion": "1.12.2",
-  "marinUiVersion": "1.25.0",
+  "shellVersion": "1.13.0",
+  "marinUiVersion": "1.26.0",
   "installPath": "vendor/marinos",
   "fontPathContract": [
     "../fonts/Jost-wght.ttf",
@@ -52,11 +52,11 @@
   "files": {
     "README.md": {
       "bytes": 1574,
-      "sha256": "5df3f5cf1fc390f76c9203558b08f799566263cce774db510ef16db1baeaba77"
+      "sha256": "230cb86b367c808dd21b527efd1b28998ce60bf2343948590d71f811f6bc6117"
     },
     "brand-source.json": {
       "bytes": 2327,
-      "sha256": "6ee3b1f7c69bffa009bdd5a51d4680be4dc4f74e8f4e5860b8fe1707c3b156e2"
+      "sha256": "b2d8f3f8321d7b7d6d57ca454e96258344f457616b883a062a374a2e2905a54f"
     },
     "icons/lucide/LICENSE": {
       "bytes": 3208,
@@ -92,11 +92,11 @@
     },
     "marinos.css": {
       "bytes": 123068,
-      "sha256": "1519b03dfdf8a83b08c23bb459891e44401b668f937561cc9310d9a9dc0f2761"
+      "sha256": "acacd8f21d9a87dc1388eeaeb601c776f50e9069cd5e8ee5ce12c7727d62e0f7"
     },
     "marinos.js": {
-      "bytes": 92749,
-      "sha256": "f10a36d36cd70789f730f5d747535b70795a3387113d3ed2840914f2bb88068c"
+      "bytes": 93824,
+      "sha256": "b7fe3e203943aa32a76fa1eb01a1d2370c37444b53646bf66c643a2460f40512"
     }
   }
 }

@@ -11,7 +11,7 @@ not replace apps' selected icons. Owners should reconcile that wording upstream.
 
 ## What is pinned
 
-`vendor/marin-ui/app-brand.css` is byte-identical to the supplied Marin UI 1.25.0
+`vendor/marin-ui/app-brand.css` is byte-identical to the supplied Marin UI 1.26.0
 checkout. `vendor/marin-ui/lock.json` records the imported `BRAND_VERSION`, file
 hashes, and provenance. The default build checks those hashes; it does not download
 or automatically adopt upstream `main`.

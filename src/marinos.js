@@ -1102,46 +1102,60 @@
     heading.append(" ", anchor);
   });
 
-  const toc = document.querySelector(".docs-toc, .toc");
-  const tocLinks = toc
-    ? Array.from(toc.querySelectorAll('a[href^="#"]')).filter((link) => link.hash.length > 1)
-    : [];
-  const tocTargets = tocLinks
-    .map((link) => ({ link, target: document.getElementById(decodeURIComponent(link.hash.slice(1))) }))
-    .filter((item) => item.target);
+  // "On this page" table of contents: every .docs-toc / .toc marks the link for the
+  // section being read with aria-current="location" (CSS makes it bold and accent
+  // blue). The current section is the last one whose top has scrolled past a line
+  // near the top of the window; at the very bottom of the page the last section
+  // counts, even when it is too short to reach that line. A page that adds its
+  // table of contents after load calls window.marinOnThisPage(nav).
+  function marinOnThisPage(toc) {
+    if (!toc || toc.dataset.onThisPageReady) return;
+    const items = Array.from(toc.querySelectorAll('a[href^="#"]'))
+      .filter((link) => link.hash.length > 1)
+      .map((link) => ({ link, target: document.getElementById(decodeURIComponent(link.hash.slice(1))) }))
+      .filter((item) => item.target);
+    if (!items.length) return;
+    toc.dataset.onThisPageReady = "true";
 
-  let scrollScheduled = false;
+    let scheduled = false;
+    function update() {
+      scheduled = false;
+      const threshold = Math.max(96, window.innerHeight * 0.28);
+      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+      let current = items[0];
+      items.forEach((item) => {
+        if (item.target.offsetParent === null) return;
+        if (item.target.getBoundingClientRect().top <= threshold) current = item;
+      });
+      if (atBottom) current = items[items.length - 1];
+      items.forEach((item) => {
+        if (item === current) item.link.setAttribute("aria-current", "location");
+        else item.link.removeAttribute("aria-current");
+      });
+    }
+    function schedule() {
+      if (scheduled) return;
+      scheduled = true;
+      window.requestAnimationFrame(update);
+    }
 
-  function updateCurrentSection() {
-    scrollScheduled = false;
-    if (!tocTargets.length) return;
-
-    const threshold = Math.max(96, window.innerHeight * 0.28);
-    let current = tocTargets[0];
-
-    tocTargets.forEach((item) => {
-      if (item.target.offsetParent === null) return;
-      if (item.target.getBoundingClientRect().top <= threshold) current = item;
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    window.addEventListener("hashchange", schedule);
+    // Stop listening when the page replaces this table of contents.
+    const watcher = new MutationObserver(() => {
+      if (!document.contains(toc)) {
+        window.removeEventListener("scroll", schedule);
+        window.removeEventListener("resize", schedule);
+        window.removeEventListener("hashchange", schedule);
+        watcher.disconnect();
+      }
     });
-
-    tocTargets.forEach((item) => {
-      if (item === current) item.link.setAttribute("aria-current", "location");
-      else item.link.removeAttribute("aria-current");
-    });
+    watcher.observe(document.body, { childList: true, subtree: true });
+    update();
   }
-
-  function scheduleCurrentSectionUpdate() {
-    if (scrollScheduled) return;
-    scrollScheduled = true;
-    window.requestAnimationFrame(updateCurrentSection);
-  }
-
-  if (tocTargets.length) {
-    window.addEventListener("scroll", scheduleCurrentSectionUpdate, { passive: true });
-    window.addEventListener("resize", scheduleCurrentSectionUpdate);
-    window.addEventListener("hashchange", scheduleCurrentSectionUpdate);
-    updateCurrentSection();
-  }
+  window.marinOnThisPage = marinOnThisPage;
+  document.querySelectorAll(".docs-toc, .toc").forEach(marinOnThisPage);
 
   // Sortable table columns: a <thead> button[data-sort-key="foo"] sorts the
   // tbody's rows by their data-sort-foo attribute. Rows don't need any JS

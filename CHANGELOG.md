@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.13.0 - 2026-10-15
+
+- The pinned Marin UI baseline moves from 1.25.0 to 1.26.0, and the shell takes the matching "On this page" behavior. A table of contents (`.docs-toc` or `.toc`) now works for every list on a page, not just the first, and the last section is marked when the reader reaches the bottom of the page. A new `window.marinOnThisPage(nav)` lets an app that builds its sections with JavaScript start a list it adds after the page loads. Before, Marin Learn carried its own copy of this code. Marin UI's CSS had no change, so nothing looks different.
+
 ## 1.12.2 - 2026-10-14
 
 - Loading messages in the Security, Accessibility, Tech and Updates sections now all say "Loading {app name}…", for example "Loading Marin Reach…", instead of "Loading security information…" and similar. They come from one helper, `window.MarinAppShell.loadingMessage()`, which apps can use for their own loading text so the wording is the same everywhere.
