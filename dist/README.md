@@ -1,6 +1,6 @@
 # Marin App Shell 1.13.0
 
-Pinned Marin UI baseline: 1.26.0.
+Pinned Marin UI baseline: 1.27.0.
 
 This directory is generated. Do not edit files inside an application. Load
 `marinos.css` before app CSS and deferred `marinos.js` before app JavaScript.

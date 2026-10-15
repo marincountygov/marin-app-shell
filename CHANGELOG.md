@@ -2,7 +2,7 @@
 
 ## 1.13.0 - 2026-10-15
 
-- The pinned Marin UI baseline moves from 1.25.0 to 1.26.0, and the shell takes the matching "On this page" behavior. A table of contents (`.docs-toc` or `.toc`) now works for every list on a page, not just the first, and the last section is marked when the reader reaches the bottom of the page. A new `window.marinOnThisPage(nav)` lets an app that builds its sections with JavaScript start a list it adds after the page loads. Before, Marin Learn carried its own copy of this code. Marin UI's CSS had no change, so nothing looks different.
+- The pinned Marin UI baseline moves from 1.25.0 to 1.27.0, and the shell takes the matching "On this page" behavior. A table of contents (`.docs-toc` or `.toc`) now works for every list on a page, not just the first, and the last section is marked when the reader reaches the bottom of the page. A list can set where its reading line sits with `data-on-this-page-line` (pixels from the top), which suits a page of short sections. A new `window.marinOnThisPage(nav)` lets an app that builds its sections with JavaScript start a list it adds after the page loads. Before, Marin Learn carried its own copy of this code. Marin UI's CSS had no change, so nothing looks different.
 
 ## 1.12.2 - 2026-10-14
 

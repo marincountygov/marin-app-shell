@@ -7,7 +7,7 @@ configuration, and app-specific CSS/JavaScript.
 
 ## Version 1.13.0
 
-Version 1.13.0 refreshes the pinned Marin UI baseline from 1.25.0 to 1.26.0 and adds the matching "On this page" behavior. Every table of contents on a page now marks the section being read, the last section is marked at the bottom of the page, and `window.marinOnThisPage(nav)` starts a list that an app adds after the page loads. Nothing looks different. Version 1.12.2 is described below.
+Version 1.13.0 refreshes the pinned Marin UI baseline from 1.25.0 to 1.27.0 and adds the matching "On this page" behavior. Every table of contents on a page now marks the section being read, the last section is marked at the bottom of the page, and `window.marinOnThisPage(nav)` starts a list that an app adds after the page loads. Nothing looks different. Version 1.12.2 is described below.
 
 ## Version 1.12.2
 
@@ -201,7 +201,7 @@ src/marinos.js                        behavior; icon map generated from SVG file
              -> scripts/build.sh -> dist/
 ```
 
-The current UI input is an explicit import of the supplied Marin UI 1.26.0 checkout.
+The current UI input is an explicit import of the supplied Marin UI 1.27.0 checkout.
 The lock records its hashes and provenance. The build uses only these pinned inputs,
 never whatever a sibling repo happens to contain.
 Font URL rebasing and removal of legacy SVG stroke CSS are counted adapters;

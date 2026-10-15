@@ -7,7 +7,7 @@
   }
 
   const SHELL_VERSION = "1.13.0";
-  const MARIN_UI_VERSION = "1.26.0";
+  const MARIN_UI_VERSION = "1.27.0";
   const MARINOS_URL = "https://marincountygov.github.io/marin-os/";
   const MARINOS_STATUS_URL = `${MARINOS_URL}#status`;
   const CATALOG_URL = `${MARINOS_URL}catalog.json`;
@@ -1106,7 +1106,8 @@
   // section being read with aria-current="location" (CSS makes it bold and accent
   // blue). The current section is the last one whose top has scrolled past a line
   // near the top of the window; at the very bottom of the page the last section
-  // counts, even when it is too short to reach that line. A page that adds its
+  // counts, even when it is too short to reach that line. Set data-on-this-page-line
+  // on the list to move the line. A page that adds its
   // table of contents after load calls window.marinOnThisPage(nav).
   function marinOnThisPage(toc) {
     if (!toc || toc.dataset.onThisPageReady) return;
@@ -1120,7 +1121,11 @@
     let scheduled = false;
     function update() {
       scheduled = false;
-      const threshold = Math.max(96, window.innerHeight * 0.28);
+      // The reading line: a quarter of the way down the window by default, or the
+      // pixel distance from the top set with data-on-this-page-line (a page of short
+      // sections wants a line near the top so a section at the top is the current one).
+      const line = Number(toc.dataset.onThisPageLine);
+      const threshold = line > 0 ? line : Math.max(96, window.innerHeight * 0.28);
       const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
       let current = items[0];
       items.forEach((item) => {
