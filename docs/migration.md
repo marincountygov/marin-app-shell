@@ -53,7 +53,7 @@ This creates or replaces:
 marin-unzipper/vendor/marinos/
 ```
 
-The installer also synchronizes the two required fonts, Open Sans license, and four
+The installer also synchronizes the two required fonts, Open Sans license, and six
 shell-owned Lucide icons/license at standard `vendor/fonts/` and `vendor/icons/lucide/`
 paths. It preserves unrelated files. Do not delete those existing directories.
 A sibling `marin-ui` (or explicit `--font-source`) supplies the hash-pinned font bytes.

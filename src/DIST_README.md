@@ -19,7 +19,7 @@ The installer copies this directory to `APP/vendor/marinos/` and synchronizes:
 - `vendor/fonts/Jost-wght.ttf`
 - `vendor/fonts/open-sans/OpenSans-VariableFont_wdth,wght.woff2`
 - `vendor/fonts/open-sans/OFL.txt`
-- `vendor/icons/lucide/{layout-grid,chevron-down,copy,check}.svg` and `LICENSE`
+- `vendor/icons/lucide/{layout-grid,chevron-down,copy,check,panel-left-open,panel-right-open}.svg` and `LICENSE`
 
 Fonts are read from a verified shell `fonts/` cache or a sibling `marin-ui`
 checkout, or from `--font-source /path/to/marin-ui`. Required hashes are in

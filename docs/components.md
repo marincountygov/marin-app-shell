@@ -234,6 +234,29 @@ Attributes:
 
 While the page is scrolled so that the footer is on screen, the control hides itself (`data-over-footer` on the link, `opacity: 0`, no pointer events) so it cannot cover footer links. On a page too short to scroll it stays visible. It stays in the keyboard order and shows itself when it receives focus.
 
+## Collapsible filter panel
+
+A filter column beside a list of results can be hidden at any width. Requirement: `marin-digital-standards/product-design/responsive-design.md`; markup and CSS come from Marin UI 1.28.0 and later (`.search-layout`, `.search-side`, `.search-sidebar`, `.search-results`, `.filter-toggle`).
+
+```html
+<form class="search-layout" aria-label="Filter engagements">
+  <div class="search-side">
+    <button type="button" class="filter-toggle" data-filter-toggle="engagements" aria-controls="filter-panel"></button>
+    <aside id="filter-panel" class="search-sidebar" aria-label="Filters">…fields…</aside>
+  </div>
+  <div class="search-results">…results…</div>
+</form>
+```
+
+Leave the button empty. The shell draws the Lucide `panel-right-open` icon while the panel is open and `panel-left-open` while it is hidden (an app that supplies its own SVGs marks them `data-filter-icon="open"` and `"closed"`), and:
+
+- sets `aria-expanded` on the button, `data-open` on the panel and `data-filters="open"` or `"closed"` on the `.search-layout`;
+- starts open on wide screens and closed up to 850 px; a choice made on a wide screen is remembered per app and per toggle in `localStorage` (key `marinos.filters.<app id>.<data-filter-toggle>`, with `<body data-app-id>` as the app id), and a narrow-screen choice is never saved;
+- names the button "Filters" (or `data-filter-label`) and adds ", N active" when the app keeps `data-filter-active="N"` on it (the shell watches the attribute), since the button has no visible text;
+- dispatches a bubbling `marin-filters-change` event on the layout with `detail: { open, button, panel }`, so an app can measure again anything sized by the results (a Leaflet map calls `invalidateSize()`).
+
+Hiding the panel never changes a filter; the app keeps filtering and still says what is active.
+
 ## Automatically provided infrastructure
 
 On initial load, the shell:

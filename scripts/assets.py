@@ -13,7 +13,7 @@ FONT_PATHS = (
     "vendor/fonts/open-sans/OpenSans-VariableFont_wdth,wght.woff2",
     "vendor/fonts/open-sans/OFL.txt",
 )
-ICON_NAMES = ("check", "chevron-down", "copy", "layout-grid")
+ICON_NAMES = ("check", "chevron-down", "copy", "layout-grid", "panel-left-open", "panel-right-open")
 SVG_ATTRIBUTES = {
     "viewBox": "0 0 24 24", "fill": "none", "stroke": "currentColor",
     "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round",

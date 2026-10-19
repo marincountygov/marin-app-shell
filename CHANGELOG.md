@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.14.0 - 2026-10-22
+
+- The pinned Marin UI baseline moves from 1.27.0 to 1.28.1, and the shell takes the matching collapsible filter panel. A `button[data-filter-toggle]` at the top of a filter column (inside a `.search-layout`) hides and shows the panel named by its `aria-controls`. The shell draws the Lucide `panel-right-open` icon while the panel is open and `panel-left-open` while it is hidden, sets `aria-expanded`, `data-open` and `data-filters`, starts open on wide screens and closed up to 850 px, remembers a wide-screen choice per app and toggle in `localStorage`, names the button "Filters" plus ", N active" from `data-filter-active`, and fires a bubbling `marin-filters-change` event so an app can resize anything sized by the results. Hiding a panel never changes a filter. A page with no such button is unaffected. Why: `marin-reach` and `marin-mentions` each carried their own copy of this CSS and script; one owner means one fix. Documented in `docs/components.md`.
+- The two icons are added to the shell's managed Lucide icons (`panel-left-open`, `panel-right-open`, now six), embedded from the vendored SVG files like the others. The installer now also installs them into each app's `vendor/icons/lucide/`.
+- New `tests/browser_filter_panel.py` covers the behavior in the built shell.
+
 ## 1.13.0 - 2026-10-15
 
 - The pinned Marin UI baseline moves from 1.25.0 to 1.27.0, and the shell takes the matching "On this page" behavior. A table of contents (`.docs-toc` or `.toc`) now works for every list on a page, not just the first, and the last section is marked when the reader reaches the bottom of the page. A list can set where its reading line sits with `data-on-this-page-line` (pixels from the top), which suits a page of short sections. A new `window.marinOnThisPage(nav)` lets an app that builds its sections with JavaScript start a list it adds after the page loads. Before, Marin Learn carried its own copy of this code. Marin UI's CSS had no change, so nothing looks different.

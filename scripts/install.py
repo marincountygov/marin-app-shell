@@ -288,7 +288,7 @@ def install(app: Path, source: str | Path | None = None, dry_run: bool = False,
                 "Staged/installed marin.yml differs from the prepared scalar-only update")
     replace_many(app, sources, validate=validate, expected_files={"marin.yml": current})
     print(f"Installed Marin App Shell {version} in {app}")
-    print("Synchronized both font files, Open Sans license, and four shell Lucide icons/license.")
+    print("Synchronized both font files, Open Sans license, and the shell Lucide icons/license.")
     print(f"Updated marin.yml platform.shell to {version}. Review, test, and commit the app.")
 
 

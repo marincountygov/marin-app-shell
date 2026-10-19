@@ -49,6 +49,7 @@ python3 "$ROOT_DIR/tests/test_release.py"
 if [[ "$BROWSER" == 1 ]]; then
   python3 "$ROOT_DIR/tests/browser_smoke.py" ${FONT_ARGS[@]+"${FONT_ARGS[@]}"}
   python3 "$ROOT_DIR/tests/browser_icon_strokes.py"
+  python3 "$ROOT_DIR/tests/browser_filter_panel.py"
 else
   printf 'SKIP: Browser/font rendering not requested; add --browser for fixture checks.\n'
 fi
