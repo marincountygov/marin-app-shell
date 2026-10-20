@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.14.0
+
+Version 1.14.0 refreshes the pinned Marin UI baseline from 1.27.0 to 1.28.1 and adds the collapsible filter panel: a `button[data-filter-toggle]` at the top of a filter column hides and shows the panel it controls, with the Lucide `panel-right-open` and `panel-left-open` icons, no per-page JavaScript, a remembered wide-screen choice, a "Filters, N active" name and a `marin-filters-change` event. The two icons join the shell's managed Lucide icons (now six). Pages that do not use the button look and behave as before. See `docs/components.md`.
+
 ## Version 1.13.0
 
 Version 1.13.0 refreshes the pinned Marin UI baseline from 1.25.0 to 1.27.0 and adds the matching "On this page" behavior. Every table of contents on a page now marks the section being read, the last section is marked at the bottom of the page, and `window.marinOnThisPage(nav)` starts a list that an app adds after the page loads. Nothing looks different. Version 1.12.2 is described below.
@@ -194,14 +198,14 @@ catalog. See [components](docs/components.md) and [integration](docs/integration
 vendor/pico.min.css                    pinned base
 vendor/marin-ui/app-brand.css          byte-identical reviewed UI snapshot
 vendor/marin-ui/lock.json              provenance and hashes, including fonts
-vendor/icons/lucide/                   only the four shell-owned icons + license
+vendor/icons/lucide/                   only the six shell-owned icons + license
 src/brand-compat.css                   documented policy corrections pending upstream
 src/shell.css                         web-component integration and footer
 src/marinos.js                        behavior; icon map generated from SVG files
              -> scripts/build.sh -> dist/
 ```
 
-The current UI input is an explicit import of the supplied Marin UI 1.27.0 checkout.
+The current UI input is an explicit import of the supplied Marin UI 1.28.1 checkout.
 The lock records its hashes and provenance. The build uses only these pinned inputs,
 never whatever a sibling repo happens to contain.
 Font URL rebasing and removal of legacy SVG stroke CSS are counted adapters;

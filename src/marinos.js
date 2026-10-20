@@ -1162,6 +1162,86 @@
   window.marinOnThisPage = marinOnThisPage;
   document.querySelectorAll(".docs-toc, .toc").forEach(marinOnThisPage);
 
+  // Collapsible filter panels (Marin UI 1.28.0): any button[data-filter-toggle] hides and shows the filter
+  // panel it controls (aria-controls) inside its nearest .search-layout. The shell draws the Lucide
+  // panel-right-open icon while the panel is open and panel-left-open while it is hidden (unless the button holds
+  // its own SVGs marked data-filter-icon="open" and "closed"), sets aria-expanded, data-open on the panel and
+  // data-filters ("open" or "closed") on the layout, starts open on wide screens (a choice made there is remembered
+  // per app and toggle in this browser) and closed up to 850px, names the button "Filters" (or data-filter-label)
+  // plus ", N active" from data-filter-active, and dispatches a bubbling "marin-filters-change" event
+  // ({ detail: { open, button, panel } }) so an app can resize anything sized by the results. Hiding the panel
+  // never changes a filter. The button has no visible text, so its name is its label.
+  const filterToggles = document.querySelectorAll("button[data-filter-toggle]");
+  if (filterToggles.length) {
+    const narrowFilters = window.matchMedia("(max-width: 850px)");
+
+    function filterStorageKey(button) {
+      const app = document.body.dataset.appId || window.location.pathname;
+      return `marinos.filters.${app}.${button.dataset.filterToggle || "filters"}`;
+    }
+
+    function savedFilterChoice(button) {
+      try {
+        return window.localStorage.getItem(filterStorageKey(button));
+      } catch {
+        return null;
+      }
+    }
+
+    function setFilterPanel(button, open, remember) {
+      const layout = button.closest(".search-layout");
+      const panel = document.getElementById(button.getAttribute("aria-controls"));
+      if (!layout || !panel) return;
+      panel.dataset.open = String(open);
+      layout.dataset.filters = open ? "open" : "closed";
+      button.setAttribute("aria-expanded", String(open));
+      // SVG elements have no hidden property, so the attribute is toggled directly.
+      button.querySelector('[data-filter-icon="open"]')?.toggleAttribute("hidden", !open);
+      button.querySelector('[data-filter-icon="closed"]')?.toggleAttribute("hidden", open);
+      if (remember && !narrowFilters.matches) {
+        try {
+          window.localStorage.setItem(filterStorageKey(button), open ? "open" : "closed");
+        } catch {
+          // The choice is just not remembered.
+        }
+      }
+      layout.dispatchEvent(new CustomEvent("marin-filters-change", { bubbles: true, detail: { open, button, panel } }));
+    }
+
+    function nameFilterToggle(button) {
+      const count = Number(button.dataset.filterActive) || 0;
+      const base = button.dataset.filterLabel || "Filters";
+      const name = count ? `${base}, ${count} active` : base;
+      button.setAttribute("aria-label", name);
+      button.title = name;
+    }
+
+    function applyFilterDefaults() {
+      filterToggles.forEach((button) => {
+        setFilterPanel(button, !narrowFilters.matches && savedFilterChoice(button) !== "closed", false);
+      });
+    }
+
+    const filterNames = new MutationObserver((records) => records.forEach((record) => nameFilterToggle(record.target)));
+    filterToggles.forEach((button) => {
+      if (!button.querySelector("svg")) {
+        const open = createLucideIcon("panel-right-open");
+        const closed = createLucideIcon("panel-left-open");
+        open.dataset.filterIcon = "open";
+        closed.dataset.filterIcon = "closed";
+        button.append(open, closed);
+      }
+      nameFilterToggle(button);
+      filterNames.observe(button, { attributes: true, attributeFilter: ["data-filter-active", "data-filter-label"] });
+      button.addEventListener("click", () => {
+        const panel = document.getElementById(button.getAttribute("aria-controls"));
+        if (panel) setFilterPanel(button, panel.dataset.open !== "true", true);
+      });
+    });
+    narrowFilters.addEventListener("change", applyFilterDefaults);
+    applyFilterDefaults();
+  }
+
   // Sortable table columns: a <thead> button[data-sort-key="foo"] sorts the
   // tbody's rows by their data-sort-foo attribute. Rows don't need any JS
   // registration — this reads whatever data-sort-* attributes are present.

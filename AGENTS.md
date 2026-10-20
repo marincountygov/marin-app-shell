@@ -26,6 +26,6 @@ A change to component names, required attributes, standard section IDs, or distr
 - `vendor/marin-ui/` is a locked input, not editable shell source. Review upstream imports explicitly.
 - Keep compatibility adapters small and documented in `docs/brand.md`. Do not reintroduce a copied whole-brand CSS source file.
 - Fonts must use the standard local app paths, no `local()` preference or external font/CDN services. Installation synchronizes and verifies them.
-- Derive owned icon constants from the four vendored Lucide SVG files; never hand-draw geometry in JS.
+- Derive owned icon constants from the six vendored Lucide SVG files; never hand-draw geometry in JS.
 - Test actual rendered Open Sans/Jost, not merely CSS family names. Never report in-memory fixtures as successful HTTP loading.
 - Respect the installer's managed path list and rollback contract; preserve app files and unrelated fonts/icons.
