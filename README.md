@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.15.0
+
+Version 1.15.0 adds action buttons and tidies the filter panel. A button that does something other than submit a form (Copy, Link, CSV, RSS, Reset, PNG) now has one quiet look, `.action-button`: an icon with no visible text (named by `aria-label` and `title`), no fill, a border on hover, the same as the Copy button on a listing. A row of them is a `.action-toolbar` of `.action-group` clusters, with an optional `.action-search` text filter at the end of the row. On narrow screens the filter button sits beside the first element of the results instead of on a row of its own. A `.search-panel-header` puts the panel's visible name and its Reset button on one line. Pages that do not use these classes look and behave as before. See `docs/components.md`.
+
 ## Version 1.14.0
 
 Version 1.14.0 refreshes the pinned Marin UI baseline from 1.27.0 to 1.28.1 and adds the collapsible filter panel: a `button[data-filter-toggle]` at the top of a filter column hides and shows the panel it controls, with the Lucide `panel-right-open` and `panel-left-open` icons, no per-page JavaScript, a remembered wide-screen choice, a "Filters, N active" name and a `marin-filters-change` event. The two icons join the shell's managed Lucide icons (now six). Pages that do not use the button look and behave as before. See `docs/components.md`.
