@@ -257,6 +257,29 @@ Leave the button empty. The shell draws the Lucide `panel-right-open` icon while
 
 Hiding the panel never changes a filter; the app keeps filtering and still says what is active.
 
+On screens up to 850 px the button sits on the same row as the first child of `.search-results` (normally the tab row) rather than on a row of its own. Keep the first child of `.search-results` the thing you want beside the button.
+
+Name the panel with its visible heading, not a hidden label: put `<div class="search-panel-header"><h2 id="filter-panel-title" class="search-panel-title">Filter engagements</h2>…Reset…</div>` first in the panel and give the panel `aria-labelledby="filter-panel-title"`. A text filter that must always show goes in the results toolbar (below), not in the panel.
+
+## Action buttons
+
+A secondary button that does something other than submit a form (Copy, Link, CSV, RSS, Reset, PNG download) uses `.action-button`: an icon and no visible text, no fill, muted, a border on hover, the same quiet look as the `.copy-button` on a listing. Name it with `aria-label` and `title`. Only a button that submits a form is solid blue or dark. Pressed state is `aria-pressed="true"`; an inert link is `aria-disabled="true"`.
+
+```html
+<div class="action-toolbar">
+  <div class="action-group" role="group" aria-label="Share">
+    <button type="button" class="action-button" aria-label="Copy" title="Copy"><svg aria-hidden="true" viewBox="0 0 24 24">…</svg></button>
+    <button type="button" class="action-button" aria-label="Copy link" title="Copy link"><svg aria-hidden="true" viewBox="0 0 24 24">…</svg></button>
+  </div>
+  <div class="action-search" role="search" aria-label="Search engagements">
+    <label class="visually-hidden" for="filter-search">Search</label>
+    <input type="search" id="filter-search" placeholder="Search engagements…">
+  </div>
+</div>
+```
+
+A group whose buttons are all `hidden` hides itself. The label of `.action-search` stays in the markup, visually hidden, so the field keeps its name.
+
 ## Automatically provided infrastructure
 
 On initial load, the shell:

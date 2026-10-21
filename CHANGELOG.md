@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.15.0 - 2026-10-22
+
+- New action buttons. `.action-button` is the one look for a secondary button that does something other than submit a form (Copy, Link, CSV, RSS, Reset, PNG): no fill, muted text, a border on hover, an accent tint when pressed, like the `.copy-button` on a listing. It is icon-only: an SVG and no visible text, named by `aria-label` and `title`. Only a button that submits a form stays solid blue or dark. `.action-toolbar` holds a row of `.action-group` clusters (a bordered group, like a Bootstrap button toolbar) and hides a group whose buttons are all hidden. `.action-search` is a search field for the end of the row; its label is visually hidden and its wrapper is `role="search"`.
+- `.search-panel-header` and `.search-panel-title`: the filter panel's visible name and its Reset button on one line. The panel is named by it with `aria-labelledby`.
+- On screens up to 850 px the filter button now sits beside the first element of `.search-results` (the tab row) instead of on a row of its own, which removes a band of empty space. The open panel takes the full row below. Wide screens are unchanged.
+
 ## 1.14.0 - 2026-10-22
 
 - The pinned Marin UI baseline moves from 1.27.0 to 1.28.1, and the shell takes the matching collapsible filter panel. A `button[data-filter-toggle]` at the top of a filter column (inside a `.search-layout`) hides and shows the panel named by its `aria-controls`. The shell draws the Lucide `panel-right-open` icon while the panel is open and `panel-left-open` while it is hidden, sets `aria-expanded`, `data-open` and `data-filters`, starts open on wide screens and closed up to 850 px, remembers a wide-screen choice per app and toggle in `localStorage`, names the button "Filters" plus ", N active" from `data-filter-active`, and fires a bubbling `marin-filters-change` event so an app can resize anything sized by the results. Hiding a panel never changes a filter. A page with no such button is unaffected. Why: `marin-reach` and `marin-mentions` each carried their own copy of this CSS and script; one owner means one fix. Documented in `docs/components.md`.
