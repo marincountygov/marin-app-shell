@@ -80,6 +80,7 @@ def expected_distribution(root: Path = ROOT) -> dict[str, bytes]:
                          ("vendor/icons/lucide/LICENSE", "licenses/LUCIDE_LICENSE.txt"),
                          ("vendor/licenses/OPEN_SANS_OFL.txt", "licenses/OPEN_SANS_OFL.txt")):
         files[dest] = (root / source).read_bytes()
+    files["audit-buttons.py"] = (root / "scripts/audit-buttons.py").read_bytes()  # an app runs this from vendor/marinos/ in its own check
     for name in ICON_NAMES:
         files[f"icons/lucide/{name}.svg"] = (root / f"vendor/icons/lucide/{name}.svg").read_bytes()
     files["icons/lucide/LICENSE"] = (root / "vendor/icons/lucide/LICENSE").read_bytes()
