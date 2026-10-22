@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.17.0 - 2026-10-23
+
+- The pinned Marin UI baseline moves from 1.28.1 to 1.29.0, which adds 35 Lucide icons. The shell bundles them with its six existing icons.
+- Declarative icons: `data-icon="name"` draws a bundled icon before an element's content, `data-icon-end` after it, including elements added later. `window.MarinAppShell.icon(name)` returns the markup. Why: every app pasted its own copy of the same icon shapes; one source keeps them identical.
+- New button kinds: `.tab-list` and `.tab-button`, `.chip-button`, `.sort-button`, `.dialog-actions`, `.is-danger`, and `.action-button.menu-toggle`. Why: tabs, filter chips, sortable headers, dialog buttons and menu buttons are not action buttons and each app was styling its own.
+- New `scripts/audit-buttons.py` lists buttons that do not follow the standard in an app, with `--fail` for check scripts.
+
 ## 1.16.0 - 2026-10-22
 
 - New `.action-group--spaced` modifier for `.action-group`: separate bordered buttons, 44 px square at minimum, with a 0.75rem gap. Why: a joined group sets small targets edge to edge, so a person with limited fine motor control or wide fingers can press the wrong one. Use it for pairs pressed often, such as Previous and Next. Joined groups are unchanged.
