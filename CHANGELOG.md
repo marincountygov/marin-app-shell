@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.17.2 - 2026-10-23
+
+- The narrow-screen "Menu" button the header builds is now a quiet button (a border, no fill) instead of Pico's solid secondary button, and the shell no longer gives it the `secondary` class. The look comes from Marin UI 1.29.1. Why: every other button in the apps is quiet unless it submits a form, and this one showed on every page of every app at phone width.
+
 ## 1.17.1 - 2026-10-23
 
 - New `.chip-group`: a row of filter chips. Pico turns any `role="group"` into one joined, full-width control, which stretched the chips across the page and drew a focus ring around the whole row; `.chip-group` gives each chip its own size and a pill shape. Why: found when converting the Personnel Management Regulations filters in `marin-docs`.

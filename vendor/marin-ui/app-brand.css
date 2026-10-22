@@ -480,6 +480,17 @@ input[type="radio"] {
 .app-menu-toggle {
   display: none;
   margin: 0;
+  border: 1px solid var(--app-control-border);
+  background: none;
+  color: var(--app-text);
+}
+
+.app-menu-toggle:hover,
+.app-menu-toggle:focus-visible,
+.app-menu-toggle[aria-expanded="true"] {
+  border-color: var(--app-accent);
+  background: none;
+  color: var(--app-accent);
 }
 
 .app-identity {
