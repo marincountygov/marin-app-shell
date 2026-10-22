@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- `scripts/audit-buttons.py` now also checks buttons an app builds in script (`createElement("button")` and then `.className`), and skips the parts of a listbox, tab list or menu, which have their own patterns. New `tests/test_audit_buttons.py`, run by `scripts/check.sh`. Tooling only: nothing in `dist/` changes, so there is no new release.
+
 ## 1.17.0 - 2026-10-23
 
 - The pinned Marin UI baseline moves from 1.28.1 to 1.29.0, which adds 35 Lucide icons. The shell bundles them with its six existing icons.
