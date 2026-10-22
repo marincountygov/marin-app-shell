@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.16.0 - 2026-10-22
+
+- New `.action-group--spaced` modifier for `.action-group`: separate bordered buttons, 44 px square at minimum, with a 0.75rem gap. Why: a joined group sets small targets edge to edge, so a person with limited fine motor control or wide fingers can press the wrong one. Use it for pairs pressed often, such as Previous and Next. Joined groups are unchanged.
+
 ## 1.15.0 - 2026-10-22
 
 - New action buttons. `.action-button` is the one look for a secondary button that does something other than submit a form (Copy, Link, CSV, RSS, Reset, PNG): no fill, muted text, a border on hover, an accent tint when pressed, like the `.copy-button` on a listing. It is icon-only: an SVG and no visible text, named by `aria-label` and `title`. Only a button that submits a form stays solid blue or dark. `.action-toolbar` holds a row of `.action-group` clusters (a bordered group, like a Bootstrap button toolbar) and hides a group whose buttons are all hidden. `.action-search` is a search field for the end of the row; its label is visually hidden and its wrapper is `role="search"`.
