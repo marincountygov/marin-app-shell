@@ -13,7 +13,19 @@ FONT_PATHS = (
     "vendor/fonts/open-sans/OpenSans-VariableFont_wdth,wght.woff2",
     "vendor/fonts/open-sans/OFL.txt",
 )
-ICON_NAMES = ("check", "chevron-down", "copy", "layout-grid", "panel-left-open", "panel-right-open")
+ICON_NAMES = (
+    "arrow-down", "arrow-left", "arrow-right", "arrow-up",
+    "check", "chevron-down", "chevron-left", "chevron-right",
+    "chevrons-left", "chevrons-right", "clock", "compass",
+    "copy", "download", "ellipsis", "eye",
+    "eye-off", "folder-open", "funnel", "grip-vertical",
+    "layout-grid", "link", "map-pin",
+    "maximize", "minimize", "panel-left-open", "panel-right-open",
+    "pencil", "plus", "printer", "redo-2",
+    "refresh-cw", "rotate-ccw", "rss", "search",
+    "settings", "share", "signpost", "sticky-note",
+    "trash", "undo-2", "upload", "x",
+)
 SVG_ATTRIBUTES = {
     "viewBox": "0 0 24 24", "fill": "none", "stroke": "currentColor",
     "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round",

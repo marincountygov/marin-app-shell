@@ -2228,6 +2228,35 @@
     ".app-icon svg, .app-card__icon svg, .docs-brand-icon svg, .copy-button svg, .menu-toggle__caret"
   ).forEach(addLucideDefaults);
 
+  // Declarative icons: an element with data-icon="name" gets that bundled Lucide icon before its content, and
+  // data-icon-end="name" gets one after it (the "Learn more" arrow). The icon is decoration, so name the button
+  // with aria-label (and title). Elements added later, such as buttons an app draws with script, are filled in too.
+  // An unknown name is a console warning, never an error, so one typo cannot break a page.
+  function applyDeclarativeIcons(root) {
+    const found = root.nodeType === 1 && root.matches?.("[data-icon], [data-icon-end]") ? [root] : [];
+    root.querySelectorAll?.("[data-icon], [data-icon-end]").forEach((element) => found.push(element));
+    found.forEach((element) => {
+      [["data-icon", "start"], ["data-icon-end", "end"]].forEach(([attribute, position]) => {
+        const name = element.getAttribute(attribute);
+        if (!name || element.querySelector(`:scope > svg[data-shell-icon="${position}"]`)) return;
+        if (!LUCIDE_ICONS[name]) {
+          console.warn(`[Marin App Shell ${SHELL_VERSION}] Unknown icon "${name}".`, element);
+          return;
+        }
+        const icon = createLucideIcon(name);
+        icon.setAttribute("data-shell-icon", position);
+        if (position === "start") element.prepend(icon);
+        else element.append(icon);
+      });
+    });
+  }
+  applyDeclarativeIcons(document);
+  new MutationObserver((records) => {
+    records.forEach((record) => record.addedNodes.forEach((node) => {
+      if (node.nodeType === 1) applyDeclarativeIcons(node);
+    }));
+  }).observe(document.documentElement, { childList: true, subtree: true });
+
   document.documentElement.dataset.marinShellVersion = SHELL_VERSION;
   document.documentElement.dataset.marinUiVersion = MARIN_UI_VERSION;
   window.MarinAppShell = Object.freeze({
@@ -2235,6 +2264,7 @@
     marinUiVersion: MARIN_UI_VERSION,
     components: Object.freeze(componentDefinitions.map(([name]) => name)),
     loadingMessage,
+    icon: (name, className = "") => lucideMarkup(name, className),
   });
   document.dispatchEvent(
     new CustomEvent("marinos:shell-ready", {

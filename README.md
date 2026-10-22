@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.17.0
+
+Version 1.17.0 gives every button kind a home in the shell. Buttons can draw their own icon with `data-icon` (35 more Lucide icons are bundled, from Marin UI 1.29.0). New classes cover tabs (`.tab-list`, `.tab-button`), filter chips (`.chip-button`), sortable headers (`.sort-button`), dialog buttons (`.dialog-actions`) and deleting actions (`.is-danger`). `scripts/audit-buttons.py` lists the buttons in an app that do not follow the standard. Pages that use none of these look and behave as before. See `docs/components.md`.
+
 ## Version 1.16.0
 
 Version 1.16.0 adds `.action-group--spaced`: a group of action buttons that are separate, bordered, 44 px targets with a gap between them, for pairs such as Previous and Next that people press often or on touch. A joined group puts small targets edge to edge, which is hard for people with limited fine motor control or wide fingers. Nothing changes for pages that do not use it. See `docs/components.md`.
@@ -213,7 +217,7 @@ src/marinos.js                        behavior; icon map generated from SVG file
              -> scripts/build.sh -> dist/
 ```
 
-The current UI input is an explicit import of the supplied Marin UI 1.28.1 checkout.
+The current UI input is an explicit import of the supplied Marin UI 1.29.0 checkout.
 The lock records its hashes and provenance. The build uses only these pinned inputs,
 never whatever a sibling repo happens to contain.
 Font URL rebasing and removal of legacy SVG stroke CSS are counted adapters;

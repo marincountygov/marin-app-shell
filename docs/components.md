@@ -280,6 +280,30 @@ A secondary button that does something other than submit a form (Copy, Link, CSV
 
 A group whose buttons are all `hidden` hides itself. Add `action-group--spaced` for controls pressed often or on touch, such as Previous and Next: the buttons become separate, bordered, 44 px targets with a gap, so people with limited fine motor control or wide fingers can press the right one. The label of `.action-search` stays in the markup, visually hidden, so the field keeps its name.
 
+## Icons for buttons
+
+Write `data-icon="name"` on a button (or any element) and the shell draws that bundled Lucide icon before its content. `data-icon-end="name"` draws one after it ("Learn more" with an arrow). Buttons added later by script are filled in too. The icon is decoration, so name the button with `aria-label` and `title`.
+
+```html
+<button type="button" class="action-button" data-icon="download" aria-label="Download CSV" title="Download CSV"></button>
+<a class="action-button" href="#more" data-icon-end="arrow-right">Learn more</a>
+```
+
+`window.MarinAppShell.icon("download")` returns the same icon as SVG markup for script that builds its own HTML. The bundled names are the Lucide files in `vendor/icons/lucide/`: arrow-down, arrow-left, arrow-right, arrow-up, check, chevron-down, chevron-left, chevron-right, chevrons-left, chevrons-right, clock, compass, copy, download, ellipsis, eye, eye-off, folder-open, funnel, grip-vertical, layout-grid, link, map-pin, maximize, minimize, panel-left-open, panel-right-open, pencil, plus, printer, redo-2, refresh-cw, rotate-ccw, rss, search, settings, share, signpost, sticky-note, trash, undo-2, upload, x. An unknown name is a console warning, not an error. An app that needs another icon adds the Lucide file to `marin-ui` first.
+
+## Other button kinds
+
+- **Tabs.** `.tab-list` holds `.tab-button` buttons with `role="tab"` and `aria-selected`. The chosen tab is solid with bold text.
+- **Filter chips.** `.chip-button` toggles that narrow a list; `aria-pressed` says which are on.
+- **Sort headers.** `.sort-button` inside a `th` that carries `aria-sort`; the arrow follows the attribute.
+- **Dialog buttons.** `.dialog-actions` right-aligns quiet word buttons (`.action-button`) and at most one solid button, the one that submits.
+- **Danger.** Add `.is-danger` to an `.action-button` that deletes or discards: it turns red on hover and focus.
+- **Menu button.** An icon `.action-button.menu-toggle` with `aria-expanded` and `aria-controls`, and the shell's caret (`.menu-toggle__caret`), opens a `.menu-panel`.
+
+## Auditing buttons
+
+`python3 scripts/audit-buttons.py ../your-app` lists every button that does not follow the standard: Pico's `secondary`, `outline` and `contrast` classes, `link-button`, and bare buttons. Add `--fail` to make it exit 1, for a check script. Requirement: `marin-digital-standards/product-design/interaction-design.md`.
+
 ## Automatically provided infrastructure
 
 On initial load, the shell:
