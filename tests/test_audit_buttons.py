@@ -39,6 +39,13 @@ class AuditButtonsTests(unittest.TestCase):
         js = 'const o = document.createElement("button");\no.className = "picker__option";\no.setAttribute("role", "option");\n'
         self.assertEqual(self.audit(js=js), [])
 
+    def test_content_buttons_pass(self):
+        self.assertEqual(self.audit('<button type="button" class="mm-term" data-button-kind="content">Name</button>'), [])
+        self.assertEqual(self.audit(js="h('button', { type: 'button', class: 'event', 'data-button-kind': 'content' }, [])"), [])
+
+    def test_comments_in_script_are_ignored(self):
+        self.assertEqual(self.audit(js="/* a real <button class=\"secondary\">x</button> in a comment */\n// <button>y</button>\n"), [])
+
     def test_vendored_code_and_tests_are_skipped(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
