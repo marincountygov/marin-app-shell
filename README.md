@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.16.0
+
+Version 1.16.0 adds `.action-group--spaced`: a group of action buttons that are separate, bordered, 44 px targets with a gap between them, for pairs such as Previous and Next that people press often or on touch. A joined group puts small targets edge to edge, which is hard for people with limited fine motor control or wide fingers. Nothing changes for pages that do not use it. See `docs/components.md`.
+
 ## Version 1.15.0
 
 Version 1.15.0 adds action buttons and tidies the filter panel. A button that does something other than submit a form (Copy, Link, CSV, RSS, Reset, PNG) now has one quiet look, `.action-button`: an icon with no visible text (named by `aria-label` and `title`), no fill, a border on hover, the same as the Copy button on a listing. A row of them is a `.action-toolbar` of `.action-group` clusters, with an optional `.action-search` text filter at the end of the row. On narrow screens the filter button sits beside the first element of the results instead of on a row of its own. A `.search-panel-header` puts the panel's visible name and its Reset button on one line. Pages that do not use these classes look and behave as before. See `docs/components.md`.

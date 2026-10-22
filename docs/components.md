@@ -278,7 +278,7 @@ A secondary button that does something other than submit a form (Copy, Link, CSV
 </div>
 ```
 
-A group whose buttons are all `hidden` hides itself. The label of `.action-search` stays in the markup, visually hidden, so the field keeps its name.
+A group whose buttons are all `hidden` hides itself. Add `action-group--spaced` for controls pressed often or on touch, such as Previous and Next: the buttons become separate, bordered, 44 px targets with a gap, so people with limited fine motor control or wide fingers can press the right one. The label of `.action-search` stays in the markup, visually hidden, so the field keeps its name.
 
 ## Automatically provided infrastructure
 
