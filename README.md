@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.17.3
+
+Version 1.17.3 keeps a visually hidden form control at 1 px, so a hidden file input no longer makes the page scroll sideways. Nothing else changes. Version 1.17.2 is described below.
+
 ## Version 1.17.2
 
 Version 1.17.2 refreshes the pinned Marin UI baseline from 1.29.0 to 1.29.1 and makes the narrow-screen Menu button quiet (a border, no fill) instead of solid. Nothing else changes. Version 1.17.1 is described below.

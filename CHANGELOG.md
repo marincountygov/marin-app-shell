@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.17.3 - 2026-10-23
+
+- A visually hidden form control (`input.visually-hidden`, and `select` and `textarea`) stays 1 px wide and tall. Pico's rule makes every input as wide as its row and at least 44 px tall, and it was more specific than `.visually-hidden`, so a hidden file input made the page scroll sideways: 33 px in Marin Magic, 317 px in Marin Zipper and 549 px in Marin Unzipper at a 1100 px window. Why: found by the new browser tests; WCAG 1.4.10 (reflow) expects no sideways scrolling for content that fits.
+
 ## 1.17.2 - 2026-10-23
 
 - The narrow-screen "Menu" button the header builds is now a quiet button (a border, no fill) instead of Pico's solid secondary button, and the shell no longer gives it the `secondary` class. The look comes from Marin UI 1.29.1. Why: every other button in the apps is quiet unless it submits a form, and this one showed on every page of every app at phone width.

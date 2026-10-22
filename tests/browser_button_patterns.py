@@ -32,6 +32,7 @@ HTML = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 <button type="button" id="chip-off" class="chip-button" aria-pressed="false">Permitted</button>
 <table><thead><tr><th id="th1" aria-sort="ascending"><button type="button" id="sort1" class="sort-button">Title</button></th></tr></thead></table>
 <div class="dialog-actions" id="dlg"><button type="button" class="action-button">Cancel</button><button type="submit" class="primary" id="save">Save</button></div>
+<input id="hidden-file" class="visually-hidden" type="file" aria-label="Choose a file">
 <div id="slot"></div>
 </main></body></html>"""
 
@@ -91,6 +92,9 @@ def run(page):
     require("▲" in after, f"A sort header shows its arrow: {after}")
     require(style(page, "#dlg", "justifyContent") == "flex-end", "Dialog buttons sit at the end")
     require(page.locator("#dlg .action-button").bounding_box()["height"] >= 43, "Dialog buttons are 44 px targets")
+    hidden = page.locator("#hidden-file").bounding_box()
+    require(hidden["width"] <= 2 and hidden["height"] <= 2, f"A visually hidden input stays 1 px: {hidden}")
+    require(page.evaluate("document.documentElement.scrollWidth <= innerWidth"), "A hidden input does not make the page wider than the window")
     page.keyboard.press("Tab")
 
 
