@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.18.0
+
+Version 1.18.0 refreshes the pinned Marin UI baseline from 1.29.1 to 1.29.2, fixes the contrast of pressed and hovered quiet buttons, and ships the button audit with the release as `vendor/marinos/audit-buttons.py`. Pressed buttons and chips, and hovered grouped buttons, are slightly darker in light mode. Version 1.17.3 is described below.
+
 ## Version 1.17.3
 
 Version 1.17.3 keeps a visually hidden form control at 1 px, so a hidden file input no longer makes the page scroll sideways. Nothing else changes. Version 1.17.2 is described below.
@@ -229,7 +233,7 @@ src/marinos.js                        behavior; icon map generated from SVG file
              -> scripts/build.sh -> dist/
 ```
 
-The current UI input is an explicit import of the supplied Marin UI 1.29.1 checkout.
+The current UI input is an explicit import of the supplied Marin UI 1.29.2 checkout.
 The lock records its hashes and provenance. The build uses only these pinned inputs,
 never whatever a sibling repo happens to contain.
 Font URL rebasing and removal of legacy SVG stroke CSS are counted adapters;

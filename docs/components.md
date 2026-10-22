@@ -302,7 +302,7 @@ Write `data-icon="name"` on a button (or any element) and the shell draws that b
 
 ## Auditing buttons
 
-`python3 scripts/audit-buttons.py ../your-app` lists every button that does not follow the standard: Pico's `secondary`, `outline` and `contrast` classes, `link-button`, and bare buttons. It reads buttons written in HTML, built with `h('button', …)`, and built with `createElement("button")` and a class name. Content that happens to be a button (a calendar event, a name that opens its record) is marked `data-button-kind="content"` and passes. Comments in script are ignored. Add `--fail` to make it exit 1, for a check script. Requirement: `marin-digital-standards/product-design/interaction-design.md`.
+`python3 vendor/marinos/audit-buttons.py .` (from inside an app that has installed shell 1.18.0 or later; from this repo, `python3 scripts/audit-buttons.py ../your-app`) lists every button that does not follow the standard: Pico's `secondary`, `outline` and `contrast` classes, `link-button`, and bare buttons. It reads buttons written in HTML, built with `h('button', …)`, and built with `createElement("button")` and a class name. Content that happens to be a button (a calendar event, a name that opens its record) is marked `data-button-kind="content"` and passes. Comments in script are ignored. Add `--fail` to make it exit 1, for a check script. Requirement: `marin-digital-standards/product-design/interaction-design.md`.
 
 ## Automatically provided infrastructure
 

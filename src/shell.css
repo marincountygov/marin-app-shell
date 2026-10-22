@@ -253,7 +253,7 @@ a.action-button[role="button"][hidden] {
 
 .action-button[aria-pressed="true"] {
   background: color-mix(in srgb, var(--app-accent) 14%, var(--app-surface));
-  color: var(--app-accent);
+  color: var(--app-accent-on-tint);
 }
 
 .action-button[aria-disabled="true"],
@@ -300,6 +300,7 @@ a.action-button[role="button"][hidden] {
 
 .action-group > .action-button:hover {
   background: color-mix(in srgb, var(--app-accent) 8%, var(--app-surface));
+  color: var(--app-accent-on-tint);
 }
 
 .action-group > .action-button:focus-visible {
@@ -338,7 +339,7 @@ a.action-button[role="button"][hidden] {
 .action-group > .copy-button:hover {
   border-color: transparent;
   background: color-mix(in srgb, var(--app-accent) 8%, var(--app-surface));
-  color: var(--app-accent);
+  color: var(--app-accent-on-tint);
 }
 
 .action-group > :not([hidden]) ~ .copy-button:hover {
@@ -525,7 +526,7 @@ a.action-button[role="button"][hidden] {
 
 .chip-button[aria-pressed="true"] {
   background: color-mix(in srgb, var(--app-accent) 14%, var(--app-surface));
-  color: var(--app-accent);
+  color: var(--app-accent-on-tint);
   font-weight: 700;
 }
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.18.0 - 2026-10-23
+
+- The pinned Marin UI baseline moves from 1.29.1 to 1.29.2, which adds contrast pairs for the new button kinds to its checker.
+- Fix: text on the accent tint now uses `--app-accent-on-tint`. A pressed `.action-button` or `.chip-button` and a hovered button in an `.action-group` used plain `--app-accent`, which is 3.8:1 on the 14% tint and 4.2:1 on the 8% hover tint in light mode (minimum 4.5:1). A new test, `tests/test_contrast_tokens.py`, reads the rules so a plain accent cannot come back.
+- The audit sees more: buttons an app builds in script (`createElement("button")` and then `.className`), content marked `data-button-kind="content"` or `"menu-item"`, and disclosures (`aria-expanded`); it skips listbox, tab and menu parts and ignores comments in script.
+- `audit-buttons.py` now ships in the release: `vendor/marinos/audit-buttons.py` in every app that installs it. An app's check script runs it from there, so the audit always matches the installed shell and nothing needs copying by hand. Why: `marin-app-template` carried its own copy that had to be refreshed whenever the shell's changed.
+
 ## 1.17.3 - 2026-10-23
 
 - A visually hidden form control (`input.visually-hidden`, and `select` and `textarea`) stays 1 px wide and tall. Pico's rule makes every input as wide as its row and at least 44 px tall, and it was more specific than `.visually-hidden`, so a hidden file input made the page scroll sideways: 33 px in Marin Magic, 317 px in Marin Zipper and 549 px in Marin Unzipper at a 1100 px window. Why: found by the new browser tests; WCAG 1.4.10 (reflow) expects no sideways scrolling for content that fits.
@@ -11,11 +18,6 @@
 ## 1.17.1 - 2026-10-23
 
 - New `.chip-group`: a row of filter chips. Pico turns any `role="group"` into one joined, full-width control, which stretched the chips across the page and drew a focus ring around the whole row; `.chip-group` gives each chip its own size and a pill shape. Why: found when converting the Personnel Management Regulations filters in `marin-docs`.
-
-## Unreleased
-
-- `scripts/audit-buttons.py` passes a button marked `data-button-kind="content"` (a calendar event, a name that opens its record) and ignores comments in script. Tooling only, so there is no new release.
-- `scripts/audit-buttons.py` now also checks buttons an app builds in script (`createElement("button")` and then `.className`), and skips the parts of a listbox, tab list or menu, which have their own patterns. New `tests/test_audit_buttons.py`, run by `scripts/check.sh`. Tooling only: nothing in `dist/` changes, so there is no new release.
 
 ## 1.17.0 - 2026-10-23
 
