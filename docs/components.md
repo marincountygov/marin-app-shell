@@ -302,7 +302,7 @@ Write `data-icon="name"` on a button (or any element) and the shell draws that b
 
 ## Auditing buttons
 
-`python3 scripts/audit-buttons.py ../your-app` lists every button that does not follow the standard: Pico's `secondary`, `outline` and `contrast` classes, `link-button`, and bare buttons. Add `--fail` to make it exit 1, for a check script. Requirement: `marin-digital-standards/product-design/interaction-design.md`.
+`python3 scripts/audit-buttons.py ../your-app` lists every button that does not follow the standard: Pico's `secondary`, `outline` and `contrast` classes, `link-button`, and bare buttons. It reads buttons written in HTML, built with `h('button', …)`, and built with `createElement("button")` and a class name. Add `--fail` to make it exit 1, for a check script. Requirement: `marin-digital-standards/product-design/interaction-design.md`.
 
 ## Automatically provided infrastructure
 

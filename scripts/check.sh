@@ -46,6 +46,7 @@ if [[ -f "$ROOT_DIR/../marin-ui/BRAND_VERSION" ]]; then
 fi
 printf 'Running release and installer regression tests...\n'
 python3 "$ROOT_DIR/tests/test_release.py"
+python3 "$ROOT_DIR/tests/test_audit_buttons.py"
 if [[ "$BROWSER" == 1 ]]; then
   python3 "$ROOT_DIR/tests/browser_smoke.py" ${FONT_ARGS[@]+"${FONT_ARGS[@]}"}
   python3 "$ROOT_DIR/tests/browser_icon_strokes.py"

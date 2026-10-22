@@ -21,6 +21,8 @@ SKIP = {"vendor", "node_modules", "tests", "archive", "learning", "packages", "d
 OK_CLASSES = {"action-button", "copy-button", "filter-toggle", "tab-button", "chip-button", "sort-button",
               "menu-toggle", "marinos-menu__toggle"}
 LEGACY_CLASSES = {"secondary", "outline", "contrast", "link-button", "mm-tab", "doc-action"}
+# A button made in script: `const x = document.createElement("button")`, then x.className = "..." or x.classList.add(...).
+CREATED = re.compile(r"(?:const|let|var)\s+(\w+)\s*=\s*[\w.]*createElement\(\s*[\"']button[\"']\s*\)")
 PATTERN = re.compile(
     r"<(button|a)\b([^>]*?)>(.*?)</\1>|h\('button',\s*\{([^}]*)\}|h\('a',\s*\{([^}]*role:\s*'button'[^}]*)\}", re.S)
 
@@ -39,6 +41,23 @@ def classify(attrs: str) -> str | None:
     return "no button class: use .action-button (or .primary for the one main action)"
 
 
+def created_button_problem(text: str, match: re.Match) -> tuple[str | None, str]:
+    """Look in the lines after createElement("button") for the class the script gives it."""
+    name = match.group(1)
+    window = text[match.end():match.end() + 900]
+    given = []
+    for found in re.finditer(rf"\b{name}\.className\s*=\s*[\"'`]([^\"'`]*)", window):
+        given.append(found.group(1))
+    for found in re.finditer(rf"\b{name}\.classList\.add\(([^)]*)\)", window):
+        given.append(" ".join(re.findall(r"[\"'`]([^\"'`]*)", found.group(1))))
+    if re.search(r"setAttribute\(\s*[\"']role[\"']\s*,\s*[\"'](option|tab|menuitem)[\"']|aria-haspopup[\"']\s*,\s*[\"']listbox", window):
+        return None, name  # a part of a listbox, tab list or menu, which has its own pattern
+    fake_attrs = f'class="{" ".join(given)}"' if given else ""
+    if re.search(rf"\b{name}\.type\s*=\s*[\"']submit", window):
+        fake_attrs += ' type="submit"'
+    return classify(fake_attrs), name
+
+
 def audit(root: Path) -> list[tuple[str, str, str]]:
     found = []
     for path in sorted(root.rglob("*")):
@@ -46,6 +65,10 @@ def audit(root: Path) -> list[tuple[str, str, str]]:
         if SKIP & set(relative.parts) or path.suffix not in {".html", ".js", ".mjs"} or not path.is_file():
             continue
         text = path.read_text(encoding="utf-8", errors="ignore")
+        for match in CREATED.finditer(text):
+            problem, name = created_button_problem(text, match)
+            if problem:
+                found.append((str(relative), problem + " (built in script)", name))
         for match in PATTERN.finditer(text):
             tag = match.group(1)
             attrs = match.group(2) or match.group(4) or match.group(5) or ""
