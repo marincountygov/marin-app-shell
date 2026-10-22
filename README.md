@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.17.1
+
+Version 1.17.1 adds `.chip-group` for a row of filter chips, so chips in a `role="group"` keep their own size. Nothing else changes. Version 1.17.0 is described below.
+
 ## Version 1.17.0
 
 Version 1.17.0 gives every button kind a home in the shell. Buttons can draw their own icon with `data-icon` (35 more Lucide icons are bundled, from Marin UI 1.29.0). New classes cover tabs (`.tab-list`, `.tab-button`), filter chips (`.chip-button`), sortable headers (`.sort-button`), dialog buttons (`.dialog-actions`) and deleting actions (`.is-danger`). `scripts/audit-buttons.py` lists the buttons in an app that do not follow the standard. Pages that use none of these look and behave as before. See `docs/components.md`.

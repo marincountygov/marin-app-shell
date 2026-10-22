@@ -1,7 +1,12 @@
 # Changelog
 
+## 1.17.1 - 2026-10-23
+
+- New `.chip-group`: a row of filter chips. Pico turns any `role="group"` into one joined, full-width control, which stretched the chips across the page and drew a focus ring around the whole row; `.chip-group` gives each chip its own size and a pill shape. Why: found when converting the Personnel Management Regulations filters in `marin-docs`.
+
 ## Unreleased
 
+- `scripts/audit-buttons.py` passes a button marked `data-button-kind="content"` (a calendar event, a name that opens its record) and ignores comments in script. Tooling only, so there is no new release.
 - `scripts/audit-buttons.py` now also checks buttons an app builds in script (`createElement("button")` and then `.className`), and skips the parts of a listbox, tab list or menu, which have their own patterns. New `tests/test_audit_buttons.py`, run by `scripts/check.sh`. Tooling only: nothing in `dist/` changes, so there is no new release.
 
 ## 1.17.0 - 2026-10-23

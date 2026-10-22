@@ -294,7 +294,7 @@ Write `data-icon="name"` on a button (or any element) and the shell draws that b
 ## Other button kinds
 
 - **Tabs.** `.tab-list` holds `.tab-button` buttons with `role="tab"` and `aria-selected`. The chosen tab is solid with bold text.
-- **Filter chips.** `.chip-button` toggles that narrow a list; `aria-pressed` says which are on.
+- **Filter chips.** `.chip-button` toggles that narrow a list; `aria-pressed` says which are on. Put a row of them in `.chip-group` with `role="group"` and an `aria-label`.
 - **Sort headers.** `.sort-button` inside a `th` that carries `aria-sort`; the arrow follows the attribute.
 - **Dialog buttons.** `.dialog-actions` right-aligns quiet word buttons (`.action-button`) and at most one solid button, the one that submits.
 - **Danger.** Add `.is-danger` to an `.action-button` that deletes or discards: it turns red on hover and focus.
@@ -302,7 +302,7 @@ Write `data-icon="name"` on a button (or any element) and the shell draws that b
 
 ## Auditing buttons
 
-`python3 scripts/audit-buttons.py ../your-app` lists every button that does not follow the standard: Pico's `secondary`, `outline` and `contrast` classes, `link-button`, and bare buttons. It reads buttons written in HTML, built with `h('button', …)`, and built with `createElement("button")` and a class name. Add `--fail` to make it exit 1, for a check script. Requirement: `marin-digital-standards/product-design/interaction-design.md`.
+`python3 scripts/audit-buttons.py ../your-app` lists every button that does not follow the standard: Pico's `secondary`, `outline` and `contrast` classes, `link-button`, and bare buttons. It reads buttons written in HTML, built with `h('button', …)`, and built with `createElement("button")` and a class name. Content that happens to be a button (a calendar event, a name that opens its record) is marked `data-button-kind="content"` and passes. Comments in script are ignored. Add `--fail` to make it exit 1, for a check script. Requirement: `marin-digital-standards/product-design/interaction-design.md`.
 
 ## Automatically provided infrastructure
 
