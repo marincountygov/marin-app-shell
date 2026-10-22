@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.17.2
+
+Version 1.17.2 refreshes the pinned Marin UI baseline from 1.29.0 to 1.29.1 and makes the narrow-screen Menu button quiet (a border, no fill) instead of solid. Nothing else changes. Version 1.17.1 is described below.
+
 ## Version 1.17.1
 
 Version 1.17.1 adds `.chip-group` for a row of filter chips, so chips in a `role="group"` keep their own size. Nothing else changes. Version 1.17.0 is described below.
@@ -221,7 +225,7 @@ src/marinos.js                        behavior; icon map generated from SVG file
              -> scripts/build.sh -> dist/
 ```
 
-The current UI input is an explicit import of the supplied Marin UI 1.29.0 checkout.
+The current UI input is an explicit import of the supplied Marin UI 1.29.1 checkout.
 The lock records its hashes and provenance. The build uses only these pinned inputs,
 never whatever a sibling repo happens to contain.
 Font URL rebasing and removal of legacy SVG stroke CSS are counted adapters;

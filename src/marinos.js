@@ -423,7 +423,7 @@
 
       const menuToggle = document.createElement("button");
       menuToggle.type = "button";
-      menuToggle.className = "app-menu-toggle secondary";
+      menuToggle.className = "app-menu-toggle";
       menuToggle.id = "menu-toggle";
       menuToggle.setAttribute("aria-expanded", "false");
       menuToggle.setAttribute("aria-controls", "app-nav");
