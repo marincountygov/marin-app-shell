@@ -304,6 +304,67 @@ Write `data-icon="name"` on a button (or any element) and the shell draws that b
 
 `python3 vendor/marinos/audit-buttons.py .` (from inside an app that has installed shell 1.18.0 or later; from this repo, `python3 scripts/audit-buttons.py ../your-app`) lists every button that does not follow the standard: Pico's `secondary`, `outline` and `contrast` classes, `link-button`, and bare buttons. It reads buttons written in HTML, built with `h('button', …)`, and built with `createElement("button")` and a class name. Content that happens to be a button (a calendar event, a name that opens its record) is marked `data-button-kind="content"` and passes. Comments in script are ignored. Add `--fail` to make it exit 1, for a check script. Requirement: `marin-digital-standards/product-design/interaction-design.md`.
 
+## Copy, download, file reading, text cleaning and upload
+
+Apps call these helpers (App Shell 1.21.0 and later) instead of writing their own. All are on `window`. Use them for anything the person copies out, saves, or brings in.
+
+| Helper | Use |
+|---|---|
+| `marinCopyRich(text, html)` | Copy for a visual editor, a CMS or an email. Resolves `true` or `false`. |
+| `marinCopyText(text)` | Copy plain text. Resolves `true` or `false`. |
+| `marinDownload({content, name, type, bom})` | Save a file. `type` comes from the name. A CSV starts with a byte-order mark unless `bom: false`. |
+| `marinReadText(file)` | Read a file as text. Resolves `{text, encoding}`. |
+| `marinDecodeText(bytes)` | The same for bytes you already have. |
+| `marinCleanText(value)` | Plain characters for output that goes to a CMS, a URL or a CSV. |
+| `marinUpload({button, input, accept, maxBytes, multiple, onFile, onMessage})` | A Browse files button and drop anywhere on the page. |
+
+**Rich copy puts exactly the HTML you give it on the clipboard.** Do not copy a rendered element (a hidden `contenteditable` that you select and `execCommand("copy")`): the browser then adds this page's fonts, sizes, colors and bold weights as inline styles, and a CMS turns a bold heading into `<strong>`. Build clean HTML (`h2`, `p`, `ul`, `li`, `a`, no classes, no styles) and pass it to `marinCopyRich`. `marinCopyRich` uses the browser's copy event, which puts exactly the HTML you give it on the clipboard (the asynchronous Clipboard API sanitizes HTML, and one app found a title losing its link that way), then falls back to the asynchronous Clipboard API. When both fail, show the text in a box for the person to copy by hand. Show the result in the page's status line ("Copied.") and say nothing when nothing was wrong.
+
+**Downloads are UTF-8.** `marinDownload` adds the byte-order mark to a CSV so Excel reads accents and apostrophes correctly. Pass a string, a Blob or a typed array.
+
+**Files that are not UTF-8 are read as Windows-1252.** A file saved from Excel stores a curly apostrophe as one byte, which a UTF-8 reader shows as "\ufffd". `marinReadText` reads valid UTF-8 as UTF-8 and everything else as Windows-1252, so the text never holds a replacement character that the helper made. An app that must not guess (Marin CSV) keeps refusing files that are not UTF-8 and tells the person to save the file as CSV UTF-8.
+
+**`marinCleanText` is opt-in.** It changes curly quotes to straight ones, non-breaking and zero-width characters to plain spaces or nothing, repairs text read with the wrong encoding (`â€™`), and turns a replacement character between two letters into an apostrophe. Use it where the output goes to a CMS, a URL or a CSV. An app that shows text keeps its typographic quotes. Do not show a message about it.
+
+**Upload** uses one pattern in every app:
+
+```html
+<article class="app-card upload-panel">
+  <h2>Upload</h2>
+  <p id="upload-help" class="app-help-text">Drag and drop a <code>.csv</code>/<code>.xlsx</code> file anywhere on this page, or use the browse button.</p>
+  <div class="app-actions">
+    <button id="browse-files" type="button" class="action-button" data-icon="upload">Browse files</button>
+  </div>
+  <input id="file-input" class="visually-hidden" type="file" aria-label="Upload a file" aria-describedby="upload-help" accept=".csv,.xlsx">
+  <p id="file-status" class="app-help-text" role="status" aria-live="polite"></p>
+</article>
+```
+
+```js
+marinUpload({
+  button: document.querySelector("#browse-files"),
+  input: document.querySelector("#file-input"),
+  accept: [".csv", ".xlsx"],
+  maxBytes: 10 * 1048576,
+  onFile: async (file) => load((await marinReadText(file)).text),
+  onMessage: (text) => { status.textContent = text; },
+});
+```
+
+The shell script is deferred, so call `marinUpload` inside a `DOMContentLoaded` listener when your script is inline in the page (the other helpers are used from event handlers, which run later). The heading is "Upload". The sentence names the file types as `.csv/.xlsx` and says where to drop. Add "Your file stays in this browser." when it is true. The helper shows a "Drop a file to upload" layer while a file is dragged over the page, passes the first file when several are dropped and says so, and sends the same plain messages for a wrong type ("Unsupported file type. Upload .csv or .xlsx.") and a file that is too large ("That file is too large. The limit is 10 MB."). Put the messages in the page's status line.
+
+**Copy and Download menus.** When there are several formats, use one button that opens a menu (`.menu`, `.menu-toggle`, `.menu-panel`), the same as the logo downloads in Marin Brand. List the formats in the order Text, HTML, Markdown, and use the same order in Copy and Download. The menu items are `button[data-button-kind="menu-item"]`.
+
+## Auditing shared helpers
+
+`vendor/marinos/audit-shared-helpers.py` lists the places an app still does its own copy, download, file reading or upload:
+
+```bash
+python3 vendor/marinos/audit-shared-helpers.py .
+```
+
+It only reports, so it does not stop a check. Add `--fail` once the app has adopted the helpers.
+
 ## Automatically provided infrastructure
 
 On initial load, the shell:

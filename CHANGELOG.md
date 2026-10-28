@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.21.0 - 2026-10-28
+
+- Add `window.marinCopyRich`, `marinCopyText`, `marinDownload`, `marinDecodeText`, `marinReadText`, `marinCleanText` and `marinUpload`, with the `.upload-panel` and `.upload-drop-overlay` styles. Why: apps each kept their own copy, download, file reading and upload code, and the same bugs reached the people using them: a copied heading carried the page's bold weight into a CMS as `<strong>`, Mentions' CSV had no byte-order mark, files saved from Excel showed "�" for apostrophes, and every upload read and sounded different.
+- The shell's own `data-copy-value` and Share buttons use the same copy route. The old hidden-selection copy, which put the page's styles on the clipboard, is gone.
+- Add `audit-shared-helpers.py` to the release (`vendor/marinos/audit-shared-helpers.py` in an app). It lists the places an app does its own copy, download, file reading or upload. It reports and does not fail unless `--fail` is given.
+- Marin UI stays at 1.31.0.
+
 ## 1.20.0 - 2026-10-28
 
 - The pinned Marin UI baseline moves from 1.30.0 to 1.31.0. The "On this page" list (`.toc`) is a bordered box with a ruled heading and stacked links, and the page content (`.content`) is a plain bordered box with no shadow. Why: Marin Docs guide pages and the Marin Learn notes reader showed two different looks for the same part of the page. An app that installs this release should delete its own `.toc` and `.content` shadow rules.
