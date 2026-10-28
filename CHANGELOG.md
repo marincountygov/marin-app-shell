@@ -2,7 +2,7 @@
 
 ## 1.21.1 - 2026-10-29
 
-- `audit-shared-helpers.py` skips third-party libraries: folders named `libs` or `lib` and files ending `.min.js`. Why: an app that bundles SheetJS or PapaParse listed a dozen "own" copy, download and file-reading places that are the library's code.
+- `audit-shared-helpers.py` skips third-party libraries: folders named `libs` or `lib` and files ending `.min.js`. Why: an app that bundles SheetJS or PapaParse listed a dozen "own" copy, download and file-reading places that are the library's code. A line, or the line above it, with a comment containing `marin-shared-helpers: allow` and a reason is skipped, for code that has a reason to do its own.
 
 ## 1.21.0 - 2026-10-28
 

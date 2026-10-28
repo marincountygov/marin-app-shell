@@ -363,7 +363,7 @@ The shell script is deferred, so call `marinUpload` inside a `DOMContentLoaded` 
 python3 vendor/marinos/audit-shared-helpers.py .
 ```
 
-It only reports, so it does not stop a check. Add `--fail` once the app has adopted the helpers.
+It only reports, so it does not stop a check. Add `--fail` once the app has adopted the helpers. Third-party libraries (a `libs/` or `lib/` folder, `.min.js` files) are skipped. When code has a reason to do its own (Marin CSV refuses a file that is not UTF-8 rather than guess), put a comment containing `marin-shared-helpers: allow` and the reason on that line or the line above.
 
 ## Automatically provided infrastructure
 
