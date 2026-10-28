@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.21.1
+
+Version 1.21.1 changes only the shared-helpers audit: it no longer lists third-party libraries (a `libs/` or `lib/` folder, or a `.min.js` file), because that code is not the app's own. Version 1.21.0 is described below.
+
 ## Version 1.21.0
 
 Version 1.21.0 adds shared helpers for the things many apps do the same way: `marinCopyRich(text, html)` and `marinCopyText(text)` for the clipboard, `marinDownload({content, name})` for saving a file, `marinReadText(file)` and `marinDecodeText(bytes)` for reading a file, `marinCleanText(value)` for plain characters, and `marinUpload({...})` for a Browse files button with drop anywhere on the page. Rich copy now puts only the HTML you give it on the clipboard, so a CMS no longer turns a heading into bold text; the shell's own copy buttons use the same route. A CSV download starts with a byte-order mark so Excel reads accents and apostrophes. Files that are not UTF-8 are read as Windows-1252. `vendor/marinos/audit-shared-helpers.py` lists the places an app still does its own copy, download, file reading or upload; it only reports. Existing apps keep working. Version 1.20.0 is described below.

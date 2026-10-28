@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.21.1 - 2026-10-29
+
+- `audit-shared-helpers.py` skips third-party libraries: folders named `libs` or `lib` and files ending `.min.js`. Why: an app that bundles SheetJS or PapaParse listed a dozen "own" copy, download and file-reading places that are the library's code.
+
 ## 1.21.0 - 2026-10-28
 
 - Add `window.marinCopyRich`, `marinCopyText`, `marinDownload`, `marinDecodeText`, `marinReadText`, `marinCleanText` and `marinUpload`, with the `.upload-panel` and `.upload-drop-overlay` styles. Why: apps each kept their own copy, download, file reading and upload code, and the same bugs reached the people using them: a copied heading carried the page's bold weight into a CMS as `<strong>`, Mentions' CSV had no byte-order mark, files saved from Excel showed "�" for apostrophes, and every upload read and sounded different.
