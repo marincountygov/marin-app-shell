@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.20.0 - 2026-10-28
+
+- The pinned Marin UI baseline moves from 1.30.0 to 1.31.0. The "On this page" list (`.toc`) is a bordered box with a ruled heading and stacked links, and the page content (`.content`) is a plain bordered box with no shadow. Why: Marin Docs guide pages and the Marin Learn notes reader showed two different looks for the same part of the page. An app that installs this release should delete its own `.toc` and `.content` shadow rules.
+- A lone `.action-button` (one that is not inside an `.action-group`) now has a visible border, `--app-border`, and an accent border when pointed at. It was borderless until pointed at, so a text button such as Browse files, Copy text or Copy HTML looked like plain text. Buttons inside a group are unchanged: they share the group's border.
+
 ## 1.19.0 - 2026-10-27
 
 - The pinned Marin UI baseline moves from 1.29.2 to 1.30.0, which defines the filter column's fields and filter groups: `.search-input-field` (the search box is a rounded rectangle, not Pico's pill), `.search-facet-group`, `.search-facet-list`, `.search-facet-count` and `.mm-facet-group`. Why: `marin-mentions` and `marin-docs` each kept a copy of these rules by eye, and the copies drifted. An app that installs this release should delete its own copies. Documented in Marin UI's "Filter column" section.

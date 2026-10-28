@@ -9,7 +9,7 @@ project:
   status: active
 
 platform:
-  marin-ui: 1.30.0
+  marin-ui: 1.31.0
 
 deployment:
   target: github-pages

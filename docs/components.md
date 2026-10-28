@@ -263,7 +263,7 @@ Name the panel with its visible heading, not a hidden label: put `<div class="se
 
 ## Action buttons
 
-A secondary button that does something other than submit a form (Copy, Link, CSV, RSS, Reset, PNG download) uses `.action-button`: an icon and no visible text, no fill, muted, a border on hover, the same quiet look as the `.copy-button` on a listing. Name it with `aria-label` and `title`. Only a button that submits a form is solid blue or dark. Pressed state is `aria-pressed="true"`; an inert link is `aria-disabled="true"`.
+A secondary button that does something other than submit a form (Copy, Link, CSV, RSS, Reset, PNG download) uses `.action-button`: an icon, with or without a short visible label ("Copy text", "Download HTML"), no fill, muted, with a visible border that turns accent when pointed at (inside an `.action-group` the buttons share the group's border instead), the same quiet look as the `.copy-button` on a listing. Name it with `aria-label` and `title`. Only a button that submits a form is solid blue or dark. Pressed state is `aria-pressed="true"`; an inert link is `aria-disabled="true"`.
 
 ```html
 <div class="action-toolbar">

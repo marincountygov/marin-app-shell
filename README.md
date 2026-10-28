@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.20.0
+
+Version 1.20.0 refreshes the pinned Marin UI baseline from 1.30.0 to 1.31.0. The "On this page" list is now a bordered box with a ruled heading and a stacked list of links, the same as the Marin Learn notes reader, and the page content is a plain bordered box with no shadow. An app that added its own rules for `.toc` or for the shadow on `.content` can delete them. A lone action button (not inside an action group), such as Browse files or Copy HTML, now has a visible border; buttons in a group are unchanged. Version 1.19.0 is described below.
+
 ## Version 1.19.0
 
 Version 1.19.0 refreshes the pinned Marin UI baseline from 1.29.2 to 1.30.0. The filter column's search field, filter groups, row spacing and checkbox size now come from the shell, so an app can delete its own copies of `.search-input-field`, `.search-facet-group`, `.search-facet-list`, `.search-facet-count` and `.mm-facet-group`. The search box in the panel is a rounded rectangle like the selects, not a pill. Pages that do not use these classes look and behave as before. Version 1.18.0 is described below.
@@ -237,7 +241,7 @@ src/marinos.js                        behavior; icon map generated from SVG file
              -> scripts/build.sh -> dist/
 ```
 
-The current UI input is an explicit import of the supplied Marin UI 1.30.0 checkout.
+The current UI input is an explicit import of the supplied Marin UI 1.31.0 checkout.
 The lock records its hashes and provenance. The build uses only these pinned inputs,
 never whatever a sibling repo happens to contain.
 Font URL rebasing and removal of legacy SVG stroke CSS are counted adapters;
