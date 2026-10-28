@@ -47,11 +47,13 @@ fi
 printf 'Running release and installer regression tests...\n'
 python3 "$ROOT_DIR/tests/test_release.py"
 python3 "$ROOT_DIR/tests/test_audit_buttons.py"
+python3 "$ROOT_DIR/tests/test_audit_shared_helpers.py"
 python3 "$ROOT_DIR/tests/test_contrast_tokens.py"
 if [[ "$BROWSER" == 1 ]]; then
   python3 "$ROOT_DIR/tests/browser_smoke.py" ${FONT_ARGS[@]+"${FONT_ARGS[@]}"}
   python3 "$ROOT_DIR/tests/browser_icon_strokes.py"
   python3 "$ROOT_DIR/tests/browser_filter_panel.py"
+  python3 "$ROOT_DIR/tests/browser_shared_helpers.py"
   python3 "$ROOT_DIR/tests/browser_button_patterns.py"
 else
   printf 'SKIP: Browser/font rendering not requested; add --browser for fixture checks.\n'
