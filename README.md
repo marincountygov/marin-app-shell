@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.19.0
+
+Version 1.19.0 refreshes the pinned Marin UI baseline from 1.29.2 to 1.30.0. The filter column's search field, filter groups, row spacing and checkbox size now come from the shell, so an app can delete its own copies of `.search-input-field`, `.search-facet-group`, `.search-facet-list`, `.search-facet-count` and `.mm-facet-group`. The search box in the panel is a rounded rectangle like the selects, not a pill. Pages that do not use these classes look and behave as before. Version 1.18.0 is described below.
+
 ## Version 1.18.0
 
 Version 1.18.0 refreshes the pinned Marin UI baseline from 1.29.1 to 1.29.2, fixes the contrast of pressed and hovered quiet buttons, and ships the button audit with the release as `vendor/marinos/audit-buttons.py`. Pressed buttons and chips, and hovered grouped buttons, are slightly darker in light mode. Version 1.17.3 is described below.
@@ -233,7 +237,7 @@ src/marinos.js                        behavior; icon map generated from SVG file
              -> scripts/build.sh -> dist/
 ```
 
-The current UI input is an explicit import of the supplied Marin UI 1.29.2 checkout.
+The current UI input is an explicit import of the supplied Marin UI 1.30.0 checkout.
 The lock records its hashes and provenance. The build uses only these pinned inputs,
 never whatever a sibling repo happens to contain.
 Font URL rebasing and removal of legacy SVG stroke CSS are counted adapters;

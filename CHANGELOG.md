@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.19.0 - 2026-10-27
+
+- The pinned Marin UI baseline moves from 1.29.2 to 1.30.0, which defines the filter column's fields and filter groups: `.search-input-field` (the search box is a rounded rectangle, not Pico's pill), `.search-facet-group`, `.search-facet-list`, `.search-facet-count` and `.mm-facet-group`. Why: `marin-mentions` and `marin-docs` each kept a copy of these rules by eye, and the copies drifted. An app that installs this release should delete its own copies. Documented in Marin UI's "Filter column" section.
+
 ## 1.18.0 - 2026-10-23
 
 - The pinned Marin UI baseline moves from 1.29.1 to 1.29.2, which adds contrast pairs for the new button kinds to its checker.
