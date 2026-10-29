@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.22.1
+
+Version 1.22.1 keeps a `<br>` as a line break in the Markdown and text that `marinContentFormats` makes from a paragraph. Version 1.22.0 is described below.
+
 ## Version 1.22.0
 
 Version 1.22.0 makes every Copy and Download offer the same three formats in the same order: Text, HTML and Markdown. `marinContentFormats(root)` reads a page (headings, paragraphs, lists, tables, links) and returns `{ text, html, markdown }` with no classes, styles or scripts. `marinFormatMenus(container, provider, { fileName })` wires the buttons inside a container (`data-copy-format` and `data-download-format`, each `text`, `html` or `markdown`) to those strings and to the shell's copy and download helpers. A page can wire itself with no script: put `data-formats-for="<selector>"` and `data-file-name` on the container of the buttons. Existing apps keep working. Version 1.21.1 is described below.
