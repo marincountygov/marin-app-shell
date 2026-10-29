@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.22.0 - 2026-10-29
+
+- Add `window.marinContentFormats(root, extraSkip)` and `window.marinFormatMenus(container, provider, { fileName, status })`, and the declarative `[data-formats-for]` container. Why: Copy and Download each offered different formats in different apps. They now offer Text, HTML and Markdown everywhere, built once. Docs' guide pages had their own converter and Marin Learn's notes build their own strings; both now use these.
+- Add `window.marinWireMenus(container)` so an app that builds a `.menu` after the page loads can open and close it; `marinFormatMenus` calls it for the menus inside its container.
+- The shell leaves `.doc-actions`, `.doc-updated`, `.heading-anchor`, `nav`, `script`, `style` and `[data-no-copy]` out of a page's formats.
+- Marin UI stays at 1.31.0.
+
 ## 1.21.1 - 2026-10-29
 
 - `audit-shared-helpers.py` skips third-party libraries: folders named `libs` or `lib` and files ending `.min.js`. Why: an app that bundles SheetJS or PapaParse listed a dozen "own" copy, download and file-reading places that are the library's code. A line, or the line above it, with a comment containing `marin-shared-helpers: allow` and a reason is skipped, for code that has a reason to do its own.

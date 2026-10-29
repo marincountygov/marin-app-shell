@@ -267,7 +267,7 @@ A secondary button that does something other than submit a form (Copy, Link, CSV
 
 ```html
 <div class="action-toolbar">
-  <div class="action-group" role="group" aria-label="Share">
+  <div class="action-group" role="group" aria-label="Page actions">
     <button type="button" class="action-button" aria-label="Copy" title="Copy"><svg aria-hidden="true" viewBox="0 0 24 24">…</svg></button>
     <button type="button" class="action-button" aria-label="Copy link" title="Copy link"><svg aria-hidden="true" viewBox="0 0 24 24">…</svg></button>
   </div>
@@ -317,6 +317,24 @@ Apps call these helpers (App Shell 1.21.0 and later) instead of writing their ow
 | `marinDecodeText(bytes)` | The same for bytes you already have. |
 | `marinCleanText(value)` | Plain characters for output that goes to a CMS, a URL or a CSV. |
 | `marinUpload({button, input, accept, maxBytes, multiple, onFile, onMessage})` | A Browse files button and drop anywhere on the page. |
+
+**Copy and Download list the same three formats, in the same order: Text, HTML, Markdown.** `marinContentFormats(root)` reads a page and returns `{ text, html, markdown }`: headings, paragraphs, lists, tables and links, with no classes, styles or scripts. It leaves out `.doc-actions`, `.doc-updated`, `.heading-anchor`, `nav`, `script`, `style` and anything marked `data-no-copy`. `marinFormatMenus(container, provider, { fileName })` wires `[data-copy-format]` and `[data-download-format]` buttons (`text`, `html` or `markdown`) inside the container to the three strings (or to a function that returns them) and to the helpers above. Copy Text copies rich text for pasting into a visual editor; Copy HTML and Copy Markdown copy the source. A page of ordinary content wires itself with no script:
+
+```html
+<div class="doc-actions" data-formats-for="article.content" data-file-name="my-page">
+  <div class="menu">
+    <button type="button" class="action-button menu-toggle" data-icon="copy" aria-expanded="false" aria-controls="copy-panel" aria-label="Copy, choose a format" title="Copy"><svg class="menu-toggle__caret" aria-hidden="true" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4"/></svg></button>
+    <div id="copy-panel" class="menu-panel" hidden>
+      <button type="button" data-button-kind="menu-item" data-copy-format="text">Text</button>
+      <button type="button" data-button-kind="menu-item" data-copy-format="html">HTML</button>
+      <button type="button" data-button-kind="menu-item" data-copy-format="markdown">Markdown</button>
+    </div>
+  </div>
+  <span class="doc-action-status" role="status" aria-live="polite"></span>
+</div>
+```
+
+A menu built after the page loads is wired by `marinFormatMenus` (or `marinWireMenus(container)`). A page whose content is data (a note, a report) builds its own three strings and calls `marinFormatMenus(container, () => ({ text, html, markdown }), { fileName, status, onFail })`; `onFail(text)` is called when a copy fails, so the app can show that text in a box for the person to copy by hand. Every Copy button, including the one on a card, offers these three formats; the one button that copies a link is **Copy link**, a lone icon button with the `link` icon (`data-action="share"`).
 
 **Rich copy puts exactly the HTML you give it on the clipboard.** Do not copy a rendered element (a hidden `contenteditable` that you select and `execCommand("copy")`): the browser then adds this page's fonts, sizes, colors and bold weights as inline styles, and a CMS turns a bold heading into `<strong>`. Build clean HTML (`h2`, `p`, `ul`, `li`, `a`, no classes, no styles) and pass it to `marinCopyRich`. `marinCopyRich` uses the browser's copy event, which puts exactly the HTML you give it on the clipboard (the asynchronous Clipboard API sanitizes HTML, and one app found a title losing its link that way), then falls back to the asynchronous Clipboard API. When both fail, show the text in a box for the person to copy by hand. Show the result in the page's status line ("Copied.") and say nothing when nothing was wrong.
 
