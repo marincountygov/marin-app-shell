@@ -32,6 +32,12 @@ class AuditTests(unittest.TestCase):
         self.assertEqual(self.scan({"assets/app.js": "marinCopyRich(t, h); marinDownload({name:'a.csv', content:c});",
                                     "index.html": '<input type="file"><script>marinUpload({})</script>'}), [])
 
+    def test_a_marked_line_is_allowed(self):
+        self.assertEqual(self.scan({"assets/engine.js": '// marin-shared-helpers: allow (refuses non-UTF-8)\nnew TextDecoder("utf-8", { fatal: true });\n'}), [])
+
+    def test_third_party_libraries_are_skipped(self):
+        self.assertEqual(self.scan({"libs/xlsx.js": "URL.createObjectURL(b)", "assets/papaparse.min.js": 'reader.readAsText(f)'}), [])
+
     def test_vendor_and_tests_are_skipped(self):
         self.assertEqual(self.scan({"vendor/marinos/marinos.js": 'document.execCommand("copy")', "tests/x.js": "URL.createObjectURL(b)"}), [])
 
