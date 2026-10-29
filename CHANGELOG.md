@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.22.1 - 2026-10-29
+
+- `marinContentFormats` keeps a `<br>` as a line break in the Markdown and text of a paragraph. It was collapsed into a space, so a block of lines separated by `<br>` came out as one long line. Headings, list items and table cells still turn a `<br>` into a space.
+- Marin UI stays at 1.31.0.
+
 ## 1.22.0 - 2026-10-29
 
 - Add `window.marinContentFormats(root, extraSkip)` and `window.marinFormatMenus(container, provider, { fileName, status })`, and the declarative `[data-formats-for]` container. Why: Copy and Download each offered different formats in different apps. They now offer Text, HTML and Markdown everywhere, built once. Docs' guide pages had their own converter and Marin Learn's notes build their own strings; both now use these.

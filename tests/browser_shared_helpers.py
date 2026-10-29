@@ -32,6 +32,7 @@ HTML = """<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Shar
   <p>Intro with <strong>bold</strong> and a <a href="/next.html">link</a>.</p>
   <ul><li>One</li><li>Two <em>nested</em></li></ul>
   <table><thead><tr><th scope="col">A</th><th scope="col">B</th></tr></thead><tbody><tr><td>1</td><td>2</td></tr><tr><td>C:\\data</td><td>a|b</td></tr></tbody></table>
+  <p>Line one<br>Line two</p>
   <p data-no-copy>Left out</p><nav>Menu</nav><script>1</script></article>
 <button type="button" id="browse" class="action-button">Browse files</button>
 <input id="file" type="file" class="visually-hidden" aria-label="Choose a file">
@@ -81,6 +82,7 @@ def run(page, tmp: Path):
     require(md.startswith("# Page title\n\nIntro with **bold** and a [link](https://example.test/next.html).") and "- One\n- Two *nested*" in md, f"Markdown copy: {md!r}")
     require("| C:\\\\data | a\\|b |" in md, f"Markdown escapes a backslash and a pipe in a table cell: {md!r}")
     require("| A | B |\n| --- | --- |\n| 1 | 2 |" in md and "Left out" not in md and "Menu" not in md and "Updated today" not in md, f"Markdown leaves out the skipped parts and keeps the table: {md!r}")
+    require("Line one  \nLine two" in md, f"Markdown keeps a line break inside a paragraph: {md!r}")
     page.click("[data-copy-format=html]")
     page.wait_for_function("document.querySelector('.doc-action-status').textContent === 'Copied HTML.'")
     html_copy = page.evaluate("navigator.clipboard.readText()")
