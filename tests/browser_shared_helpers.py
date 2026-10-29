@@ -19,6 +19,20 @@ HTML = """<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Shar
 <link rel="stylesheet" href="/vendor/marinos/marinos.css"><script src="/vendor/marinos/marinos.js" defer></script></head>
 <body data-app-id="fixture"><main id="main" class="container app-main">
 <h2 style="font-weight:700">Rustic Bakery</h2>
+<div class="doc-actions" data-formats-for="#page" data-file-name="my-page">
+  <button type="button" data-copy-format="text">Copy text</button>
+  <button type="button" data-copy-format="html">Copy HTML</button>
+  <button type="button" data-copy-format="markdown">Copy Markdown</button>
+  <button type="button" data-download-format="text">Save text</button>
+  <button type="button" data-download-format="html">Save HTML</button>
+  <button type="button" data-download-format="markdown">Save Markdown</button>
+  <span class="doc-action-status" role="status"></span>
+</div>
+<article id="page"><h1 class="doc-title">Page title</h1><p class="doc-updated">Updated today</p>
+  <p>Intro with <strong>bold</strong> and a <a href="/next.html">link</a>.</p>
+  <ul><li>One</li><li>Two <em>nested</em></li></ul>
+  <table><thead><tr><th scope="col">A</th><th scope="col">B</th></tr></thead><tbody><tr><td>1</td><td>2</td></tr><tr><td>C:\\data</td><td>a|b</td></tr></tbody></table>
+  <p data-no-copy>Left out</p><nav>Menu</nav><script>1</script></article>
 <button type="button" id="browse" class="action-button">Browse files</button>
 <input id="file" type="file" class="visually-hidden" aria-label="Choose a file">
 <p id="status" role="status"></p>
@@ -59,6 +73,26 @@ CLIPBOARD = """async () => {
 def run(page, tmp: Path):
     page.goto(PAGE)
     page.wait_for_function("typeof window.marinCopyRich === 'function' && typeof window.marinUpload === 'function'")
+
+    # Format menus: Text, HTML and Markdown of a page, copied and saved, clean of the page's own look.
+    page.click("[data-copy-format=markdown]")
+    page.wait_for_function("document.querySelector('.doc-action-status').textContent === 'Copied Markdown.'")
+    md = page.evaluate("navigator.clipboard.readText()")
+    require(md.startswith("# Page title\n\nIntro with **bold** and a [link](https://example.test/next.html).") and "- One\n- Two *nested*" in md, f"Markdown copy: {md!r}")
+    require("| C:\\\\data | a\\|b |" in md, f"Markdown escapes a backslash and a pipe in a table cell: {md!r}")
+    require("| A | B |\n| --- | --- |\n| 1 | 2 |" in md and "Left out" not in md and "Menu" not in md and "Updated today" not in md, f"Markdown leaves out the skipped parts and keeps the table: {md!r}")
+    page.click("[data-copy-format=html]")
+    page.wait_for_function("document.querySelector('.doc-action-status').textContent === 'Copied HTML.'")
+    html_copy = page.evaluate("navigator.clipboard.readText()")
+    require(html_copy.startswith("<h1>Page title</h1><p>Intro with <strong>bold</strong> and a <a href=\"https://example.test/next.html\">link</a>.</p>") and "class=" not in html_copy and "style=" not in html_copy and "Left out" not in html_copy, f"HTML copy is clean: {html_copy[:200]}")
+    page.click("[data-copy-format=text]")
+    page.wait_for_function("document.querySelector('.doc-action-status').textContent === 'Copied rich text.'")
+    got = page.evaluate(CLIPBOARD)
+    require(got["text/html"] == html_copy and got["text/plain"].startswith("Page title\n\nIntro with bold and a link (https://example.test/next.html)."), f"Rich text copy: {got['text/plain'][:120]}")
+    for fmt, name in (("text", "my-page.txt"), ("html", "my-page.html"), ("markdown", "my-page.md")):
+        with page.expect_download() as info:
+            page.click(f"[data-download-format={fmt}]")
+        require(info.value.suggested_filename == name, f"Download {fmt} is named {name}")
 
     # Copy: the clipboard holds exactly the HTML given (links kept), never this page's styles, by either route.
     html = '<h3>Rustic Bakery</h3><p><b><a href="https://example.org/a">Title</a></b></p><ul><li>dept: Food</li></ul>'
