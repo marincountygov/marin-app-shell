@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.23.0
+
+Version 1.23.0 refreshes the pinned Marin UI baseline from 1.31.0 to 1.33.0, so a solid button (the main action of a screen, `.primary`) is Marin Blue with white text, and the light accent with dark text in dark mode, instead of Pico's stock blue. It also sizes the icon the shell draws on a solid button (`data-icon` and `data-icon-end`, such as the arrow on a step flow's Next button) at 1rem beside the words, and makes the Feedback component a named landmark (`role="complementary"`) so it is not outside every landmark. Version 1.22.1 is described below.
+
 ## Version 1.22.1
 
 Version 1.22.1 keeps a `<br>` as a line break in the Markdown and text that `marinContentFormats` makes from a paragraph. Version 1.22.0 is described below.
@@ -257,7 +261,7 @@ src/marinos.js                        behavior; icon map generated from SVG file
              -> scripts/build.sh -> dist/
 ```
 
-The current UI input is an explicit import of the supplied Marin UI 1.31.0 checkout.
+The current UI input is an explicit import of the supplied Marin UI 1.33.0 checkout.
 The lock records its hashes and provenance. The build uses only these pinned inputs,
 never whatever a sibling repo happens to contain.
 Font URL rebasing and removal of legacy SVG stroke CSS are counted adapters;

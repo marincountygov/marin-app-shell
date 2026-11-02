@@ -272,6 +272,27 @@ a.action-button[role="button"][hidden] {
   stroke-linejoin: round;
 }
 
+/* An icon the shell draws from data-icon or data-icon-end on a solid button (the Next of a step flow) is the same
+   1rem size and sits beside the words, the same as on an action button. */
+.primary[data-icon],
+.primary[data-icon-end] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.primary > svg[data-shell-icon] {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 /* Action buttons carry an icon and no visible text; the name is the aria-label (and the title, for hover). */
 .action-button:has(> svg:only-child) {
   min-width: 2.25rem;
