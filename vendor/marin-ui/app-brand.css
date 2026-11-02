@@ -91,6 +91,11 @@
 
   --pico-font-family-sans-serif: var(--app-font-body);
 
+  /* The solid (main action) button: Marin Blue with white text, 4.6:1. */
+  --app-primary-bg: var(--marin-blue);
+  --app-primary-bg-hover: #005ea8;
+  --app-on-primary: #ffffff;
+
   --pico-primary: var(--marin-blue);
   --pico-primary-hover: #005ea8;
   --pico-primary-focus: rgba(7, 119, 207, 0.25);
@@ -103,6 +108,16 @@
    repeat Pico's selectors to win by source order. */
 :root:not([data-theme=dark]) {
   --pico-form-element-border-color: var(--app-control-border);
+}
+
+/* Pico's own rule on :root:not([data-theme=dark]) and [data-theme=light] sets the solid button's fill to its stock
+   blue (#0172ad), which is not a brand color and outranks a plain :root rule. Repeat Pico's selectors so a solid
+   button (the main action of a screen) is Marin Blue. Link and text colors keep --pico-primary. */
+:root:not([data-theme=dark]),
+[data-theme=light] {
+  --pico-primary-background: var(--app-primary-bg);
+  --pico-primary-hover-background: var(--app-primary-bg-hover);
+  --pico-primary-inverse: var(--app-on-primary);
 }
 
 @media (min-width: 576px) {
@@ -170,6 +185,10 @@
     --pico-form-element-background-color: #101820;
     --pico-form-element-border-color: var(--app-control-border);
     --pico-form-element-color: var(--app-text);
+    --app-primary-bg: #8fcaff;
+    --app-primary-bg-hover: #b9dcff;
+    --app-on-primary: #101418;
+
     --pico-primary: #8fcaff;
     --pico-primary-hover: #b9dcff;
     --pico-primary-focus: rgba(143, 202, 255, 0.35);
@@ -177,7 +196,19 @@
 
   :root:not([data-theme]) {
     --pico-form-element-border-color: var(--app-control-border);
+    --pico-primary-background: var(--app-primary-bg);
+    --pico-primary-hover-background: var(--app-primary-bg-hover);
+    --pico-primary-inverse: var(--app-on-primary);
   }
+}
+
+[data-theme=dark] {
+  --app-primary-bg: #8fcaff;
+  --app-primary-bg-hover: #b9dcff;
+  --app-on-primary: #101418;
+  --pico-primary-background: var(--app-primary-bg);
+  --pico-primary-hover-background: var(--app-primary-bg-hover);
+  --pico-primary-inverse: var(--app-on-primary);
 }
 
 html {

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.23.0 - 2026-11-02
+
+- The pinned Marin UI baseline moves from 1.31.0 to 1.33.0. A solid button (`.primary`, a form's submit button, the Next button of a step flow) is now Marin Blue (`#0777cf`) with white text in light mode, and the accent `#8fcaff` with dark text in dark mode. It was Pico's stock blue, which is not a brand color. Why: Pico's `:root:not([data-theme=dark])` rule outranks a plain `:root` rule and sets the fill through `--pico-primary-background`, which Marin UI did not override. Link and text colors are unchanged.
+- An icon the shell draws on a solid button with `data-icon` or `data-icon-end` is 1rem and sits beside the words with a gap. Before, only `.action-button` sized it, so the arrow on a step flow's Next button came out huge unless the app sized it. Apps can remove their own rule for it.
+- `<marin-app-feedback>` is a named landmark (`role="complementary"`, named by the link text). Why: the Feedback link sat outside every landmark, which axe reports as the "region" rule.
+
 ## 1.22.1 - 2026-10-29
 
 - `marinContentFormats` keeps a `<br>` as a line break in the Markdown and text of a paragraph. It was collapsed into a space, so a block of lines separated by `<br>` came out as one long line. Headings, list items and table cells still turn a `<br>` into a space.

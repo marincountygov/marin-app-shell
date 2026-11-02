@@ -825,6 +825,9 @@
         link.target = target;
         if (target === "_blank") link.rel = "noreferrer";
       }
+      // The link sits outside the page's other landmarks, so the component is its own, named by the link text.
+      this.setAttribute("role", "complementary");
+      this.setAttribute("aria-label", label);
       this.replaceChildren(link);
       this.dataset.rendered = "true";
       this.watchFooter(link);
