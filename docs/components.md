@@ -397,3 +397,117 @@ On initial load, the shell:
 - dispatches `marinos:shell-ready` with the two versions in `event.detail`.
 
 A missing `main#main` produces a console warning.
+
+## Record list
+
+A `[data-record-list]` element loads a JSON file and draws the records that match as the result cards the apps use (`ul.search-results-list` of `li.app-card.mm-card`), available from App Shell 1.24.0. It lets one app's records appear on another app's page without a copy of that app's code. It loads the first time it becomes visible, using the same `hidden` check as the Updates feed, so it works inside a tab section. Key numbers and charts (below) load the same way, and a file used by several of them on one page is fetched once.
+
+```html
+<section id="reach" data-tab-section="reach" hidden>
+  <div data-record-list data-app-name="Reach" data-noun="engagements"
+       data-src="https://marincountygov.github.io/marin-reach/data/engagements.json" data-records="records"
+       data-match="agencies" data-value="Community Development Agency"
+       data-title="eventName" data-meta="date,location" data-badge="status" data-text="project" data-sort="date"></div>
+</section>
+```
+
+| Attribute | Meaning |
+|---|---|
+| `data-src` | Required. The JSON address. It can be on another site that allows reading it. `{date:-29}` is the UTC date 29 days ago and `{date:0}` today. |
+| `data-records` | Dot path to the list of records. Leave out when the file is the list. |
+| `data-match`, `data-value` | Keep a record when this field equals the value, or contains it when the field is a list. Leave out to draw every record. |
+| `data-exclude` | `field=value`. Drop the records whose field equals the value (or lists it), before anything is drawn or counted. Key numbers and charts take it too. Use it to leave out one kind of record, such as `sourceType=social`. |
+| `data-title` | Required. The field shown as the card heading. |
+| `data-link` | A field holding an http or https address. The heading becomes a link to it. |
+| `data-link-template` | Instead of `data-link`: an address with `{field}` parts filled from each record (values are encoded), such as `https://example.org/app/?engagement={id}`. Use it when the target app opens one record from its address. |
+| `data-meta` | Comma-separated fields shown under the heading, joined by a dash. `field:words` adds words after the value (`redirects:visits` reads "5 visits"). |
+| `data-hidden-path`, `data-hidden-text` | A flag that, when true, withholds the list and shows the text instead, for a service that hides small counts. |
+| `data-text` | A field shown as a short description under that line. |
+| `data-image` | A field holding an http or https address of a picture, shown beside the text. |
+| `data-badge` | A field shown as a badge above the heading. |
+| `data-sort`, `data-sort-order` | Sort field, and `desc` (default) or `asc`. |
+| `data-limit` | Most cards drawn. Default 24; the status line says how many were left out. |
+| `data-empty-text` | Said instead of "No … found." when nothing is left to draw. Use it when a filter (`data-match`, `data-exclude`) can leave a list empty for a reason a person cannot see. |
+| `data-src` with several files | Several addresses separated by spaces: their records are joined (a file that cannot be read is skipped unless none can). `data-unique` names the field that makes two records the same one, so a record in two files is drawn and counted once. Key numbers and charts take both. |
+| `data-columns` | `2` or `3`: draw the cards in that many columns on a wide screen, one on a narrow one. Pick a `data-limit` that is a multiple of it so the last row is full. |
+| `data-group`, `data-group-link`, `data-group-date`, `data-group-noun` | One card for each value of a field (an array field counts each value) instead of one for each record: the value as the heading, how many records it has (`data-group-noun` names them) and the dates they span (`data-group-date`). `data-group-link` is the address the heading links to, with `{value}` replaced by the value. Newest first. Use it for a list of campaigns drawn from their events. |
+| `data-timeframe` | The date field. The status line then says how far back the records go, from the oldest: "(last week)", "(last month)", "(last 3 months)" or "(since Jan 5, 2026)". |
+| `data-app-name`, `data-noun` | Words for the status lines: "Loading Reach…", "2 engagements.", "No engagements found.", "Reach could not be loaded right now." |
+
+Field names can be dot paths. Values are always set as text, never as HTML. A `YYYY-MM-DD` value is shown as a long date, and a full date and time as the short form the console shows ("Nov 2, 4:12 PM", Pacific time). The card styles (`.mm-card`, `.search-results-list`) are the apps' own; a page that uses the component needs them in its stylesheet. Tested by `tests/browser_record_list.py`.
+
+## Key numbers
+
+A `[data-key-numbers]` element shows a few numbers as the apps' stat cards (`.mm-stats-kpis`). They are either numbers a service already added up, or numbers counted from the records. It loads the first time it becomes visible.
+
+```html
+<div data-key-numbers data-app-name="Links"
+     data-src="https://example.org/api/summary?from={date:-29}&to={date:0}"
+     data-fields="period_redirects:Visits,tracked_links:Links"
+     data-hidden-path="meta.suppressed" data-hidden-text="Too few visits to show."></div>
+
+<div data-key-numbers data-app-name="Mentions" data-src="monitors/marin-cda.json" data-records="items"
+     data-compute='[["count","Mentions"],["unique","Unique sources","source"],["count","Social","sourceType","social"]]'></div>
+```
+
+`data-src` is required, with `data-fields` or `data-compute`. `data-fields` is `field:Label` pairs; a field is a dot path under `data-path` (default `data`). `data-compute` is a JSON list counted from the records (with `data-records`, `data-match` and `data-value` as in the record list): `["count","Label"]` counts the records, `["count","Label","field","value"]` counts those whose field equals the value, and `["unique","Label","field"]` counts the different values. `data-hidden-path` names a flag; when it is true the numbers are withheld and `data-hidden-text` is shown, for a service that hides small counts. Numbers get thousands separators, and values are set as text.
+
+## Charts
+
+A `[data-chart]` element draws one of the apps' chart cards with Chart.js, from the same kind of file. The page supplies its own copy of Chart.js (`data-chart-lib`); the component loads it when the first chart is shown.
+
+```html
+<div class="mm-stats-grid">
+  <div data-chart data-app-name="Mentions" data-src="monitors/marin-cda.json" data-records="items"
+       data-chart-lib="../vendor/chart.min.js" data-chart-title="Mentions over time"
+       data-kind="line" data-date="publishedAt" data-bucket="day"></div>
+  <div data-chart data-app-name="Mentions" data-src="monitors/marin-cda.json" data-records="items"
+       data-chart-lib="../vendor/chart.min.js" data-chart-title="Top sources" data-kind="bar" data-group="source"></div>
+</div>
+```
+
+| Attribute | Meaning |
+|---|---|
+| `data-src`, `data-records`, `data-match`, `data-value` | As for the record list. |
+| `data-chart-lib` | Required. The address of `chart.min.js` on the page's own site. |
+| `data-chart-title` | Required. The card heading. |
+| `data-kind` | `line` (default) counts records per day or month; `bar` ranks values, as horizontal bars. |
+| `data-date`, `data-bucket` | Line. The date field, and `day` (default) or `month`. Days and months with nothing stay on the line as zero. Days are Pacific. |
+| `data-group`, `data-top` | Bar. The field to rank (a list field counts each value) and the most bars (default 10). |
+| `data-sum` | Add up this field instead of counting records, for rows a service already added up by day. |
+| `data-hidden-path` | As for key numbers. When the flag is true the chart is left out, since the key numbers beside it say why. |
+| `data-empty-text` | Words for a chart with nothing to draw. |
+| `data-hide-empty` | Hide a chart drawn from records when there is nothing to draw, instead of saying so. Use it for a teaser chart above a list that already says it is empty. |
+| `data-inline` | Instead of `data-src`: the id of a `<script type="application/json">` in the page that holds the amounts (below). Nothing is fetched except Chart.js. |
+| `data-kind="columns"` or `"bars"` | With `data-inline`: vertical columns, or horizontal bars. Both start at zero. |
+| `data-kind="pie"` | With `data-inline`: the first series as shares of a whole. Slices run from the largest, zero values have no slice, and the legend names each slice with its share; the tooltip gives the amount and the percentage. Use it for the parts of one total at one time, not for change over time. |
+| `data-stacked` | With `data-inline`: stack the series. |
+
+The canvas has a text summary for screen readers (the total and the peak, or the top bar). Charts take the page's text and grid colors. Tested by `tests/browser_record_list.py`, with a stand-in for Chart.js.
+
+**Amounts the page already holds** (a budget) are drawn from a block in the page, so the chart and the table beside it come from the same figures:
+
+```html
+<script type="application/json" id="types-spec">{"labels": ["Salaries and Benefits", "Services and Supplies"],
+  "series": [{"name": "FY 2025-26", "values": [16125624, 4611103]}, {"name": "FY 2026-27", "values": [17890809, 4911771]}],
+  "format": "currency", "summary": "Salaries and Benefits is the largest at $17,890,809."}</script>
+<div data-chart data-inline="types-spec" data-chart-lib="../vendor/chart.min.js" data-chart-title="Expenditure by type" data-kind="columns"></div>
+```
+
+`format` is `currency` (axis in $K and $M, tooltips and the text summary in whole dollars, a minus sign for decreases) or `number`. `summary` is the sentence screen readers get after the title; without it the component names the largest value, or each series' total. Several series are drawn side by side, named in a legend; the colors are chosen to stay apart for people who see color differently, and color is never the only signal. Put the data in the table beside the chart too.
+
+## Sub-tabs
+
+A `[data-subtabs]` group inside a tab section splits it into panels. It holds a `[data-subtabs-nav]` of links and `[data-subtab]` panels; each link is `#` plus a panel's `id`, and a link to the tab section itself means the first panel.
+
+```html
+<section id="mentions" data-tab-section="mentions" hidden>
+  <div data-subtabs>
+    <nav data-subtabs-nav aria-label="Mentions sections"><a href="#mentions">Home</a><a href="#mentions-stats">Stats</a></nav>
+    <div id="mentions-home" data-subtab>…</div>
+    <div id="mentions-stats" data-subtab hidden>…</div>
+  </div>
+</section>
+```
+
+One panel shows at a time: the one the hash names, or contains an element the hash names, else the first. The nav marks the current link with `aria-current="page"`. A hash that names a panel opens its tab section without the shell scrolling to it. Record lists, key numbers and charts in a hidden panel load when it is first shown. Available from App Shell 1.24.0.

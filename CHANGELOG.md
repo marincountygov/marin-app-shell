@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.24.0 - 2026-11-03
+- `[data-record-list]` takes `data-link-template`: each card's link built from the record's fields (`https://…/?engagement={id}`). Why: a Marin Docs Reach card opens that engagement's details in Marin Reach.
+- Add the Dashboard section styles (`.org-dashboard`, `.org-dash`, `.org-dash__list`, `.org-dash__more`): one section per row, each set apart by a bottom border. Why: they were in Marin Docs' own stylesheet; a page's styles come from here.
+- `[data-chart]` drawn from records takes `data-hide-empty`: with nothing to draw the chart is hidden instead of saying so. Why: a Marin Docs Dashboard shows an app's first chart above its list, and the list already says when it is empty.
+- `[data-record-list]`, `[data-key-numbers]` and `[data-chart]`: `data-src` may name several files separated by spaces, with `data-unique` naming the field that makes a record the same record in more than one file. Why: a Marin Docs agency page shows the mentions of the agency and of its divisions together, as Marin Mentions does.
+- `[data-record-list]` takes `data-empty-text`, said instead of "No … found." when a filter leaves nothing to draw. Why: a Marin Docs organization whose only mentions are social posts shows none, and should say why.
+- `[data-record-list]` takes `data-columns` (2 or 3), the same as Marin UI 1.34.0.
+- `[data-record-list]`, `[data-key-numbers]` and `[data-chart]` take `data-exclude` (`field=value`): records whose field equals the value are left out before anything is drawn or counted. Why: Marin Docs leaves social posts out of the Mentions it shows for a County organization.
+- `[data-chart]` also draws amounts the page already holds (`data-inline`, `data-kind="columns"` or `"bars"`, `data-stacked`), the same as Marin UI 1.34.0. Why: Marin Docs shows the County budget as charts beside the tables, from the same figures. See "Charts" in `docs/components.md`.
+- `[data-record-list]` takes `data-timeframe` (the date field): its status line says how far back the records go, for example "Showing 3 of 50 mentions (last week)." Why: Marin Docs shows the latest mentions, and a count alone does not say how old they are.
+- `[data-chart]` with `data-inline` also draws `data-kind="pie"`: the first series as shares of a whole, with each slice and its share in the legend, and the amount and percentage in the tooltip. Why: Marin Docs shows a service area's spending as the share each department takes.
+- Copy and Download menus name a downloaded file from the container's `data-file-name` when it is clicked, not when the page loaded, so a page whose content changes (a tab) can name the file for what it holds.
+- `[data-record-list]` takes `data-group` (with `data-group-link`, `data-group-date`, `data-group-noun`): one card for each value of a field, with its count and the dates it spans, linking to a filtered page. Why: Marin Docs shows the campaigns an agency runs in Marin Reach, each linking to Reach filtered to that campaign.
+- `[data-record-list]` no longer prints a plain count under its heading ("7 engagements."). The status line shows only what a person cannot see: "Showing 24 of 50 mentions" when the list is cut off, and the timeframe when `data-timeframe` is set. Why: the cards are there to count.
+
+- Add the record list, key numbers and charts: `data-record-list`, `data-key-numbers` and `data-chart` draw another app's published JSON as that app's result cards, stat cards and chart cards, loading when first visible. They are the same components as Marin UI 1.34.0 (see "Record list", "Key numbers" and "Charts" in `docs/components.md`). Why: Marin Docs pages for County organizations show an app's records and statistics in tabs, without a copy of that app's code. Values are set as text, never as HTML; only http and https addresses become links or pictures. Also sub-tabs (`data-subtabs`, `data-subtab`), the same as Marin UI 1.34.0: panels inside a tab section, switched by the hash.
+- The pinned Marin UI baseline moves from 1.33.0 to 1.34.0. Fonts and icons are unchanged.
+- Add the test banner (`.app-test-banner`): a yellow strip below the header navigation that says the data shown is for test use only. An app or a section turns it on with `test: true` or `test_sections` in `marin.yml`. Why: Marin Docs marks its budget and capital pages as a design test.
+
 ## 1.23.0 - 2026-11-02
 
 - The pinned Marin UI baseline moves from 1.31.0 to 1.33.0. A solid button (`.primary`, a form's submit button, the Next button of a step flow) is now Marin Blue (`#0777cf`) with white text in light mode, and the accent `#8fcaff` with dark text in dark mode. It was Pico's stock blue, which is not a brand color. Why: Pico's `:root:not([data-theme=dark])` rule outranks a plain `:root` rule and sets the fill through `--pico-primary-background`, which Marin UI did not override. Link and text colors are unchanged.

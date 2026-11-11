@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.24.0
+
+Version 1.24.0 adds the record list, key numbers and charts: elements with `data-record-list`, `data-key-numbers` and `data-chart` load a JSON file the first time they become visible and draw it as the source app's result, stat and chart cards, so one app's records can appear on another app's page without a copy of that app's code. See "Record list" in `docs/components.md`. Existing apps keep working. Version 1.23.0 is described below.
+
 ## Version 1.23.0
 
 Version 1.23.0 refreshes the pinned Marin UI baseline from 1.31.0 to 1.33.0, so a solid button (the main action of a screen, `.primary`) is Marin Blue with white text, and the light accent with dark text in dark mode, instead of Pico's stock blue. It also sizes the icon the shell draws on a solid button (`data-icon` and `data-icon-end`, such as the arrow on a step flow's Next button) at 1rem beside the words, and makes the Feedback component a named landmark (`role="complementary"`) so it is not outside every landmark. Version 1.22.1 is described below.
