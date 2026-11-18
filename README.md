@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.25.0
+
+Version 1.25.0 refreshes the pinned Marin UI baseline from 1.34.0 to 1.35.0. On a wide screen the filter column now scrolls on its own, as tall as the window at most, with the Filter title and Reset button kept at the top, so a long list of filters no longer needs the whole page to scroll. Checkbox rows and group names in the filter column have more room around them. The filter button is named "Filter" (or "Filter, 3 active") instead of "Filters", the same word as the panel title; a button can still set its own name with `data-filter-label`. Component names, markup and paths are unchanged.
+
 ## Version 1.24.0
 
 Version 1.24.0 adds the record list, key numbers and charts: elements with `data-record-list`, `data-key-numbers` and `data-chart` load a JSON file the first time they become visible and draw it as the source app's result, stat and chart cards, so one app's records can appear on another app's page without a copy of that app's code. See "Record list" in `docs/components.md`. Existing apps keep working. Version 1.23.0 is described below.

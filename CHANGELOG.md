@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.25.0 - 2026-11-17
+- The filter column scrolls on its own on a wide screen (at most as tall as the window), with the Filter title and Reset button pinned at the top. Why: a long panel could only be scrolled by scrolling the whole page. Narrow screens are unchanged.
+- More room between checkbox rows (0.6rem) and around filter group names in the filter column.
+- The filter button is named "Filter" ("Filter, 3 active"), not "Filters", the same word as the panel title. `data-filter-label` still sets a different name.
+- The pinned Marin UI baseline moves from 1.34.0 to 1.35.0. Fonts and icons are unchanged.
+
 ## 1.24.0 - 2026-11-03
 - `[data-record-list]` takes `data-link-template`: each card's link built from the record's fields (`https://…/?engagement={id}`). Why: a Marin Docs Reach card opens that engagement's details in Marin Reach.
 - Add the Dashboard section styles (`.org-dashboard`, `.org-dash`, `.org-dash__list`, `.org-dash__more`): one section per row, each set apart by a bottom border. Why: they were in Marin Docs' own stylesheet; a page's styles come from here.
