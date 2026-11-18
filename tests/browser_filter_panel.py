@@ -21,7 +21,7 @@ HTML = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 <form class="search-layout" id="layout-a" aria-label="Filter things">
   <div class="search-side">
     <button type="button" id="toggle-a" class="filter-toggle" data-filter-toggle="things" aria-controls="panel-a"></button>
-    <aside id="panel-a" class="search-sidebar" aria-label="Filters"><label for="search-a">Search</label><input id="search-a" type="search"></aside>
+    <aside id="panel-a" class="search-sidebar" aria-label="Filter"><label for="search-a">Search</label><input id="search-a" type="search"></aside>
   </div>
   <div class="search-results"><p>Results A</p></div>
 </form>
@@ -85,7 +85,7 @@ def run(page):
     # The shell draws its bundled Lucide icons (stroked, 24x24) and names the button.
     s = state(page)
     require(s["expanded"] == "true" and s["filters"] == "open" and s["open"] == "true", f"Starts open: {s}")
-    require(s["label"] == "Filters" and s["title"] == "Filters", f"Default name: {s}")
+    require(s["label"] == "Filter" and s["title"] == "Filter", f"Default name: {s}")
     require(s["icons"] == [["open", False], ["closed", True]], f"Open shows the panel-right-open icon: {s['icons']}")
     require(page.locator("#toggle-a svg").first.evaluate("e => [e.getAttribute('viewBox'), e.getAttribute('stroke'), e.getAttribute('aria-hidden'), getComputedStyle(e).fill]") == ["0 0 24 24", "currentColor", "true", "none"],
             "The bundled icon is a stroked 24x24 Lucide SVG hidden from assistive technology")
@@ -110,10 +110,10 @@ def run(page):
     page.keyboard.press("Enter")
 
     page.evaluate("document.getElementById('toggle-a').dataset.filterActive = '3'")
-    page.wait_for_function("document.getElementById('toggle-a').getAttribute('aria-label') === 'Filters, 3 active'", timeout=3000)
-    require(page.get_attribute("#toggle-a", "title") == "Filters, 3 active", "The title matches the name")
+    page.wait_for_function("document.getElementById('toggle-a').getAttribute('aria-label') === 'Filter, 3 active'", timeout=3000)
+    require(page.get_attribute("#toggle-a", "title") == "Filter, 3 active", "The title matches the name")
     page.evaluate("document.getElementById('toggle-a').dataset.filterActive = '0'")
-    page.wait_for_function("document.getElementById('toggle-a').getAttribute('aria-label') === 'Filters'", timeout=3000)
+    page.wait_for_function("document.getElementById('toggle-a').getAttribute('aria-label') === 'Filter'", timeout=3000)
 
     page.click("#toggle-a")
     require(page.evaluate("localStorage.getItem('marinos.filters.fixture.things')") == "closed", "The choice is saved under the app id and toggle name")
