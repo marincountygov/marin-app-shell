@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 1.25.1
+
+Version 1.25.1 refreshes the pinned Marin UI baseline from 1.35.0 to 1.35.1. In the scrolling filter column, the Filter title and Reset button sit on the page background and no longer let a checkbox show above them. Component names, markup and paths are unchanged.
+
 ## Version 1.25.0
 
 Version 1.25.0 refreshes the pinned Marin UI baseline from 1.34.0 to 1.35.0. On a wide screen the filter column now scrolls on its own, as tall as the window at most, with the Filter title and Reset button kept at the top, so a long list of filters no longer needs the whole page to scroll. Checkbox rows and group names in the filter column have more room around them. The filter button is named "Filter" (or "Filter, 3 active") instead of "Filters", the same word as the panel title; a button can still set its own name with `data-filter-label`. Component names, markup and paths are unchanged.
