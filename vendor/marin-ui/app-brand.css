@@ -1073,8 +1073,9 @@ th[aria-sort="descending"] .sort-button::after {
 
 /* The filter column scrolls on its own. It is as tall as the window at most, and a long panel scrolls inside
    itself instead of making the whole page scroll before the panel moves. The Filter title and Reset button stay
-   at the top while the fields scroll. Narrow screens stack the panel above the results and let the page scroll
-   it, so this is wide screens only. The small padding keeps focus rings from being clipped at the scroll edge. */
+   at the top while the fields scroll, on the page background so nothing shows through it. Narrow screens stack the
+   panel above the results and let the page scroll it, so this is wide screens only. The side and bottom padding
+   keeps focus rings from being clipped at the scroll edge. */
 @media (min-width: 851px) {
   .search-side {
     display: flex;
@@ -1085,7 +1086,7 @@ th[aria-sort="descending"] .sort-button::after {
   .search-side > .search-sidebar {
     flex: 1 1 auto;
     min-height: 0;
-    padding: 0.25rem;
+    padding: 0 0.25rem 0.25rem;
     overflow-y: auto;
     overscroll-behavior: contain;
   }
@@ -1094,9 +1095,9 @@ th[aria-sort="descending"] .sort-button::after {
     position: sticky;
     top: 0;
     z-index: 1;
-    padding: 0 0 0.5rem;
+    padding: 0.25rem 0 0.5rem;
     margin-bottom: 0.5rem;
-    background: var(--app-bg);
+    background: var(--app-bg-soft);
   }
 }
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.25.1 - 2026-11-17
+- The Filter title and Reset button pinned at the top of the scrolling filter column sit on the page background, and no checkbox shows above them as the list scrolls.
+- The pinned Marin UI baseline moves from 1.35.0 to 1.35.1. Fonts and icons are unchanged.
+
 ## 1.25.0 - 2026-11-17
 - The filter column scrolls on its own on a wide screen (at most as tall as the window), with the Filter title and Reset button pinned at the top. Why: a long panel could only be scrolled by scrolling the whole page. Narrow screens are unchanged.
 - More room between checkbox rows (0.6rem) and around filter group names in the filter column.
