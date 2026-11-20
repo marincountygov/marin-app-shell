@@ -108,7 +108,8 @@
    "options": {
     "from": "filters/column-data.json",
     "records": "records",
-    "valueField": "tags"
+    "valueField": "tags",
+    "order": "data"
    }
   },
   {
