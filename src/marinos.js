@@ -1304,6 +1304,7 @@
     const url = new URL(window.location.href);
 
     async function resolveOptions(spec, groupBy = []) {
+      if (spec.app) return [];
       if (spec.values) return spec.values.map((one) => ({ value: String(one.value), label: one.label, count: null, hidden: one.hidden === true }));
       const data = await getJson(spec.from);
       const records = spec.records ? spec.records.split(".").reduce((found, key) => found?.[key], data) : data;
@@ -1527,7 +1528,8 @@
       return fieldset;
     }
 
-    const aside = make("aside", { id: panelId, class: "search-sidebar", "aria-labelledby": titleId, "data-open": "false" }, [header, searchField, ...groups.map(buildGroup)]);
+    const fieldsets = new Map(groups.map((group) => [group.id, buildGroup(group)]));
+    const aside = make("aside", { id: panelId, class: "search-sidebar", "aria-labelledby": titleId, "data-open": "false" }, [header, searchField, ...fieldsets.values()]);
     column.replaceChildren(toggle, aside);
     if (!status.isConnected) column.append(status);
 
@@ -1548,7 +1550,7 @@
         } else next.searchParams.set(group.param, value);
       });
       try {
-        window.history.replaceState(window.history.state, "", next);
+        window.history.replaceState(window.history.state, "", next.href);
       } catch {
         // The address just is not updated.
       }
@@ -1636,6 +1638,23 @@
     Object.defineProperty(column, "filterState", { get: snapshot, configurable: true });
     column.setCounts = setCounts;
     column.reset = reset;
+    // For a group whose options are {"app": true}: the app supplies the choices once it has them (data it fetched
+    // or worked out), as [{ value, label, count?, path?, parent?, hidden? }]. The group is drawn again with what is
+    // chosen kept; a chosen value that is not among the new choices is dropped.
+    column.setOptions = (groupId, options) => {
+      const group = groups.find((one) => one.id === groupId);
+      if (!group) return;
+      group.list = options.map((option) => ({ count: null, path: [], parent: "", hidden: false, ...option, value: String(option.value) }));
+      if (isMany(group)) state.groups[groupId] = state.groups[groupId].filter((value) => group.list.some((option) => option.value === value));
+      else if (group.type === "radio" || group.type === "select") {
+        if (state.groups[groupId] !== "" && !group.list.some((option) => option.value === state.groups[groupId])) state.groups[groupId] = defaultFor(group);
+      }
+      const fresh = buildGroup(group);
+      fieldsets.get(groupId).replaceWith(fresh);
+      fieldsets.set(groupId, fresh);
+      toggle.dataset.filterActive = String(activeCount());
+      writeAddress();
+    };
     column.setResults = setResults;
     // The app sets a choice itself (for example a hidden "Report dates" choice). It updates the column, the
     // address and the active count, and sends no change, so an app's own change handler cannot loop.
