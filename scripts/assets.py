@@ -90,7 +90,7 @@ def read_lock(root: Path = ROOT) -> dict:
 
 def verify_inputs(root: Path = ROOT) -> dict:
     lock = read_lock(root)
-    expected_paths = {"vendor/marin-ui/app-brand.css", "vendor/pico.min.css", "vendor/icons/lucide/LICENSE"}
+    expected_paths = {"vendor/marin-ui/app-brand.css", "vendor/marin-ui/filter-panel.schema.json", "vendor/pico.min.css", "vendor/icons/lucide/LICENSE"}
     expected_paths.update(f"vendor/icons/lucide/{name}.svg" for name in ICON_NAMES)
     require(set(lock.get("files", {})) == expected_paths, "Unexpected locked UI input inventory")
     for path, meta in lock["files"].items():

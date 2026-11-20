@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.0.0 - 2026-11-20
+- **Breaking for every app that has a filter column.** An app now lists its filters in a `filters.json` and the shell draws the column; hand-written filter markup and the app's own code that builds it are removed in the same pull request that installs this release. Installing 2.0.0 without that change, or the change without 2.0.0, is not supported, and the app's check fails: `python3 vendor/marinos/audit-filter-column.py . --fail`. Why: the words, order, spacing, scrolling and accessibility of the filter column were copied into each app and had drifted; one owner keeps them the same.
+- The shell draws the filter column from `filters.json` (`[data-filter-column]`, with the schema `filter-panel.schema.json` shipped beside the shell): the toggle, the "Filter" title, Reset, a "Search" field with no placeholder, and groups of checkboxes (collapsed, always showing, or nested), a radio choice, a drop-down or a date range. Every group shows its name, and nothing chosen reads "All" and the plural noun. Choices are kept in the address. Events and methods are in `docs/components.md`.
+- Accessibility built in: search waits for a pause before it announces, Reset announces once and keeps focus, no option is ever disabled, a field tabbed into view stops below the pinned Filter title, Escape closes the open panel on a narrow screen and returns focus to its button, option rows are full-width click targets of at least 24 px, focus rings use system colors in forced-colors mode.
+- `setResults(count)` and `[data-filter-results]` on the filter column: one polite "N results." message, "No results." with a Reset filters button, and "Filters reset. N results." after Reset. A filters file that will not load shows "Could not load the filters." with Retry, as an alert. A date range that ends before it starts is not applied and shows an alert.
+- `options.parentField`: a choice can be listed under another (a division under its department), as a separate indented checkbox.
+- Add `audit-filter-column.py` to the release (`vendor/marinos/audit-filter-column.py` in an app). It lists a hand-written filter column and any `filters.json` that breaks the schema (placeholder, search label, title that starts with "Filter", "All" text that does not start with "All", a missing name, an id or address parameter used twice, an options file that is missing). It needs only Python. A panel that is not a filter, such as a list of steps, is marked `data-filter-column-exempt`.
+- The pinned Marin UI baseline moves from 1.35.1 to 1.36.0. Fonts and icons are unchanged.
+
 ## 1.25.1 - 2026-11-17
 - The Filter title and Reset button pinned at the top of the scrolling filter column sit on the page background, and no checkbox shows above them as the list scrolls.
 - The pinned Marin UI baseline moves from 1.35.0 to 1.35.1. Fonts and icons are unchanged.

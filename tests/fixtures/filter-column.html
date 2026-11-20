@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Filter column fixture</title>
+  
+  <link rel="stylesheet" href="/vendor/marinos/marinos.css">
+  <script src="/vendor/marinos/marinos.js" defer></script>
+</head>
+<body data-app-id="fixture">
+  <main class="container">
+    <h1>Filter column fixture</h1>
+    <div class="search-layout">
+      <div class="search-side" data-filter-column="filters/valid-column.json" data-filter-name="items"></div>
+      <div class="search-results">
+        <p id="results-status" data-filter-results>Waiting</p>
+        <div style="height:2000px">Results</div>
+      </div>
+    </div>
+  </main>
+  <script>
+    window.__changes = [];
+    document.addEventListener("marin-filter-change", (event) => {
+      window.__changes.push(event.detail);
+      // A real app filters here, then tells the column how many results are left.
+      if (!window.__skipResults) document.querySelector("[data-filter-column]").setResults(window.__count ?? 12);
+    });
+  </script>
+</body>
+</html>

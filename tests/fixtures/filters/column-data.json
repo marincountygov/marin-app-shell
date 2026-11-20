@@ -1,0 +1,1084 @@
+{
+ "records": [
+  {
+   "id": 0,
+   "title": "Item 0",
+   "department": "Department 01",
+   "status": "Open",
+   "tags": [
+    "c"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 1,
+   "title": "Item 1",
+   "department": "Department 02",
+   "status": "Closed",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "North",
+   "parent_department": "Department 01"
+  },
+  {
+   "id": 2,
+   "title": "Item 2",
+   "department": "Department 03",
+   "status": "Pending",
+   "tags": [
+    "c"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "North",
+   "parent_department": "Department 01"
+  },
+  {
+   "id": 3,
+   "title": "Item 3",
+   "department": "Department 04",
+   "status": "Open",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "South",
+   "parent_department": "Department 02"
+  },
+  {
+   "id": 4,
+   "title": "Item 4",
+   "department": "Department 05",
+   "status": "Closed",
+   "tags": [
+    "c"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 5,
+   "title": "Item 5",
+   "department": "Department 06",
+   "status": "Pending",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 6,
+   "title": "Item 6",
+   "department": "Department 07",
+   "status": "Open",
+   "tags": [
+    "c"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 7,
+   "title": "Item 7",
+   "department": "Department 08",
+   "status": "Closed",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 8,
+   "title": "Item 8",
+   "department": "Department 09",
+   "status": "Pending",
+   "tags": [
+    "c"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 9,
+   "title": "Item 9",
+   "department": "Department 10",
+   "status": "Open",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 10,
+   "title": "Item 10",
+   "department": "Department 11",
+   "status": "Closed",
+   "tags": [
+    "c"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 11,
+   "title": "Item 11",
+   "department": "Department 12",
+   "status": "Pending",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 12,
+   "title": "Item 12",
+   "department": "Department 13",
+   "status": "Open",
+   "tags": [
+    "c"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 13,
+   "title": "Item 13",
+   "department": "Department 14",
+   "status": "Closed",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 14,
+   "title": "Item 14",
+   "department": "Department 15",
+   "status": "Pending",
+   "tags": [
+    "c"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 15,
+   "title": "Item 15",
+   "department": "Department 16",
+   "status": "Open",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 16,
+   "title": "Item 16",
+   "department": "Department 17",
+   "status": "Closed",
+   "tags": [
+    "c"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 17,
+   "title": "Item 17",
+   "department": "Department 18",
+   "status": "Pending",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 18,
+   "title": "Item 18",
+   "department": "Department 19",
+   "status": "Open",
+   "tags": [
+    "c"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 19,
+   "title": "Item 19",
+   "department": "Department 20",
+   "status": "Closed",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 20,
+   "title": "Item 20",
+   "department": "Department 21",
+   "status": "Pending",
+   "tags": [
+    "c"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 21,
+   "title": "Item 21",
+   "department": "Department 22",
+   "status": "Open",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 22,
+   "title": "Item 22",
+   "department": "Department 23",
+   "status": "Closed",
+   "tags": [
+    "c"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 23,
+   "title": "Item 23",
+   "department": "Department 24",
+   "status": "Pending",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 24,
+   "title": "Item 24",
+   "department": "Department 25",
+   "status": "Open",
+   "tags": [
+    "c"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 25,
+   "title": "Item 25",
+   "department": "Department 26",
+   "status": "Closed",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 26,
+   "title": "Item 26",
+   "department": "Department 27",
+   "status": "Pending",
+   "tags": [
+    "c"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 27,
+   "title": "Item 27",
+   "department": "Department 28",
+   "status": "Open",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 28,
+   "title": "Item 28",
+   "department": "Department 29",
+   "status": "Closed",
+   "tags": [
+    "c"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 29,
+   "title": "Item 29",
+   "department": "Department 30",
+   "status": "Pending",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 30,
+   "title": "Item 30",
+   "department": "Department 31",
+   "status": "Open",
+   "tags": [
+    "c"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 31,
+   "title": "Item 31",
+   "department": "Department 32",
+   "status": "Closed",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 32,
+   "title": "Item 32",
+   "department": "Department 33",
+   "status": "Pending",
+   "tags": [
+    "c"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 33,
+   "title": "Item 33",
+   "department": "Department 34",
+   "status": "Open",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 34,
+   "title": "Item 34",
+   "department": "Department 35",
+   "status": "Closed",
+   "tags": [
+    "c"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 35,
+   "title": "Item 35",
+   "department": "Department 36",
+   "status": "Pending",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 36,
+   "title": "Item 36",
+   "department": "Department 37",
+   "status": "Open",
+   "tags": [
+    "c"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 37,
+   "title": "Item 37",
+   "department": "Department 38",
+   "status": "Closed",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 38,
+   "title": "Item 38",
+   "department": "Department 39",
+   "status": "Pending",
+   "tags": [
+    "c"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 39,
+   "title": "Item 39",
+   "department": "Department 40",
+   "status": "Open",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 40,
+   "title": "Item 40",
+   "department": "Department 01",
+   "status": "Closed",
+   "tags": [
+    "c"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 41,
+   "title": "Item 41",
+   "department": "Department 02",
+   "status": "Pending",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "South",
+   "parent_department": "Department 01"
+  },
+  {
+   "id": 42,
+   "title": "Item 42",
+   "department": "Department 03",
+   "status": "Open",
+   "tags": [
+    "c"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "North",
+   "parent_department": "Department 01"
+  },
+  {
+   "id": 43,
+   "title": "Item 43",
+   "department": "Department 04",
+   "status": "Closed",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "North",
+   "parent_department": "Department 02"
+  },
+  {
+   "id": 44,
+   "title": "Item 44",
+   "department": "Department 05",
+   "status": "Pending",
+   "tags": [
+    "c"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 45,
+   "title": "Item 45",
+   "department": "Department 06",
+   "status": "Open",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 46,
+   "title": "Item 46",
+   "department": "Department 07",
+   "status": "Closed",
+   "tags": [
+    "c"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 47,
+   "title": "Item 47",
+   "department": "Department 08",
+   "status": "Pending",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 48,
+   "title": "Item 48",
+   "department": "Department 09",
+   "status": "Open",
+   "tags": [
+    "c"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 49,
+   "title": "Item 49",
+   "department": "Department 10",
+   "status": "Closed",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 50,
+   "title": "Item 50",
+   "department": "Department 11",
+   "status": "Pending",
+   "tags": [
+    "c"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 51,
+   "title": "Item 51",
+   "department": "Department 12",
+   "status": "Open",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 52,
+   "title": "Item 52",
+   "department": "Department 13",
+   "status": "Closed",
+   "tags": [
+    "c"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 53,
+   "title": "Item 53",
+   "department": "Department 14",
+   "status": "Pending",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 54,
+   "title": "Item 54",
+   "department": "Department 15",
+   "status": "Open",
+   "tags": [
+    "c"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 55,
+   "title": "Item 55",
+   "department": "Department 16",
+   "status": "Closed",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 56,
+   "title": "Item 56",
+   "department": "Department 17",
+   "status": "Pending",
+   "tags": [
+    "c"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 57,
+   "title": "Item 57",
+   "department": "Department 18",
+   "status": "Open",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 58,
+   "title": "Item 58",
+   "department": "Department 19",
+   "status": "Closed",
+   "tags": [
+    "c"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 59,
+   "title": "Item 59",
+   "department": "Department 20",
+   "status": "Pending",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 60,
+   "title": "Item 60",
+   "department": "Department 21",
+   "status": "Open",
+   "tags": [
+    "c"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 61,
+   "title": "Item 61",
+   "department": "Department 22",
+   "status": "Closed",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 62,
+   "title": "Item 62",
+   "department": "Department 23",
+   "status": "Pending",
+   "tags": [
+    "c"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 63,
+   "title": "Item 63",
+   "department": "Department 24",
+   "status": "Open",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 64,
+   "title": "Item 64",
+   "department": "Department 25",
+   "status": "Closed",
+   "tags": [
+    "c"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 65,
+   "title": "Item 65",
+   "department": "Department 26",
+   "status": "Pending",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 66,
+   "title": "Item 66",
+   "department": "Department 27",
+   "status": "Open",
+   "tags": [
+    "c"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 67,
+   "title": "Item 67",
+   "department": "Department 28",
+   "status": "Closed",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 68,
+   "title": "Item 68",
+   "department": "Department 29",
+   "status": "Pending",
+   "tags": [
+    "c"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 69,
+   "title": "Item 69",
+   "department": "Department 30",
+   "status": "Open",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 70,
+   "title": "Item 70",
+   "department": "Department 31",
+   "status": "Closed",
+   "tags": [
+    "c"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 71,
+   "title": "Item 71",
+   "department": "Department 32",
+   "status": "Pending",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 72,
+   "title": "Item 72",
+   "department": "Department 33",
+   "status": "Open",
+   "tags": [
+    "c"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 73,
+   "title": "Item 73",
+   "department": "Department 34",
+   "status": "Closed",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 74,
+   "title": "Item 74",
+   "department": "Department 35",
+   "status": "Pending",
+   "tags": [
+    "c"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 75,
+   "title": "Item 75",
+   "department": "Department 36",
+   "status": "Open",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 76,
+   "title": "Item 76",
+   "department": "Department 37",
+   "status": "Closed",
+   "tags": [
+    "c"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 77,
+   "title": "Item 77",
+   "department": "Department 38",
+   "status": "Pending",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2026",
+   "facet": "Person",
+   "group": "South",
+   "parent_department": ""
+  },
+  {
+   "id": 78,
+   "title": "Item 78",
+   "department": "Department 39",
+   "status": "Open",
+   "tags": [
+    "c"
+   ],
+   "year": "2024",
+   "facet": "Place",
+   "group": "North",
+   "parent_department": ""
+  },
+  {
+   "id": 79,
+   "title": "Item 79",
+   "department": "Department 40",
+   "status": "Closed",
+   "tags": [
+    "a",
+    "b"
+   ],
+   "year": "2025",
+   "facet": "Organization",
+   "group": "North",
+   "parent_department": ""
+  }
+ ]
+}
