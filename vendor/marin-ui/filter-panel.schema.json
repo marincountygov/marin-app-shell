@@ -112,6 +112,13 @@
               "description": "The record field that holds the value of another record in the same list: that record is listed under it (a division under its department). Choosing one does not choose the other.",
               "type": "string",
               "minLength": 1
+            },
+            "order": {
+              "description": "\"data\" keeps the choices in the order the file lists them; the default sorts them A to Z (numbers in order).",
+              "enum": [
+                "label",
+                "data"
+              ]
             }
           }
         },
@@ -409,6 +416,13 @@
                   "description": "The record field that holds the value of another record in the same list: that record is listed under it (a division under its department). Choosing one does not choose the other.",
                   "type": "string",
                   "minLength": 1
+                },
+                "order": {
+                  "description": "\"data\" keeps the choices in the order the file lists them; the default sorts them A to Z (numbers in order).",
+                  "enum": [
+                    "label",
+                    "data"
+                  ]
                 }
               }
             },

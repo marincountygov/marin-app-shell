@@ -70,7 +70,7 @@ def drawn(page, base):
     require(first.startswith("Department 01") and "(2)" in first, f"Options are sorted and counted from the data: {first!r}")
     require(page.locator("#year-options input[value='2026']").is_checked(), "A radio group starts on its latest value")
     tags = page.eval_on_selector_all("#items-filter-panel-tag option", "els => els.map(e => e.textContent)")
-    require(tags == ["All tags", "a", "b", "c"], f"A field holding a list gives one choice per item: {tags}")
+    require(tags == ["All tags", "c", "a", "b"], f"A field holding a list gives one choice per item, in the data's own order: {tags}")
     require(page.get_attribute("#items-filter-panel-tag", "aria-labelledby") == "items-filter-panel-tag-legend", "The select is named by its group name")
     require(toggle_name(page) == "Filter", f"Nothing active: {toggle_name(page)}")
 
@@ -202,6 +202,32 @@ def date_params(page, base):
     page.fill("#items-filter-panel-date-from", "2026-02-01")
     page.dispatch_event("#items-filter-panel-date-from", "change")
     require("from=2026-02-01" in page.url and "to=2026-03-01" in page.url and "date-from" not in page.url, f"The range is written with the file's own parameter names: {page.url}")
+
+
+def late_column(page, base):
+    # A column added after the page loaded (a page drawn from a template when the address changes) is drawn as it
+    # arrives, once; replacing the page removes it without leaving anything behind.
+    load(page, base)
+    page.evaluate("""() => {
+        const layout = document.createElement('div');
+        layout.id = 'late-layout';
+        layout.className = 'search-layout';
+        layout.innerHTML = '<div class="search-side" id="late" data-filter-column="filters/valid-small.json" data-filter-name="late"></div><div class="search-results"></div>';
+        document.querySelector('main').append(layout);
+    }""")
+    page.wait_for_selector("#late-filter-panel #admin-facet", state="attached")
+    require(page.locator("#late-filter-panel-toggle").count() == 1 and page.locator("#late-filter-panel .search-panel-title").count() == 1, "A column added later is drawn once")
+    page.evaluate("document.getElementById('late-layout').remove()")
+    page.evaluate("""() => {
+        const layout = document.createElement('div');
+        layout.id = 'late-layout';
+        layout.className = 'search-layout';
+        layout.innerHTML = '<div class="search-side" data-filter-column="filters/valid-small.json" data-filter-name="late"></div><div class="search-results"></div>';
+        document.querySelector('main').append(layout);
+    }""")
+    page.wait_for_selector("#late-filter-panel #admin-facet", state="attached")
+    require(page.locator("#late-filter-panel-toggle").count() == 1, "Drawn again when the page comes back")
+    page.evaluate("document.getElementById('late-layout').remove()")
 
 
 def behaves(page, base):
@@ -412,7 +438,7 @@ def main():
                 page = context.new_page()
                 page.on("pageerror", lambda e: problems.append(str(e)))
                 page.on("console", lambda m: problems.append(m.text) if m.type == "error" and not EXPECTING_ERRORS["on"] else None)
-                for check in (drawn, group_types, hierarchy, app_options, small_columns, date_params, results_and_errors, behaves, focus_not_obscured, sizes):
+                for check in (drawn, group_types, hierarchy, app_options, small_columns, date_params, late_column, results_and_errors, behaves, focus_not_obscured, sizes):
                     check(page, base)
                 axe(page, base, scheme)
                 context.close()
