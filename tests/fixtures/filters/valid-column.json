@@ -1,7 +1,12 @@
 {
  "schemaVersion": "1.0.0",
  "search": {
-  "id": "item-search"
+  "id": "item-search",
+  "fields": [
+   "title",
+   "department"
+  ],
+  "match": "words"
  },
  "groups": [
   {
@@ -57,7 +62,8 @@
     "from": "filters/column-data.json",
     "records": "records",
     "valueField": "year"
-   }
+   },
+   "field": "year"
   },
   {
    "type": "checkbox",
@@ -68,7 +74,8 @@
     "from": "filters/column-data.json",
     "records": "records",
     "valueField": "department"
-   }
+   },
+   "field": "department"
   },
   {
    "type": "checkbox",
@@ -98,7 +105,8 @@
     "records": "records",
     "valueField": "department",
     "parentField": "parent_department"
-   }
+   },
+   "field": "department"
   },
   {
    "type": "select",
@@ -110,14 +118,16 @@
     "records": "records",
     "valueField": "tags",
     "order": "data"
-   }
+   },
+   "field": "tags"
   },
   {
    "type": "date-range",
    "id": "date",
    "label": "Dates",
    "fromParam": "from",
-   "toParam": "to"
+   "toParam": "to",
+   "field": "date"
   },
   {
    "type": "nested-checkbox",
@@ -131,7 +141,8 @@
     "from": "filters/column-data.json",
     "records": "records",
     "valueField": "department"
-   }
+   },
+   "field": "department"
   },
   {
    "type": "checkbox",

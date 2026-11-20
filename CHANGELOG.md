@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.0 - 2026-11-20
+- The filter column does the matching and the counting. `filters.json` names the record field each group looks at (`"field"`, a dot path; a list counts as each value) and the fields the search reads (`search.fields`, `search.match` of `"phrase"` or `"words"`). The column has `matchesRecord(record, {skip})`, `filter(records, {skip})` and `updateCounts(records, {extra, skip})`: OR inside a group, AND across groups, a date range on the record's date, a count beside every choice that leaves out its own group, and group totals that count each record once. A group with no `field` stays the app's own. Why: five apps each wrote about 15 to 20 lines of the same matching and counting. This is compatible: an app that keeps its own matching works unchanged.
+- The pinned Marin UI baseline moves from 1.36.0 to 1.37.0.
+
 ## 2.0.0 - 2026-11-20
 - **Breaking for every app that has a filter column.** An app now lists its filters in a `filters.json` and the shell draws the column; hand-written filter markup and the app's own code that builds it are removed in the same pull request that installs this release. Installing 2.0.0 without that change, or the change without 2.0.0, is not supported, and the app's check fails: `python3 vendor/marinos/audit-filter-column.py . --fail`. Why: the words, order, spacing, scrolling and accessibility of the filter column were copied into each app and had drifted; one owner keeps them the same.
 - The shell draws the filter column from `filters.json` (`[data-filter-column]`, with the schema `filter-panel.schema.json` shipped beside the shell): the toggle, the "Filter" title, Reset, a "Search" field with no placeholder, and groups of checkboxes (collapsed, always showing, or nested), a radio choice, a drop-down or a date range. Every group shows its name, and nothing chosen reads "All" and the plural noun. Choices are kept in the address. Events and methods are in `docs/components.md`.
