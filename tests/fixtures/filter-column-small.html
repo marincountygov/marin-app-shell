@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Filter column fixture, no search</title>
+  
+  <link rel="stylesheet" href="/vendor/marinos/marinos.css">
+  <script src="/vendor/marinos/marinos.js" defer></script>
+</head>
+<body data-app-id="fixture">
+  <main class="container">
+    <h1>Filter column fixture, no search</h1>
+    <div class="search-layout">
+      <div class="search-side" data-filter-column="filters/valid-small.json" data-filter-name="admin"></div>
+      <div class="search-results"><p id="results-status" data-filter-results>Waiting</p></div>
+    </div>
+    <div class="search-layout">
+      <div class="search-side" data-filter-column="filters/valid-separator.json" data-filter-name="feed"></div>
+      <div class="search-results"><p>Second column</p></div>
+    </div>
+  </main>
+</body>
+</html>

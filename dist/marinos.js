@@ -1335,14 +1335,18 @@
       return "";
     };
     const isMany = (group) => group.type === "checkbox" || group.type === "nested-checkbox";
+    // "address": false in the file keeps every choice out of the address (a table's own filter, say).
+    const addressOn = config.address !== false;
     const fromAddress = (group) => {
       const params = url.searchParams;
-      if (isMany(group)) return params.has(group.param) ? params.getAll(group.param).filter(Boolean) : defaultFor(group);
+      if (!addressOn) return defaultFor(group);
+      // "separator" reads a list written in one parameter ("a,b"), as an app's older shared links did.
+      if (isMany(group)) return params.has(group.param) ? params.getAll(group.param).flatMap((one) => (group.separator ? one.split(group.separator) : [one])).filter(Boolean) : defaultFor(group);
       if (group.type === "date-range") return { from: params.get(`${group.param}-from`) || "", to: params.get(`${group.param}-to`) || "" };
       return params.has(group.param) ? params.get(group.param) : defaultFor(group);
     };
 
-    const state = { search: url.searchParams.get("q") || "", groups: {} };
+    const state = { search: addressOn ? url.searchParams.get("q") || "" : "", groups: {} };
     groups.forEach((group) => {
       state.groups[group.id] = fromAddress(group);
     });
@@ -1350,6 +1354,8 @@
     const isActive = (group) => {
       const value = state.groups[group.id];
       if (group.type === "date-range") return Boolean(value.from || value.to);
+      // A hidden choice (a "Report dates" time range) is what the app shows, not something the person chose.
+      if (group.list.some((option) => option.hidden && option.value === value)) return false;
       return JSON.stringify(value) !== JSON.stringify(defaultFor(group));
     };
     const activeCount = () => (state.search.trim() ? 1 : 0) + groups.filter(isActive).length;
@@ -1380,12 +1386,18 @@
     const resetButton = make("button", { type: "button", class: "action-button", "aria-label": "Reset filters", title: "Reset filters" }, [resetIcon]);
     const header = make("div", { class: "search-panel-header" }, [make("h2", { class: "search-panel-title", id: titleId, text: "Filter" }), resetButton]);
 
-    const searchId = config.search.id;
-    const searchInput = make("input", { type: "search", id: searchId, autocomplete: "off" });
-    searchInput.value = state.search;
-    const searchField = make("div", { class: "search-input-field" }, [make("label", { for: searchId, text: "Search" }), searchInput]);
+    // The search box is left out when the file has no "search" (a short list that needs none).
+    let searchInput = null;
+    let searchField = null;
+    if (config.search) {
+      searchInput = make("input", { type: "search", id: config.search.id, autocomplete: "off" });
+      searchInput.value = state.search;
+      searchField = make("div", { class: "search-input-field" }, [make("label", { for: config.search.id, text: "Search" }), searchInput]);
+    }
 
     const controls = {};
+    const groupCounts = {};
+    const disabledGroups = new Set();
     const summaryFor = (group) => {
       const count = state.groups[group.id].length;
       return count ? `${count} selected` : group.allLabel;
@@ -1429,15 +1441,20 @@
           return make("ul", { class: "search-facet-list", id: by.length ? null : `${group.id}-options` }, [...roots, ...loose].map((option) => item(option, children)));
         };
         // Nested groups (groupBy): one collapsed group for each value of a field, in the order the data first shows them.
-        const branch = (options, depth) => {
+        // A choice whose path is shorter than the depth sits directly in the group above (a facet with only one group).
+        const branch = (options, depth, trail = []) => {
           if (depth >= by.length) return list(options);
+          const deeper = (option) => option.path.length > depth && option.path[depth] != null;
           const parts = new Map();
-          options.forEach((option) => parts.set(option.path[depth], [...(parts.get(option.path[depth]) || []), option]));
+          options.filter(deeper).forEach((option) => parts.set(option.path[depth], [...(parts.get(option.path[depth]) || []), option]));
           const wrap = make("div");
+          const here = options.filter((option) => !deeper(option));
+          if (here.length) wrap.append(list(here));
           parts.forEach((subset, name) => {
             const summary = make("summary", { text: name });
-            summaries.push({ summary, name, values: new Set(subset.map((option) => option.value)) });
-            wrap.append(make("details", { class: "mm-facet-group", open: subset.some((option) => chosen().includes(option.value)) }, [summary, branch(subset, depth + 1)]));
+            const key = [...trail, name].join(" / ");
+            summaries.push({ summary, name, key, values: new Set(subset.map((option) => option.value)) });
+            wrap.append(make("details", { class: "mm-facet-group", open: subset.some((option) => chosen().includes(option.value)) }, [summary, branch(subset, depth + 1, [...trail, name])]));
           });
           return wrap;
         };
@@ -1452,9 +1469,10 @@
         fieldset.append(body);
         const refresh = () => {
           if (simpleSummary) simpleSummary.textContent = summaryFor(group);
-          summaries.forEach(({ summary, name, values }) => {
+          summaries.forEach(({ summary, name, key, values }) => {
             const count = chosen().filter((value) => values.has(value)).length;
-            summary.textContent = count ? `${name} (${count} selected)` : name;
+            const total = (groupCounts[group.id] || {})[key];
+            summary.textContent = `${name}${total == null ? "" : ` (${total})`}${count ? ` (${count} selected)` : ""}`;
           });
         };
         refresh();
@@ -1463,10 +1481,11 @@
           refresh();
           changed(group.id);
         });
-        controls[group.id] = { list: fieldset, sync() {
+        controls[group.id] = { list: fieldset, refresh, sync() {
           inputs.forEach((input) => { input.checked = chosen().includes(input.value); });
           refresh();
-          fieldset.querySelectorAll("details").forEach((details) => { details.open = false; });
+          // A group holding a choice is open, so a choice set by the app is never hidden; with nothing chosen (Reset) all close.
+          fieldset.querySelectorAll("details").forEach((details) => { details.open = Boolean(details.querySelector("input:checked")); });
         } };
       } else if (group.type === "radio") {
         const list = make("ul", { class: "search-facet-list", id: `${group.id}-options` });
@@ -1529,11 +1548,12 @@
     }
 
     const fieldsets = new Map(groups.map((group) => [group.id, buildGroup(group)]));
-    const aside = make("aside", { id: panelId, class: "search-sidebar", "aria-labelledby": titleId, "data-open": "false" }, [header, searchField, ...fieldsets.values()]);
+    const aside = make("aside", { id: panelId, class: "search-sidebar", "aria-labelledby": titleId, "data-open": "false" }, [header, ...(searchField ? [searchField] : []), ...fieldsets.values()]);
     column.replaceChildren(toggle, aside);
     if (!status.isConnected) column.append(status);
 
     function writeAddress() {
+      if (!addressOn) return;
       const next = new URL(window.location.href);
       const keys = ["q", ...groups.flatMap((group) => [group.param, `${group.param}-from`, `${group.param}-to`])];
       keys.forEach((key) => next.searchParams.delete(key));
@@ -1542,7 +1562,8 @@
         const value = state.groups[group.id];
         if (!isActive(group)) return;
         if (isMany(group)) {
-          if (value.length) value.forEach((one) => next.searchParams.append(group.param, one));
+          if (value.length && group.separator) next.searchParams.set(group.param, value.join(group.separator));
+          else if (value.length) value.forEach((one) => next.searchParams.append(group.param, one));
           else next.searchParams.append(group.param, "");
         } else if (group.type === "date-range") {
           if (value.from) next.searchParams.set(`${group.param}-from`, value.from);
@@ -1564,12 +1585,12 @@
     }
 
     let searchTimer;
-    searchInput.addEventListener("input", () => {
+    searchInput?.addEventListener("input", () => {
       state.search = searchInput.value;
       window.clearTimeout(searchTimer);
       searchTimer = window.setTimeout(() => changed("search"), FILTER_SEARCH_PAUSE);
     });
-    searchInput.addEventListener("search", () => {
+    searchInput?.addEventListener("search", () => {
       window.clearTimeout(searchTimer);
       state.search = searchInput.value;
       changed("search");
@@ -1578,7 +1599,7 @@
     function reset() {
       window.clearTimeout(searchTimer);
       state.search = "";
-      searchInput.value = "";
+      if (searchInput) searchInput.value = "";
       groups.forEach((group) => {
         state.groups[group.id] = defaultFor(group);
         controls[group.id].sync();
@@ -1641,6 +1662,19 @@
     // For a group whose options are {"app": true}: the app supplies the choices once it has them (data it fetched
     // or worked out), as [{ value, label, count?, path?, parent?, hidden? }]. The group is drawn again with what is
     // chosen kept; a chosen value that is not among the new choices is dropped.
+    // Counts shown beside a nested group's name, keyed by its path ("Place" or "Place / Districts").
+    column.setGroupCounts = (groupId, counts) => {
+      groupCounts[groupId] = counts;
+      controls[groupId]?.refresh?.();
+    };
+    // A whole group the current view does not use (a time range while a report sets its own dates). The group stays
+    // on screen, dimmed and out of the tab order, and keeps what it holds.
+    column.setDisabled = (groupId, disabled) => {
+      if (!fieldsets.has(groupId)) return;
+      if (disabled) disabledGroups.add(groupId);
+      else disabledGroups.delete(groupId);
+      fieldsets.get(groupId).disabled = Boolean(disabled);
+    };
     column.setOptions = (groupId, options) => {
       const group = groups.find((one) => one.id === groupId);
       if (!group) return;
@@ -1650,6 +1684,7 @@
         if (state.groups[groupId] !== "" && !group.list.some((option) => option.value === state.groups[groupId])) state.groups[groupId] = defaultFor(group);
       }
       const fresh = buildGroup(group);
+      fresh.disabled = disabledGroups.has(groupId);
       fieldsets.get(groupId).replaceWith(fresh);
       fieldsets.set(groupId, fresh);
       toggle.dataset.filterActive = String(activeCount());

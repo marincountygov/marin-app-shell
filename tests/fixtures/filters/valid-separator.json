@@ -1,0 +1,35 @@
+{
+ "schemaVersion": "1.0.0",
+ "search": {
+  "id": "s"
+ },
+ "groups": [
+  {
+   "type": "nested-checkbox",
+   "id": "monitor",
+   "label": "Monitors",
+   "groupBy": [
+    "facet",
+    "group"
+   ],
+   "separator": ",",
+   "options": {
+    "app": true
+   }
+  },
+  {
+   "type": "select",
+   "id": "time",
+   "label": "Times",
+   "default": "60d",
+   "options": {
+    "values": [
+     {
+      "value": "60d",
+      "label": "Past 60 days"
+     }
+    ]
+   }
+  }
+ ]
+}
