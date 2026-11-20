@@ -129,6 +129,15 @@
     "records": "records",
     "valueField": "department"
    }
+  },
+  {
+   "type": "checkbox",
+   "id": "owner",
+   "label": "Owners",
+   "allLabel": "All owners",
+   "options": {
+    "app": true
+   }
   }
  ]
 }

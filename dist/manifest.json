@@ -263,11 +263,11 @@
     },
     "brand-source.json": {
       "bytes": 10511,
-      "sha256": "fa6e9b2319ad43387d8ead7e9ca9d0ebf8cb6ce872a68aa1cbeeca5331f86dcf"
+      "sha256": "9df9acaa17294068e9e62f0c0e1d9626fc6ca732aadb0db450a729f64ba63af4"
     },
     "filter-panel.schema.json": {
-      "bytes": 11009,
-      "sha256": "667869ba777664ee988d207585c154c181d1b2b51ea21b2aa205f5cc395f6a99"
+      "bytes": 11487,
+      "sha256": "7ee9e3bcb49e1fbc5e746828a71de799a5cdc2d027605f96b9ffea0c9db22b1c"
     },
     "icons/lucide/LICENSE": {
       "bytes": 3208,
@@ -462,8 +462,8 @@
       "sha256": "327726595323609199500db625dd0aed5bd990147749fe6f71667559179014c4"
     },
     "marinos.js": {
-      "bytes": 183309,
-      "sha256": "81418eb69cb81b2181ce0531c7e5e7015ef9963e8b10584aef9dc7bb79203e6a"
+      "bytes": 184604,
+      "sha256": "eea1ecfcad567bde5787e237cd2303a07cbd2b65f58c22734bdfaf4fd4c3bd8f"
     }
   }
 }

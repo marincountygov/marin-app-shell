@@ -75,7 +75,7 @@
       "pattern": "^All [a-z]"
     },
     "options": {
-      "description": "Where the choices come from. Prefer \"from\": the labels then come from the app's own data, not from this file.",
+      "description": "Where the choices come from. Prefer \"from\": the labels then come from the app's own data file, not from this file.",
       "oneOf": [
         {
           "type": "object",
@@ -143,6 +143,19 @@
                   }
                 }
               }
+            }
+          }
+        },
+        {
+          "description": "The app supplies the choices itself after it loads (data it fetched or worked out): column.setOptions(groupId, [{value, label, count?}]). The group's name and \"All\" text still come from this file.",
+          "type": "object",
+          "required": [
+            "app"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "app": {
+              "const": true
             }
           }
         }
