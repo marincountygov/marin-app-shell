@@ -114,7 +114,9 @@
   {
    "type": "date-range",
    "id": "date",
-   "label": "Dates"
+   "label": "Dates",
+   "fromParam": "from",
+   "toParam": "to"
   },
   {
    "type": "nested-checkbox",
