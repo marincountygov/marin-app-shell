@@ -10,6 +10,8 @@ rendering and adopts the reviewed Marin UI 1.19.0 baseline. Version 1.11.0 refre
 compatible footer-extension API for app-specific links and optional platform-link
 suppression while making the four standard information destinations mandatory.
 
+Version 2.0.0 is the first major release since 1.0: the filter column is drawn from an app's `filters.json`, so an app with a filter column removes its own markup in the same pull request that installs it.
+
 Patch releases fix compatible defects. Minor releases add compatible capabilities
 or intentionally change presentation and therefore still require visual review.
 Major releases change required component markup, routes, or deployment paths.

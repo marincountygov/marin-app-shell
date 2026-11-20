@@ -191,3 +191,14 @@ bash scripts/install.sh ../marin-unzipper --check
 It verifies managed shell, font, and icon integrity and requires
 `vendor/marinos/manifest.json` `shellVersion` to match the app's
 `marin.yml` `platform.shell` value.
+
+## Moving to 2.0.0: the filter column
+
+Release 2.0.0 is breaking for an app that has a filter column. The shell install and the filter change go in **one pull request**, never apart.
+
+1. Install the release: `bash scripts/install.sh /path/to/app`.
+2. Write `filters.json` next to the page, following `vendor/marinos/filter-panel.schema.json`. The wording comes from there, not from the page: a plural name for each group, an "All …" text (`All departments`, `All statuses`), no placeholder, no search label, no title for the column. Choices come from the app's own data (`options.from`), so no choice label is typed into the page.
+3. In the page, replace the whole `.search-side` (the toggle button and `aside.search-sidebar`) with `<div class="search-side" data-filter-column="filters.json" data-filter-name="things"></div>`.
+4. Delete the app's own code that builds, fills, resets or reads the column, its address handling for filters, and its CSS copies of the column. Listen for `marin-filter-change` (`detail.state`) and call `setCounts`, `setResults` and `reset` on the element instead. Put `data-filter-results` on the results message, and delete the app's own result-count announcement, "no results" text and "active filters" text.
+5. Move sort out of the column to above the results.
+6. Run `python3 vendor/marinos/audit-filter-column.py . --fail` and the app's own tests. Add the audit to the app's `scripts/check.sh` and CI.

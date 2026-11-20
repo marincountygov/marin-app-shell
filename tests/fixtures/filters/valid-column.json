@@ -1,0 +1,134 @@
+{
+ "schemaVersion": "1.0.0",
+ "search": {
+  "id": "item-search"
+ },
+ "groups": [
+  {
+   "type": "select",
+   "id": "time",
+   "label": "Times",
+   "default": "60d",
+   "options": {
+    "values": [
+     {
+      "value": "24h",
+      "label": "Past 24 hours"
+     },
+     {
+      "value": "60d",
+      "label": "Past 60 days"
+     },
+     {
+      "value": "report",
+      "label": "Report dates",
+      "hidden": true
+     }
+    ]
+   }
+  },
+  {
+   "type": "checkbox",
+   "id": "show",
+   "label": "Measures",
+   "collapsed": false,
+   "default": [
+    "amount"
+   ],
+   "options": {
+    "values": [
+     {
+      "value": "amount",
+      "label": "Amount"
+     },
+     {
+      "value": "change",
+      "label": "Change"
+     }
+    ]
+   }
+  },
+  {
+   "type": "radio",
+   "id": "year",
+   "label": "Years",
+   "default": "latest",
+   "options": {
+    "from": "filters/column-data.json",
+    "records": "records",
+    "valueField": "year"
+   }
+  },
+  {
+   "type": "checkbox",
+   "id": "department",
+   "label": "Departments",
+   "allLabel": "All departments",
+   "options": {
+    "from": "filters/column-data.json",
+    "records": "records",
+    "valueField": "department"
+   }
+  },
+  {
+   "type": "checkbox",
+   "id": "status",
+   "label": "Statuses",
+   "allLabel": "All statuses",
+   "options": {
+    "values": [
+     {
+      "value": "open",
+      "label": "Open"
+     },
+     {
+      "value": "closed",
+      "label": "Closed"
+     }
+    ]
+   }
+  },
+  {
+   "type": "checkbox",
+   "id": "unit",
+   "label": "Units",
+   "allLabel": "All units",
+   "options": {
+    "from": "filters/column-data.json",
+    "records": "records",
+    "valueField": "department",
+    "parentField": "parent_department"
+   }
+  },
+  {
+   "type": "select",
+   "id": "tag",
+   "label": "Tags",
+   "allLabel": "All tags",
+   "options": {
+    "from": "filters/column-data.json",
+    "records": "records",
+    "valueField": "tags"
+   }
+  },
+  {
+   "type": "date-range",
+   "id": "date",
+   "label": "Dates"
+  },
+  {
+   "type": "nested-checkbox",
+   "id": "monitor",
+   "label": "Monitors",
+   "groupBy": [
+    "facet",
+    "group"
+   ],
+   "options": {
+    "from": "filters/column-data.json",
+    "records": "records",
+    "valueField": "department"
+   }
+  }
+ ]
+}

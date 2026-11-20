@@ -22,7 +22,8 @@ def main() -> None:
     version = (source / "BRAND_VERSION").read_text().strip()
     require(re.fullmatch(r"\d+\.\d+\.\d+", version) is not None, "Invalid Marin UI BRAND_VERSION")
     mapping = {"vendor/marin-ui/app-brand.css": "shared/app-brand.css", "vendor/pico.min.css": "vendor/pico.min.css",
-               "vendor/icons/lucide/LICENSE": "vendor/icons/lucide/LICENSE"}
+               "vendor/icons/lucide/LICENSE": "vendor/icons/lucide/LICENSE",
+               "vendor/marin-ui/filter-panel.schema.json": "schemas/filter-panel.schema.json"}
     mapping.update({f"vendor/icons/lucide/{n}.svg": f"vendor/icons/lucide/{n}.svg" for n in ICON_NAMES})
     for path in [*mapping.values(), *FONT_PATHS]:
         require_plain_path(source / path, source)

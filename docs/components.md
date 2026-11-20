@@ -511,3 +511,10 @@ A `[data-subtabs]` group inside a tab section splits it into panels. It holds a 
 ```
 
 One panel shows at a time: the one the hash names, or contains an element the hash names, else the first. The nav marks the current link with `aria-current="page"`. A hash that names a panel opens its tab section without the shell scrolling to it. Record lists, key numbers and charts in a hidden panel load when it is first shown. Available from App Shell 1.24.0.
+
+## Filter column
+
+An app lists its filters in `filters.json` and the shell draws the column. Put `<div class="search-side" data-filter-column="filters.json" data-filter-name="things"></div>` inside a `.search-layout`; no filter HTML belongs in the page. The file follows `vendor/marinos/filter-panel.schema.json` (search; groups of type `checkbox`, `nested-checkbox`, `radio`, `select` or `date-range`). The element dispatches `marin-filter-ready` and `marin-filter-change` (`detail.state`, `detail.source`), keeps the choices in the address (`q` and each group's `param`), and has `filterState`, `setCounts(groupId, {value: n})`, `setValue(groupId, value)`, `setResults(count)` and `reset()`. Put `data-filter-results` on the results message element inside the same `.search-layout` and call `setResults(count)` after filtering; the column announces the count once and offers Reset at zero. The words "Filter", "Search" and "Reset", the order, the spacing, the scrolling and the accessibility are the shell's. The full reference is "Filter column" in Marin UI's `docs/components.md`.
+
+`python3 vendor/marinos/audit-filter-column.py . --fail` lists a hand-written column and any `filters.json` that breaks the schema. Mark a panel that is not a filter (a list of steps) with `data-filter-column-exempt="steps"` on its `aside`.
+
