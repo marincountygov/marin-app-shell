@@ -1337,12 +1337,20 @@
     const isMany = (group) => group.type === "checkbox" || group.type === "nested-checkbox";
     // "address": false in the file keeps every choice out of the address (a table's own filter, say).
     const addressOn = config.address !== false;
+    // "fromParam" and "toParam" name a date range's address parameters, for an app whose links already used them.
+    const dateParams = (group) => [group.fromParam || `${group.param}-from`, group.toParam || `${group.param}-to`];
     const fromAddress = (group) => {
       const params = url.searchParams;
       if (!addressOn) return defaultFor(group);
       // "separator" reads a list written in one parameter ("a,b"), as an app's older shared links did.
       if (isMany(group)) return params.has(group.param) ? params.getAll(group.param).flatMap((one) => (group.separator ? one.split(group.separator) : [one])).filter(Boolean) : defaultFor(group);
-      if (group.type === "date-range") return { from: params.get(`${group.param}-from`) || "", to: params.get(`${group.param}-to`) || "" };
+      if (group.type === "date-range") {
+        // Only real dates count, and a range written backwards is turned round, as an app's older links expected.
+        const [fromKey, toKey] = dateParams(group);
+        const day = (value) => (/^\d{4}-\d{2}-\d{2}$/.test(value || "") ? value : "");
+        const range = { from: day(params.get(fromKey)), to: day(params.get(toKey)) };
+        return range.from && range.to && range.from > range.to ? { from: range.to, to: range.from } : range;
+      }
       return params.has(group.param) ? params.get(group.param) : defaultFor(group);
     };
 
@@ -1544,6 +1552,8 @@
         fieldset.append(from.wrapper, to.wrapper, rangeError);
         controls[group.id] = { sync() { from.input.value = state.groups[group.id].from; to.input.value = state.groups[group.id].to; showRange(false); } };
       }
+      // A group whose choices the app supplies has nothing to show until it does, or if there are none.
+      if (group.options?.app && group.list.length === 0) fieldset.hidden = true;
       return fieldset;
     }
 
@@ -1555,7 +1565,7 @@
     function writeAddress() {
       if (!addressOn) return;
       const next = new URL(window.location.href);
-      const keys = ["q", ...groups.flatMap((group) => [group.param, `${group.param}-from`, `${group.param}-to`])];
+      const keys = ["q", ...groups.flatMap((group) => [group.param, ...dateParams(group)])];
       keys.forEach((key) => next.searchParams.delete(key));
       if (state.search.trim()) next.searchParams.set("q", state.search.trim());
       groups.forEach((group) => {
@@ -1566,8 +1576,9 @@
           else if (value.length) value.forEach((one) => next.searchParams.append(group.param, one));
           else next.searchParams.append(group.param, "");
         } else if (group.type === "date-range") {
-          if (value.from) next.searchParams.set(`${group.param}-from`, value.from);
-          if (value.to) next.searchParams.set(`${group.param}-to`, value.to);
+          const [fromKey, toKey] = dateParams(group);
+          if (value.from) next.searchParams.set(fromKey, value.from);
+          if (value.to) next.searchParams.set(toKey, value.to);
         } else next.searchParams.set(group.param, value);
       });
       try {

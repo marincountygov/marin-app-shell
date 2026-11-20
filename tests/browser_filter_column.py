@@ -62,7 +62,8 @@ def drawn(page, base):
     require(page.evaluate("document.querySelectorAll('#items-filter-panel [disabled]').length") == 0, "Nothing is disabled")
     legends = page.eval_on_selector_all("#items-filter-panel legend", "els => els.map(e => e.textContent)")
     require(legends == ["Times", "Measures", "Years", "Departments", "Statuses", "Units", "Tags", "Dates", "Monitors", "Owners"], f"Every group shows its name: {legends}")
-    require(page.evaluate("[...document.querySelectorAll('#items-filter-panel legend')].every(e => e.getBoundingClientRect().width > 0 && !e.closest('.visually-hidden'))"), "No legend is hidden")
+    require(page.evaluate("[...document.querySelectorAll('#items-filter-panel fieldset:not([hidden]) legend')].every(e => e.getBoundingClientRect().width > 0 && !e.closest('.visually-hidden'))"), "No legend is hidden")
+    require(page.evaluate("document.getElementById('owner-facet').hidden"), "A group whose choices the app has not supplied yet is not shown")
     require(page.inner_text("#department-summary") == "All departments", "A group with nothing chosen reads All and its plural noun")
     require(page.locator("#department-options input").count() == 40, "Options come from the data file")
     first = page.text_content("#department-options li >> nth=0")
@@ -141,12 +142,12 @@ def app_options(page, base):
     # A group with {"app": true} starts empty; the app supplies its choices when it has them. A choice held in the
     # address before they arrive stays chosen, and one that is not among them is dropped.
     load(page, base, "?owner=b&owner=gone")
-    require(page.locator("#owner-options input").count() == 0 and page.inner_text("#owner-summary") == "2 selected", "Before the app supplies choices, the group is empty but keeps the address's choices")
+    require(page.locator("#owner-options input").count() == 0 and page.text_content("#owner-summary") == "2 selected", "Before the app supplies choices, the group is empty but keeps the address's choices")
     page.evaluate("document.querySelector('[data-filter-column]').setOptions('owner', [{ value: 'a', label: 'Alpha', count: 3 }, { value: 'b', label: 'Beta', count: 1 }, { value: 'c', label: 'Gamma' }])")
     labels = page.eval_on_selector_all("#owner-options li", "els => els.map(e => e.textContent.trim())")
     require(labels == ["Alpha (3)", "Beta (1)", "Gamma"], f"The supplied choices are drawn: {labels}")
     require(page.locator("#owner-options input[value='b']").is_checked() and not page.locator("#owner-options input[value='a']").is_checked(), "The remembered choice is checked")
-    require(page.inner_text("#owner-summary") == "1 selected" and "owner=b" in page.url and "gone" not in page.url, "A choice that is not among them is dropped, from the group and the address")
+    require(page.text_content("#owner-summary") == "1 selected" and "owner=b" in page.url and "gone" not in page.url, "A choice that is not among them is dropped, from the group and the address")
     page.check("#owner-options input[value='c']")
     page.evaluate("document.querySelector('[data-filter-column]').setOptions('owner', [{ value: 'a', label: 'Alpha' }, { value: 'b', label: 'Beta' }, { value: 'c', label: 'Gamma' }])")
     require(page.locator("#owner-options input:checked").count() == 2, "Supplying choices again keeps what is chosen")
@@ -189,6 +190,18 @@ def small_columns(page, base):
     page.evaluate("document.querySelectorAll('#monitor-facet details').forEach((d) => { d.open = true; })")
     page.check("#monitor-facet input[value='m2']")
     require("monitor=m1%2Cm2%2Cm3" in page.url or "monitor=m1,m2,m3" in page.url, f"Choices are written back joined in one parameter: {page.url}")
+
+
+def date_params(page, base):
+    # A date range can name its own address parameters (a link written as ?from=&to= keeps working), reads only real
+    # dates, and turns a backwards range round.
+    load(page, base, "?from=2026-02-01&to=2026-01-01")
+    require(page.input_value("#items-filter-panel-date-from") == "2026-01-01" and page.input_value("#items-filter-panel-date-to") == "2026-02-01", "A backwards range in the address is turned round")
+    load(page, base, "?from=tomorrow&to=2026-03-01")
+    require(page.input_value("#items-filter-panel-date-from") == "" and page.input_value("#items-filter-panel-date-to") == "2026-03-01", "Only real dates are read")
+    page.fill("#items-filter-panel-date-from", "2026-02-01")
+    page.dispatch_event("#items-filter-panel-date-from", "change")
+    require("from=2026-02-01" in page.url and "to=2026-03-01" in page.url and "date-from" not in page.url, f"The range is written with the file's own parameter names: {page.url}")
 
 
 def behaves(page, base):
@@ -399,7 +412,7 @@ def main():
                 page = context.new_page()
                 page.on("pageerror", lambda e: problems.append(str(e)))
                 page.on("console", lambda m: problems.append(m.text) if m.type == "error" and not EXPECTING_ERRORS["on"] else None)
-                for check in (drawn, group_types, hierarchy, app_options, small_columns, results_and_errors, behaves, focus_not_obscured, sizes):
+                for check in (drawn, group_types, hierarchy, app_options, small_columns, date_params, results_and_errors, behaves, focus_not_obscured, sizes):
                     check(page, base)
                 axe(page, base, scheme)
                 context.close()

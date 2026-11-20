@@ -331,6 +331,14 @@
         },
         "param": {
           "$ref": "#/$defs/id"
+        },
+        "fromParam": {
+          "description": "The address parameter for the From date, when links already used one (\"from\"). Default: the group's param and \"-from\".",
+          "$ref": "#/$defs/id"
+        },
+        "toParam": {
+          "description": "The address parameter for the To date (\"to\"). Default: the group's param and \"-to\".",
+          "$ref": "#/$defs/id"
         }
       }
     },
