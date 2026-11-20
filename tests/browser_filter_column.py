@@ -188,6 +188,12 @@ def small_columns(page, base):
     )
     require(shape == [["Place", 2, 0], ["Person", 0, 1]], f"A facet with two groups nests; one with a single group lists its choices directly: {shape}")
     page.evaluate("document.querySelectorAll('#monitor-facet details').forEach((d) => { d.open = true; })")
+    # With "match": "phrase" (the default) the whole search must appear in the text; the group's "field" is "id".
+    page.fill("#s", "a b")
+    page.wait_for_function("document.querySelector('[data-filter-name=feed]').filterState.search === 'a b'")
+    require(page.evaluate("(() => { const c = document.querySelector('[data-filter-name=feed]'); return [c.matchesRecord({ name: 'x a b y', id: 'm1' }), c.matchesRecord({ name: 'b a', id: 'm1' }), c.matchesRecord({ name: 'x a b y', id: 'zzz' })]; })()") == [True, False, False],
+            "A phrase matches in order, and the choice (m1, m3) still applies")
+    page.fill("#s", "")
     page.check("#monitor-facet input[value='m2']")
     require("monitor=m1%2Cm2%2Cm3" in page.url or "monitor=m1,m2,m3" in page.url, f"Choices are written back joined in one parameter: {page.url}")
 
@@ -228,6 +234,71 @@ def late_column(page, base):
     page.wait_for_selector("#late-filter-panel #admin-facet", state="attached")
     require(page.locator("#late-filter-panel-toggle").count() == 1, "Drawn again when the page comes back")
     page.evaluate("document.getElementById('late-layout').remove()")
+
+
+def matching(page, base):
+    # The file names each group's record field and the search's fields, so the column does the matching and the counts.
+    records = json.loads((ROOT / "tests/fixtures/filters/column-data.json").read_text())["records"]
+    load(page, base)
+    page.evaluate("""async () => {
+        window.__records = (await (await fetch('filters/column-data.json')).json()).records;
+        window.__col = document.querySelector('[data-filter-column]');
+    }""")
+    # The Years choice starts on its latest value and matches too, so the counts below set it aside with skip.
+    n = lambda skip=(): page.evaluate("(skip) => __col.filter(__records, { skip: ['year', ...skip] }).length", list(skip))
+    require(page.evaluate("__col.filter(__records).length") == sum(1 for r in records if r["year"] == "2026"), "The latest year is a choice like any other: it narrows the records")
+    require(n() == 80, "With nothing else chosen every record matches")
+    # The column must not shadow the browser's own Element.matches, which selector tools call on every element.
+    require(page.evaluate("(() => { const c = document.querySelector('[data-filter-column]'); return c.matches === Element.prototype.matches && c.matches('[data-filter-column]') && !c.matches('.nope') && c.querySelector('legend').closest('#items-filter-panel') !== null; })()"), "The column leaves the DOM's matches alone")
+    # Search: every word, in any order, across the named fields.
+    page.fill("#item-search", "02 department")
+    page.wait_for_function("__col.filterState.search === '02 department'")
+    require(n() == 2, f"Search words match in any order: {n()}")
+    page.fill("#item-search", "")
+    page.wait_for_function("__col.filterState.search === ''")
+    # OR inside a group, AND across groups.
+    page.click("#department-summary")
+    page.check("#department-options input[value='Department 01']")
+    require(n() == 2, "One department matches its records")
+    page.check("#department-options input[value='Department 03']")
+    require(n() == 4, "Two choices in a group combine with OR")
+    page.select_option("#items-filter-panel-tag", "c")
+    want = sum(1 for r in records if r["department"] in ("Department 01", "Department 03") and "c" in r["tags"])
+    require(n() == want, f"Groups combine with AND: {n()} vs {want}")
+    require(n(["tag"]) == 4, "A skipped group is left out")
+    # A date range.
+    page.fill("#items-filter-panel-date-from", "2026-02-12")
+    page.dispatch_event("#items-filter-panel-date-from", "change")
+    want = sum(1 for r in records if r["department"] in ("Department 01", "Department 03") and "c" in r["tags"] and r["date"] >= "2026-02-12")
+    require(n() == want, f"A date range matches on the record's date: {n()} vs {want}")
+    page.click("#items-filter-panel .action-button")
+    # Counts leave out the group's own choice, and group totals count each record once.
+    page.select_option("#items-filter-panel-tag", "c")
+    page.evaluate("document.querySelector('#department-facet details').open = true")
+    page.check("#department-options input[value='Department 01']")  # a choice in the group itself must not shrink its own counts
+    page.evaluate("__col.updateCounts(__records)")
+    counts = page.eval_on_selector_all("#department-options li", "els => Object.fromEntries(els.map(e => [e.querySelector('input').value, e.querySelector('.search-facet-count').textContent]))")
+    expect = {}
+    for r in records:
+        if "c" in r["tags"] and r["year"] == "2026":  # the Years choice (latest) still applies to every count
+            expect[r["department"]] = expect.get(r["department"], 0) + 1
+    bad = {k: (counts[k], f"({expect.get(k, 0)})") for k in counts if counts[k] != f"({expect.get(k, 0)})"}
+    require(not bad, f"Each choice shows how many records it would match: {bad}")
+    page.uncheck("#department-options input[value='Department 01']")
+    first = {}
+    for r in records:
+        first.setdefault(r["department"], r["facet"])
+    page.evaluate("""(map) => __col.setOptions('monitor', Object.entries(map).map(([value, facet]) => ({ value, label: value, path: [facet] })))""", first)
+    page.evaluate("__col.updateCounts(__records)")
+    texts = page.eval_on_selector_all("#monitor-facet > div > details > summary", "els => els.map(e => e.textContent.replace(/\\s+/g, ' ').trim())")
+    totals = {}
+    for r in records:
+        if "c" in r["tags"] and r["year"] == "2026":
+            totals[first[r["department"]]] = totals.get(first[r["department"]], 0) + 1
+    got = {t.split(" (")[0]: t for t in texts}
+    require(all(got[k].startswith(f"{k} ({v})") for k, v in totals.items()), f"Group totals count each record once: {got} vs {totals}")
+    # A group with no field is left to the app.
+    require(page.evaluate("document.querySelector('[data-filter-column]').matchesRecord({ title: 'x' }, { skip: ['tag'] })") in (True, False), "matches is callable")
 
 
 def behaves(page, base):
@@ -287,6 +358,9 @@ def results_and_errors(page, base):
     page.click("#results-status button")
     page.wait_for_function("document.getElementById('results-status').textContent === 'Filters reset. 12 results.'")
     require(not page.locator("#department-options input:checked").count(), "Reset from the empty state clears the choices")
+    # The text can be a node the app built (a line with some words in another weight); it keeps its markup.
+    page.evaluate("""() => { const line = document.createDocumentFragment(); line.append('Showing: all '); const span = document.createElement('span'); span.className = 'weight'; span.textContent = '(12 items)'; line.append(span); document.querySelector('[data-filter-column]').setResults(12, line); }""")
+    require(page.evaluate("document.getElementById('results-status').textContent") == "Showing: all (12 items)" and page.locator("#results-status span.weight").count() == 1, "A node keeps its markup")
     # An app that does not call setResults still hears "Filters reset." on its own.
     page.evaluate("window.__skipResults = true")
     page.click("#items-filter-panel .action-button")
@@ -438,7 +512,7 @@ def main():
                 page = context.new_page()
                 page.on("pageerror", lambda e: problems.append(str(e)))
                 page.on("console", lambda m: problems.append(m.text) if m.type == "error" and not EXPECTING_ERRORS["on"] else None)
-                for check in (drawn, group_types, hierarchy, app_options, small_columns, date_params, late_column, results_and_errors, behaves, focus_not_obscured, sizes):
+                for check in (drawn, group_types, hierarchy, app_options, small_columns, date_params, late_column, matching, results_and_errors, behaves, focus_not_obscured, sizes):
                     check(page, base)
                 axe(page, base, scheme)
                 context.close()

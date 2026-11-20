@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 2.1.0
+
+Version 2.1.0 lets a filter column do the matching and counting: name the record field for each group (`field`) and the search (`search.fields`) in `filters.json`, then use `column.filter(records)`, `column.matchesRecord(record)` and `column.updateCounts(records)` instead of writing the same code in the app. It is compatible with 2.0.0: an app that keeps its own matching works unchanged. The pinned Marin UI baseline moves from 1.36.0 to 1.37.0.
+
 ## Version 2.0.0
 
 Version 2.0.0 draws every filter column from the app's own `filters.json`, so the words, order, spacing, scrolling and accessibility are the same in every app. **Breaking for every app that has a filter column.** An app now lists its filters in a `filters.json` and the shell draws the column; hand-written filter markup and the app's own code that builds it are removed in the same pull request that installs this release. Installing 2.0.0 without that change, or the change without 2.0.0, is not supported, and the app's check fails: `python3 vendor/marinos/audit-filter-column.py . --fail`. See "Filter column" in `docs/components.md` and "Moving to 2.0.0" in `docs/migration.md`. The pinned Marin UI baseline moves from 1.35.1 to 1.36.0.

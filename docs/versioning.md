@@ -12,6 +12,8 @@ suppression while making the four standard information destinations mandatory.
 
 Version 2.0.0 is the first major release since 1.0: the filter column is drawn from an app's `filters.json`, so an app with a filter column removes its own markup in the same pull request that installs it.
 
+Version 2.1.0 adds matching and counting to the filter column (`field`, `search.fields`, `filter`, `matchesRecord`, `updateCounts`) without changing anything an existing app relies on.
+
 Patch releases fix compatible defects. Minor releases add compatible capabilities
 or intentionally change presentation and therefore still require visual review.
 Major releases change required component markup, routes, or deployment paths.
