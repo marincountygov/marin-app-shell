@@ -81,8 +81,11 @@ def group_types(page, base):
     listed = page.eval_on_selector_all("#items-filter-panel-time option:not([hidden])", "els => els.map(e => e.value)")
     require(listed == ["24h", "60d"], f"A hidden choice is not listed: {listed}")
     page.evaluate("document.querySelector('[data-filter-column]').setValue('time', 'report')")
-    require(page.input_value("#items-filter-panel-time") == "report" and "time=report" in page.url, "The app can set a hidden choice, and it reaches the address")
-    require(toggle_name(page) == "Filter, 1 active", f"setValue updates the active count: {toggle_name(page)}")
+    require(page.input_value("#items-filter-panel-time") == "report", "The app can set a hidden choice")
+    require("time=" not in page.url and toggle_name(page) == "Filter", f"A hidden choice is the app's display, not a filter: it stays out of the address and the active count ({page.url}, {toggle_name(page)})")
+    page.evaluate("document.querySelector('[data-filter-column]').setValue('time', '24h')")
+    require("time=24h" in page.url and toggle_name(page) == "Filter, 1 active", f"A real choice set by the app reaches the address and the count: {page.url}")
+    page.evaluate("document.querySelector('[data-filter-column]').setValue('time', '60d')")
     # An always-showing checkbox group: no summary, and its default is checked.
     require(page.locator("#show-facet details").count() == 0 and page.locator("#show-options input:checked").count() == 1, "An open list has no summary and starts on its default")
     page.uncheck("#show-options li:first-child input")
@@ -148,6 +151,44 @@ def app_options(page, base):
     page.evaluate("document.querySelector('[data-filter-column]').setOptions('owner', [{ value: 'a', label: 'Alpha' }, { value: 'b', label: 'Beta' }, { value: 'c', label: 'Gamma' }])")
     require(page.locator("#owner-options input:checked").count() == 2, "Supplying choices again keeps what is chosen")
     require(page.evaluate("document.querySelector('[data-filter-column]').filterState.groups.owner").__len__() == 2, "The state matches the screen")
+
+
+def small_columns(page, base):
+    # No search in the file: no search box. address false: nothing reaches the address. Variable depth: a facet with one
+    # group lists its choices directly; one with two groups nests. Group counts, and a disabled group.
+    page.goto(base + "tests/fixtures/filter-column-small.html?admin=a")
+    page.wait_for_selector("#admin-filter-panel", state="attached")
+    require(page.locator("#admin-filter-panel .search-input-field").count() == 0 and page.locator("#admin-filter-panel input[type=search]").count() == 0, "No search box when the file has none")
+    page.evaluate("document.querySelector('[data-filter-name=admin]').setOptions('admin', [{ value: 'a', label: 'Alpha', path: ['News'] }, { value: 'b', label: 'Beta', path: ['News'] }, { value: 'c', label: 'Gamma', path: ['Video'] }])")
+    require(page.locator("#admin-facet input").count() == 3 and page.locator("#admin-facet input:checked").count() == 0, "address:false ignores the address on load")
+    page.click("#admin-facet summary >> nth=0")
+    page.check("#admin-facet input[value='a']")
+    require(page.url.endswith("?admin=a"), f"address:false leaves the address as it was: {page.url}")
+    page.evaluate("document.querySelector('[data-filter-name=admin]').setGroupCounts('admin', { News: 5, Video: 2 })")
+    texts = page.eval_on_selector_all("#admin-facet > div > details > summary", "els => els.map(e => e.textContent)")
+    require(texts == ["News (5) (1 selected)", "Video (2)"], f"Group counts and selected counts show: {texts}")
+
+    # Disabled group: dimmed, out of the tab order, keeps what it holds, survives new options.
+    page.evaluate("document.querySelector('[data-filter-name=admin]').setDisabled('admin', true)")
+    require(page.evaluate("document.getElementById('admin-facet').disabled") and page.evaluate("document.querySelector('#admin-facet input').matches(':disabled')"), "A disabled group disables its fields")
+    page.evaluate("document.querySelector('[data-filter-name=admin]').setOptions('admin', [{ value: 'a', label: 'Alpha', path: ['News'] }])")
+    require(page.evaluate("document.getElementById('admin-facet').disabled") and page.locator("#admin-facet input:checked").count() == 1, "Disabled and chosen survive new options")
+    page.evaluate("document.querySelector('[data-filter-name=admin]').setDisabled('admin', false)")
+    require(not page.evaluate("document.getElementById('admin-facet').disabled"), "Enabling puts it back")
+
+    # Separator: a list in one parameter is read and written the same way.
+    page.goto(base + "tests/fixtures/filter-column-small.html?monitors=x")
+    page.goto(base + "tests/fixtures/filter-column-small.html?monitor=m1,m3")
+    page.wait_for_selector("#feed-filter-panel", state="attached")
+    page.evaluate("document.querySelector('[data-filter-name=feed]').setOptions('monitor', [{ value: 'm1', label: 'One', path: ['Place', 'North'] }, { value: 'm2', label: 'Two', path: ['Place', 'South'] }, { value: 'm3', label: 'Three', path: ['Person'] }])")
+    require(page.evaluate("document.querySelector('[data-filter-name=feed]').filterState.groups.monitor") == ["m1", "m3"], "A comma-joined parameter is read as a list")
+    shape = page.evaluate(
+        """() => [...document.querySelectorAll('#monitor-facet > div > details')].map(d => [d.querySelector('summary').textContent.split(' (')[0], d.querySelectorAll(':scope > div > details').length, d.querySelectorAll(':scope > div > ul > li').length])"""
+    )
+    require(shape == [["Place", 2, 0], ["Person", 0, 1]], f"A facet with two groups nests; one with a single group lists its choices directly: {shape}")
+    page.evaluate("document.querySelectorAll('#monitor-facet details').forEach((d) => { d.open = true; })")
+    page.check("#monitor-facet input[value='m2']")
+    require("monitor=m1%2Cm2%2Cm3" in page.url or "monitor=m1,m2,m3" in page.url, f"Choices are written back joined in one parameter: {page.url}")
 
 
 def behaves(page, base):
@@ -358,7 +399,7 @@ def main():
                 page = context.new_page()
                 page.on("pageerror", lambda e: problems.append(str(e)))
                 page.on("console", lambda m: problems.append(m.text) if m.type == "error" and not EXPECTING_ERRORS["on"] else None)
-                for check in (drawn, group_types, hierarchy, app_options, results_and_errors, behaves, focus_not_obscured, sizes):
+                for check in (drawn, group_types, hierarchy, app_options, small_columns, results_and_errors, behaves, focus_not_obscured, sizes):
                     check(page, base)
                 axe(page, base, scheme)
                 context.close()

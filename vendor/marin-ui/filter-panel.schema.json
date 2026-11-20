@@ -6,7 +6,6 @@
   "type": "object",
   "required": [
     "schemaVersion",
-    "search",
     "groups"
   ],
   "additionalProperties": false,
@@ -18,7 +17,7 @@
       "const": "1.0.0"
     },
     "search": {
-      "description": "The search box, always first. Its label is always \"Search\" and it never has a placeholder, so neither can be set.",
+      "description": "The search box, first when there is one. Leave it out for a short list that needs none. Its label is always \"Search\" and it never has a placeholder, so neither can be set.",
       "type": "object",
       "required": [
         "id"
@@ -53,6 +52,10 @@
           }
         ]
       }
+    },
+    "address": {
+      "description": "false keeps every choice out of the address bar (a table's own filter). Default true.",
+      "type": "boolean"
     }
   },
   "$defs": {
@@ -200,6 +203,12 @@
         },
         "param": {
           "$ref": "#/$defs/id"
+        },
+        "separator": {
+          "description": "Read and write the choices as one address parameter joined with this character (\"a,b\"), as an app's older shared links did. Without it each choice is its own parameter.",
+          "enum": [
+            ","
+          ]
         }
       },
       "if": {
@@ -363,38 +372,64 @@
           }
         },
         "options": {
-          "type": "object",
-          "required": [
-            "from",
-            "valueField"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "from": {
-              "type": "string",
-              "minLength": 1
+          "oneOf": [
+            {
+              "type": "object",
+              "required": [
+                "from",
+                "valueField"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "from": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "records": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "valueField": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "labelField": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "parentField": {
+                  "description": "The record field that holds the value of another record in the same list: that record is listed under it (a division under its department). Choosing one does not choose the other.",
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
             },
-            "records": {
-              "type": "string",
-              "minLength": 1
-            },
-            "valueField": {
-              "type": "string",
-              "minLength": 1
-            },
-            "labelField": {
-              "type": "string",
-              "minLength": 1
-            },
-            "parentField": {
-              "description": "The record field that holds the value of another record in the same list: that record is listed under it (a division under its department). Choosing one does not choose the other.",
-              "type": "string",
-              "minLength": 1
+            {
+              "$ref": "#/$defs/appOptions"
             }
-          }
+          ]
         },
         "param": {
           "$ref": "#/$defs/id"
+        },
+        "separator": {
+          "description": "Read and write the choices as one address parameter joined with this character (\"a,b\"), as an app's older shared links did. Without it each choice is its own parameter.",
+          "enum": [
+            ","
+          ]
+        }
+      }
+    },
+    "appOptions": {
+      "description": "The app supplies the choices itself after it loads (data it fetched or worked out): column.setOptions(groupId, [{value, label, count?}]). The group's name and \"All\" text still come from this file.",
+      "type": "object",
+      "required": [
+        "app"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "app": {
+          "const": true
         }
       }
     }

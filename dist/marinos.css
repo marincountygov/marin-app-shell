@@ -1194,6 +1194,11 @@ th[aria-sort="descending"] .sort-button::after {
   outline-offset: 2px;
 }
 
+/* A group inside a group (Place, then Districts) is indented, so it reads as part of the one above. */
+.mm-facet-group .mm-facet-group {
+  margin-left: 0.75rem;
+}
+
 /* An open group's checkboxes start a little below its name and leave room before the next group. */
 .mm-facet-group .search-facet-list {
   margin: 0.25rem 0 0.75rem;
