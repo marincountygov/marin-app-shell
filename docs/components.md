@@ -375,6 +375,20 @@ The shell script is deferred, so call `marinUpload` inside a `DOMContentLoaded` 
 
 **Copy and Download menus.** When there are several formats, use one button that opens a menu (`.menu`, `.menu-toggle`, `.menu-panel`), the same as the logo downloads in Marin Brand. List the formats in the order Text, HTML, Markdown, and use the same order in Copy and Download. The menu items are `button[data-button-kind="menu-item"]`.
 
+
+## Search results that show where the words are
+
+A search of the text of documents shows a line of the text under each result with the matched words marked, and marks the same words on the page the result opens. The rules are "Search results that show where the words are" in Marin UI's `docs/components.md`; the shell provides the code, and Marin UI's CSS provides `mark.search-hit` and `.search-snippet`. An app writes none of it.
+
+| Helper | What it does |
+|---|---|
+| `marinSearchWords(text)` | The words of what a person typed: lower case, no accents, no punctuation. Use it to split the query. |
+| `marinSearchSnippet(text, words)` | A `span.search-snippet` with about a line of `text` around the first word that starts with a typed word, each such word in a `mark.search-hit` (the whole word), with an ellipsis (`…`) on a side that continues. `null` when no word of the text starts with one: show the start of the text instead. |
+| `marinSearchRemember(href, words)` | Call it when a result is pressed. It keeps the words in `sessionStorage` for the page `href` opens. Nothing is added to the address. |
+| `marinSearchHighlight()` | Runs by itself when a page loads. If words were kept for this page (and are under two minutes old), it marks each word that starts with one inside `[data-search-highlight]` (else `#start`, else `#main`), skipping navigation, asides, the document actions and the pager, scrolls to the first mark (or stays at the section the address names), and lets Escape clear the marks. The words are read once, so a reload shows none. |
+
+The matching is the same everywhere: a word matches when it **starts with** a typed word, ignoring case and accents. A result that is only a heading makes a person open page after page to find the sentence; the snippet answers before the click. A search box in a sidebar or a narrow column lists names only, but still calls `marinSearchRemember` so the page it opens marks the words.
+
 ## Auditing shared helpers
 
 `vendor/marinos/audit-shared-helpers.py` lists the places an app still does its own copy, download, file reading or upload:
