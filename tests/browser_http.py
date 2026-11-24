@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from assets import require
 from install import install
-from browser_smoke import chrome_path, platform_fonts
+from browser_smoke import launch_browser, platform_fonts
 
 
 class QuietHandler(SimpleHTTPRequestHandler):
@@ -46,7 +46,7 @@ def main() -> None:
         thread.start()
         try:
             with sync_playwright() as pw:
-                browser = pw.chromium.launch(executable_path=chrome_path(), headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
+                browser = launch_browser(pw)
                 try:
                     page = browser.new_page(viewport={"width":1440,"height":1000})
                     errors, failures, font_responses = [], [], []
@@ -67,7 +67,7 @@ def main() -> None:
                         require(any(f["isCustomFont"] and f["glyphCount"] > 0 and family.replace(" ","").lower() in f["familyName"].replace(" ","").lower() for f in fonts),
                                 f"Actual rendered font mismatch: {selector}: {fonts}")
                     page.locator("#app-nav a[href='#about']").click()
-                    page.wait_for_function("!document.getElementById('about').hidden")
+                    page.wait_for_function("() => { const about = document.getElementById('about'); return Boolean(about) && !about.hidden; }")  # the section is built after the click, so it may not exist yet
                     page.evaluate("window.__homeNavigationProbe = true")
                     page.locator(".app-title__link").click()
                     page.wait_for_url(base)

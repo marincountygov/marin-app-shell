@@ -47,6 +47,14 @@ def chrome_path() -> str:
     return path
 
 
+def launch_browser(pw):
+    """The CI machine (Linux) runs the system Chromium without a sandbox. Anywhere else, use the Chromium that Playwright installs:
+    pointing Playwright at a system browser with those flags stalls on a Mac (no error, the page never loads)."""
+    if sys.platform.startswith("linux"):
+        return pw.chromium.launch(executable_path=chrome_path(), headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
+    return pw.chromium.launch(headless=True)
+
+
 def font_css(page: Page, css: str, fonts: dict[str, Path]) -> str:
     payload = [base64.b64encode(fonts[p].read_bytes()).decode("ascii") for p in FONT_PATHS[:2]]
     urls = page.evaluate('''values => values.map(value => {
@@ -149,7 +157,7 @@ def run_test(source: Path | None, screenshots: Path | None) -> None:
     fonts, label = resolve_fonts(ROOT, source)
     print(f"Browser fixture font source: {label}")
     with sync_playwright() as pw:
-        browser = pw.chromium.launch(executable_path=chrome_path(), headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
+        browser = launch_browser(pw)
         try:
             for width, scheme in ((1440,"light"), (1440,"dark"), (390,"light"), (390,"dark"), (320,"light")):
                 context = browser.new_context(viewport={"width":width,"height":900}, color_scheme=scheme)
