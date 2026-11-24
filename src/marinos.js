@@ -2355,6 +2355,10 @@
   window.marinContentFormats = contentFormats;
   window.marinFormatMenus = formatMenus;
 
+  // ---- Reports: the report model and what is made from it (window.marinReports) ------------------------------------------
+  // The core is src/reports-core.js, inlined here by scripts/build.py. It has no DOM access. See docs/reports.md.
+  /* __MARIN_REPORTS_CORE__ */
+
   // ---- Search results that show where the words are -----------------------------------------------------------------
   // A search of document text shows a line of the text under each result with the matched words marked (marinSearchSnippet),
   // and marks the same words on the page the result opens. The words travel in sessionStorage, never in the address

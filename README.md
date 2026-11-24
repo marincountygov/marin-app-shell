@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 2.3.0
+
+Version 2.3.0 adds the report core, `window.marinReports`. A report is plain data, and the core makes the preview HTML, text, Markdown, a standalone page, CSV rows and the report file from it, and reads a report file back. It has no DOM access. A table cell can carry a margin of error and a one-sided bound, so a CSV keeps both. It is compatible with 2.2.0. See `docs/reports.md`.
+
 ## Version 2.2.0
 
 Version 2.2.0 adds search results that show where the words are: `marinSearchWords`, `marinSearchSnippet`, `marinSearchRemember` and a highlighter that runs by itself on the page a result opens. An app's search shows a line of the text under each result with the matched words marked, and the same words are marked on the page that opens, with nothing added to the address. The look (`mark.search-hit`, `.search-snippet`) comes with the Marin UI 1.38.0 baseline. It is compatible with 2.1.0: nothing an existing app relies on changes. See "Search results that show where the words are" in `docs/components.md`.
