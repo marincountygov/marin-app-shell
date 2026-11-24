@@ -73,6 +73,8 @@ def expected_distribution(root: Path = ROOT) -> dict[str, bytes]:
     js = expand((root / "src/marinos.js").read_text())
     require(js.count("__LUCIDE_ICONS__") == 1, "Expected one generated Lucide input slot")
     js = js.replace("__LUCIDE_ICONS__", json.dumps(icon_map, ensure_ascii=True, sort_keys=True))
+    require(js.count("/* __MARIN_REPORTS_CORE__ */") == 1, "Expected one report core slot")
+    js = js.replace("/* __MARIN_REPORTS_CORE__ */", (root / "src/reports-core.js").read_text().strip())
     files = {"marinos.css": css.encode(), "marinos.js": js.encode(),
              "README.md": expand((root / "src/DIST_README.md").read_text()).encode(),
              "brand-source.json": (json.dumps(lock, indent=2) + "\n").encode()}

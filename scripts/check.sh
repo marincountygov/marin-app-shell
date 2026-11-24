@@ -26,6 +26,9 @@ if command -v node >/dev/null 2>&1; then
   node --check "$ROOT_DIR/demo/app.js"
   printf 'Checking viewBox-aware icon stroke defaults...\n'
   node "$ROOT_DIR/tests/icon_stroke_defaults.js"
+  printf 'Checking the report core...\n'
+  node --test "$ROOT_DIR/tests/reports-core.test.js" > /dev/null
+  node --check "$ROOT_DIR/src/reports-core.js"
 else
   printf 'SKIP: Node unavailable; JavaScript syntax and icon-default unit checks not performed.\n' >&2
 fi

@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.3.0 - 2026-11-24
+- Add the report core, `window.marinReports`: `create`, `renderHtml`, `toText`, `toMarkdown`, `standaloneHtml`, `csvRows`, `toJson`, `parseJson`, `formatDate` and `pacificToday`. A report is plain data that every output is made from (docs/reports.md). A cell of a table's raw `values` can also carry a margin of error and a one-sided bound, which the CSV writes as columns of their own. The Marin UI baseline is unchanged.
+
 ## 2.2.0 - 2026-11-24
 - Add the search-result helpers: `marinSearchWords(text)`, `marinSearchSnippet(text, words)` (a line of the text with the matched words in `mark.search-hit`, or `null`), `marinSearchRemember(href, words)` (call it when a result is pressed) and a highlighter that runs by itself on the page a result opens, marking the same words inside `[data-search-highlight]` (else `#start`, else `#main`). The words travel in `sessionStorage`, never in the address; they are read once and are ignored after two minutes or on another page. Escape clears the marks. Why: Marin Docs and the MarinOS home search each carried a copy of this code; every app's search can now show where the words are without writing it. The rules are "Search results that show where the words are" in Marin UI's `docs/components.md`.
 - The pinned Marin UI baseline moves from 1.37.0 to 1.38.0, which adds `mark.search-hit` and `.search-snippet`. Fonts and icons are unchanged.

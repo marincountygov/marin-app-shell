@@ -2172,7 +2172,7 @@ mark.search-hit {
   stroke-linejoin: round;
 }
 
-/* Marin App Shell 2.2.0: component integration only.
+/* Marin App Shell 2.3.0: component integration only.
    General visual rules come from the locked, unmodified Marin UI input. */
 marin-os-banner,
 marin-app-header,

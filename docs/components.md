@@ -534,3 +534,6 @@ An app lists its filters in `filters.json` and the shell draws the column. Put `
 
 `python3 vendor/marinos/audit-filter-column.py . --fail` lists a hand-written column and any `filters.json` that breaks the schema. Mark a panel that is not a filter (a list of steps) with `data-filter-column-exempt="steps"` on its `aside`.
 
+## Reports
+
+`window.marinReports` (2.3.0 and later) makes a report from plain data and draws it as HTML, text, Markdown, a standalone page, CSV rows and a report file, and reads a report file back. It has no DOM access, so it runs in tests. An app builds the section screens; the core turns the sections into the document, so the preview, Copy and Download cannot differ. The model and the calls are in `docs/reports.md`.
