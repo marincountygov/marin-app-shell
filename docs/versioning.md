@@ -14,6 +14,8 @@ Version 2.0.0 is the first major release since 1.0: the filter column is drawn f
 
 Version 2.1.0 adds matching and counting to the filter column (`field`, `search.fields`, `filter`, `matchesRecord`, `updateCounts`) without changing anything an existing app relies on.
 
+Version 2.2.0 adds the search-result helpers (`marinSearchWords`, `marinSearchSnippet`, `marinSearchRemember`, and a highlighter that runs when a page loads) and adopts the Marin UI 1.38.0 baseline, without changing anything an existing app relies on.
+
 Patch releases fix compatible defects. Minor releases add compatible capabilities
 or intentionally change presentation and therefore still require visual review.
 Major releases change required component markup, routes, or deployment paths.

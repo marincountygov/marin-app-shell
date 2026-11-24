@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 2.2.0
+
+Version 2.2.0 adds search results that show where the words are: `marinSearchWords`, `marinSearchSnippet`, `marinSearchRemember` and a highlighter that runs by itself on the page a result opens. An app's search shows a line of the text under each result with the matched words marked, and the same words are marked on the page that opens, with nothing added to the address. The look (`mark.search-hit`, `.search-snippet`) comes with the Marin UI 1.38.0 baseline. It is compatible with 2.1.0: nothing an existing app relies on changes. See "Search results that show where the words are" in `docs/components.md`.
+
 ## Version 2.1.0
 
 Version 2.1.0 lets a filter column do the matching and counting: name the record field for each group (`field`) and the search (`search.fields`) in `filters.json`, then use `column.filter(records)`, `column.matchesRecord(record)` and `column.updateCounts(records)` instead of writing the same code in the app. It is compatible with 2.0.0: an app that keeps its own matching works unchanged. The pinned Marin UI baseline moves from 1.36.0 to 1.37.0.
