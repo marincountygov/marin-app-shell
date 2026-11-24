@@ -90,7 +90,10 @@ def run(page):
     require(style(page, "#chip-on", "borderTopLeftRadius") != "0px", "Chips are rounded")
     after = page.evaluate("getComputedStyle(document.getElementById('sort1'), '::after').content")
     require("▲" in after, f"A sort header shows its arrow: {after}")
-    require(style(page, "#dlg", "justifyContent") == "flex-end", "Dialog buttons sit at the end")
+    # Where the buttons are, not how the browser prints the value: newer Chrome reports `flex-end` as `flow-end`.
+    gap_after = page.evaluate("document.getElementById('dlg').getBoundingClientRect().right - document.getElementById('save').getBoundingClientRect().right")
+    gap_before = page.evaluate("document.querySelector('#dlg .action-button').getBoundingClientRect().left - document.getElementById('dlg').getBoundingClientRect().left")
+    require(abs(gap_after) < 2 and gap_before > 20, f"Dialog buttons sit at the end (space after {gap_after}, before {gap_before})")
     require(page.locator("#dlg .action-button").bounding_box()["height"] >= 43, "Dialog buttons are 44 px targets")
     hidden = page.locator("#hidden-file").bounding_box()
     require(hidden["width"] <= 2 and hidden["height"] <= 2, f"A visually hidden input stays 1 px: {hidden}")
