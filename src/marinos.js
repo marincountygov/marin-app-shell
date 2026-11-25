@@ -1176,6 +1176,251 @@
   window.marinOnThisPage = marinOnThisPage;
   document.querySelectorAll(".docs-toc, .toc").forEach(marinOnThisPage);
 
+  // Steps layout: <nav class="steps" data-steps> holds an <ol> of links to the step sections (.step, each with an
+  // h2 and any .step-box parts). One step shows at a time; without JavaScript every step stays on the page and the
+  // links jump down to it. The shell:
+  //  - marks the current link aria-current="step" and gives every link a state word ("Completed" for the steps
+  //    before the current one, "Current", "Up next") in a .step-state span, with data-step-state for the styles.
+  //    Nothing is saved: completed only means earlier. Any step can be opened at any time, forward or back,
+  //  - writes the "Step 2 of 6: Analyze" line and a progress bar into .steps-progress, and shows it. The line is
+  //    not a live region: the current step's h2 is described by a hidden "Step 2 of 6", so when focus moves to the
+  //    heading a screen reader says the heading and the position once,
+  //  - sets the page title to "App: Analyze (step 2 of 6)" (the app is the title up to " | ") while the steps are on
+  //    screen, and puts the original title back when another tab is shown (WCAG 2.4.2),
+  //  - ends every step with Previous and Next buttons ([data-prev-step], [data-next-step] hold the step id; a step
+  //    that already has its own .steps-pager keeps it, and its buttons stay hidden in the page until JavaScript runs),
+  //    and shows the toggle that controls the column, which is also hidden until JavaScript runs,
+  //  - builds "On this page" into [data-steps-toc] from the current step's .step-box headings (h3), giving
+  //    each box an id, and rebuilds it when the step changes,
+  //  - on a narrow screen closes the open step list when a step is chosen, so the step shows,
+  //  - follows the address: #step or #box-inside-a-step, the Back button, and moves focus to the step's h2
+  //    when the person changes step,
+  //  - dispatches a bubbling "marin-step-change" event on the nav ({ detail: { id, index, total, name } }).
+  // Link text is "1. Name" (a number in the words, never in a shape).
+  const STEP_STATE_WORDS = { complete: "Completed", current: "Current", upcoming: "Up next" };
+  function marinSteps(nav) {
+    if (!nav || nav.dataset.stepsReady) return null;
+    const steps = Array.from(nav.querySelectorAll('a[href^="#"]'))
+      .map((link) => ({ link, id: decodeURIComponent(link.hash.slice(1)) }))
+      .map((step) => ({ ...step, section: document.getElementById(step.id) }))
+      .filter((step) => step.section);
+    if (!steps.length) return null;
+    nav.dataset.stepsReady = "true";
+
+    const slug = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    steps.forEach((step) => {
+      if (!step.link.querySelector(".step-name")) {
+        const text = step.link.textContent.trim();
+        step.link.textContent = "";
+        const name = document.createElement("span");
+        name.className = "step-name";
+        name.textContent = text;
+        const state = document.createElement("span");
+        state.className = "step-state";
+        step.link.append(name, state);
+      }
+      step.label = step.link.querySelector(".step-name").textContent.trim();
+      step.title = step.label.replace(/^\d+\.\s*/, "");
+      step.section.querySelectorAll(".step-box").forEach((box) => {
+        const heading = box.querySelector("h3");
+        if (heading && !box.id) box.id = `${step.id}-${slug(heading.textContent)}`;
+      });
+    });
+
+    // Previous and Next are part of the layout: every step ends with them unless the page already wrote its own
+    // .steps-pager. Next is the one solid button, with the next step's name in lowercase and an arrow after the words;
+    // Previous is a quiet icon-only button with the arrow before it, named by aria-label and title. The first step has no
+    // Previous and the last has no Next (they are left out, never disabled). The arrows are drawn by the shell and are
+    // decoration. Both buttons sit in a named nav (not role=group, whose Pico styles join the buttons), 44 px or more, in the tab order after the step's content.
+    steps.forEach((step, index) => {
+      if (step.section.querySelector(".steps-pager")) return;
+      const pager = document.createElement("nav");
+      pager.className = "steps-pager";
+      pager.setAttribute("aria-label", "Previous and next step");
+      if (index > 0) {
+        const name = `Previous: ${steps[index - 1].title.toLowerCase()}`;
+        const previous = document.createElement("button");
+        previous.type = "button";
+        previous.className = "action-button";
+        previous.dataset.prevStep = steps[index - 1].id;
+        previous.dataset.icon = "arrow-left";
+        previous.setAttribute("aria-label", name);
+        previous.title = name;
+        pager.append(previous);
+      }
+      if (index < steps.length - 1) {
+        const next = document.createElement("button");
+        next.type = "button";
+        next.className = "primary";
+        next.dataset.nextStep = steps[index + 1].id;
+        next.dataset.iconEnd = "arrow-right";
+        next.textContent = `Next: ${steps[index + 1].title.toLowerCase()}`;
+        pager.append(next);
+      }
+      step.section.append(pager);
+    });
+
+    const progress = document.querySelector(".steps-progress");
+    let progressText = null;
+    let progressBar = null;
+    if (progress) {
+      progressText = progress.querySelector("p");
+      progressBar = progress.querySelector("progress");
+      if (!progressText) {
+        progressText = document.createElement("p");
+        progress.append(progressText);
+      }
+      if (!progressBar) {
+        progressBar = document.createElement("progress");
+        progressBar.setAttribute("aria-hidden", "true");
+        progress.append(progressBar);
+      }
+      progressBar.max = steps.length;
+      progress.hidden = false;
+    }
+    document.querySelectorAll("[data-next-step], [data-prev-step]").forEach((button) => { button.hidden = false; });
+    // The hidden position the current heading is described by ("Step 2 of 6").
+    const position = document.createElement("span");
+    position.id = "steps-position";
+    position.className = "visually-hidden";
+    (progress || nav).append(position);
+    const baseTitle = document.title;
+    const appName = baseTitle.split(" | ")[0];
+    const host = nav.closest("section");
+    let currentStep = steps[0];
+    let currentIndex = 0;
+    function syncTitle() {
+      document.title = host && host.hidden ? baseTitle : `${appName}: ${currentStep.title} (step ${currentIndex + 1} of ${steps.length})`;
+    }
+    const panel = nav.closest(".search-sidebar");
+    if (panel && panel.id) document.querySelectorAll(`button[aria-controls="${panel.id}"]`).forEach((button) => { button.hidden = false; });
+
+    const tocHolder = document.querySelector("[data-steps-toc]");
+    let tocStep = null;
+    function buildToc(step) {
+      if (!tocHolder || tocStep === step.id) return;
+      tocStep = step.id;
+      tocHolder.textContent = "";
+      const boxes = Array.from(step.section.querySelectorAll(".step-box[id]"));
+      if (boxes.length < 2) return;
+      const toc = document.createElement("nav");
+      toc.className = "toc steps-toc";
+      toc.setAttribute("aria-label", "On this page");
+      const title = document.createElement("h2");
+      title.textContent = "On this page";
+      const list = document.createElement("ul");
+      boxes.forEach((box) => {
+        const item = document.createElement("li");
+        const link = document.createElement("a");
+        link.href = `#${box.id}`;
+        link.textContent = box.querySelector("h3").textContent;
+        // The step is named after the visible words, so the link still says where it goes out of context.
+        const context = document.createElement("span");
+        context.className = "visually-hidden";
+        context.textContent = ` (${step.label})`;
+        link.append(context);
+        item.append(link);
+        list.append(item);
+      });
+      toc.append(title, list);
+      tocHolder.append(toc);
+      marinOnThisPage(toc);
+    }
+
+    const indexOf = (id) => steps.findIndex((step) => step.id === id);
+    function stepOfHash(hash) {
+      if (indexOf(hash) >= 0) return hash;
+      const target = hash ? document.getElementById(hash) : null;
+      const section = target && target.closest(".step");
+      return section && indexOf(section.id) >= 0 ? section.id : steps[0].id;
+    }
+
+    function show(id, moveFocus) {
+      const current = Math.max(indexOf(id), 0);
+      steps.forEach((step, index) => {
+        step.section.hidden = index !== current;
+        const state = index < current ? "complete" : index === current ? "current" : "upcoming";
+        step.link.dataset.stepState = state;
+        step.link.querySelector(".step-state").textContent = STEP_STATE_WORDS[state];
+        if (state === "current") step.link.setAttribute("aria-current", "step");
+        else step.link.removeAttribute("aria-current");
+      });
+      const step = steps[current];
+      currentStep = step;
+      currentIndex = current;
+      position.textContent = `Step ${current + 1} of ${steps.length}`;
+      steps.forEach((other) => {
+        const heading = other.section.querySelector(":scope > h2");
+        if (!heading) return;
+        if (other === step) heading.setAttribute("aria-describedby", position.id);
+        else heading.removeAttribute("aria-describedby");
+      });
+      syncTitle();
+      buildToc(step);
+      if (progress) {
+        progressText.textContent = `Step ${current + 1} of ${steps.length}: ${step.title}`;
+        progressBar.value = current + 1;
+      }
+      nav.dispatchEvent(new CustomEvent("marin-step-change", { bubbles: true, detail: { id: step.id, index: current, total: steps.length, name: step.title } }));
+      if (moveFocus) focusHeading(step);
+    }
+
+    function focusHeading(step) {
+      const heading = step.section.querySelector(":scope > h2");
+      if (!heading) return;
+      heading.tabIndex = -1;
+      heading.focus();
+      heading.scrollIntoView({ block: "start" });
+    }
+
+    // On a narrow screen the open list sits above the step, so choosing a step closes it and the step is what shows.
+    const narrowScreen = window.matchMedia("(max-width: 850px)");
+    function closeListOnNarrow() {
+      if (!narrowScreen.matches || !panel || !panel.id) return;
+      const toggle = document.querySelector(`button[aria-controls="${panel.id}"]`);
+      if (toggle && toggle.getAttribute("aria-expanded") === "true") toggle.click();
+    }
+
+    function go(id) {
+      const url = new URL(window.location.href);
+      url.hash = id;
+      window.history.pushState(null, "", url);
+      show(id, true);
+    }
+
+    steps.forEach((step) => {
+      step.link.addEventListener("click", (event) => {
+        event.preventDefault();
+        closeListOnNarrow();
+        go(step.id);
+      });
+    });
+    document.querySelectorAll("[data-next-step], [data-prev-step]").forEach((button) => {
+      button.addEventListener("click", () => go(button.dataset.nextStep || button.dataset.prevStep));
+    });
+    // Back and Forward between steps move focus to the heading, like Next and Previous. A hash that names another tab
+    // (About, Updates) leaves the step alone.
+    window.addEventListener("popstate", () => {
+      const hash = window.location.hash.slice(1);
+      const target = hash ? document.getElementById(decodeURIComponent(hash)) : null;
+      if (hash && indexOf(hash) < 0 && !(target && target.closest(".step"))) return;
+      // The browser clears focus right after a history event, so the heading takes it a moment later.
+      show(stepOfHash(hash), false);
+      const step = currentStep;
+      window.setTimeout(() => focusHeading(step), 0);
+    });
+    // The title follows the tab: it is the step's while the steps are shown and the page's own when another tab is.
+    if (host) new MutationObserver(syncTitle).observe(host, { attributes: true, attributeFilter: ["hidden"] });
+
+    const hash = window.location.hash.slice(1);
+    show(stepOfHash(hash), false);
+    const first = hash ? document.getElementById(decodeURIComponent(hash)) : null;
+    if (first && first.classList.contains("step-box")) first.scrollIntoView();
+    return { go, show };
+  }
+  window.marinSteps = marinSteps;
+  document.querySelectorAll("nav[data-steps]").forEach(marinSteps);
+
   // Collapsible filter panels (Marin UI 1.28.0): any button[data-filter-toggle] hides and shows the filter
   // panel it controls (aria-controls) inside its nearest .search-layout. The shell draws the Lucide
   // panel-right-open icon while the panel is open and panel-left-open while it is hidden (unless the button holds

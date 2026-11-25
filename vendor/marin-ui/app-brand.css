@@ -1271,6 +1271,10 @@ mark.search-hit {
   cursor: pointer;
 }
 
+.filter-toggle[hidden] {
+  display: none;
+}
+
 .filter-toggle:hover {
   border-color: var(--app-accent);
   background: color-mix(in srgb, var(--app-accent) 8%, var(--app-surface));
@@ -2155,5 +2159,240 @@ mark.search-hit {
   a {
     color: inherit;
     text-decoration: none;
+  }
+}
+
+/* Steps layout: a workflow of steps, one shown at a time, listed in the collapsible left column
+   (the filter column's `.search-layout` / `.search-sidebar`). A step's state is always a word ("Completed",
+   "Current", "Up next"), never color or a shape alone: color, weight and a bar on the left edge only
+   reinforce it. There are no circles, no numbers inside shapes and no icons in the list. Completed means
+   earlier than the current step; nothing is saved. app-shell.js (`nav[data-steps]`) sets data-step-state. */
+/* Pico gives a nav's first list a negative left margin (nav ol:first-of-type); the reset has to outrank it. */
+.steps ol,
+.steps ol:first-of-type,
+.steps ol:last-of-type {
+  display: block;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.steps li {
+  display: block;
+  margin: 0 0 0.25rem;
+  padding: 0;
+  list-style: none;
+}
+
+.steps a {
+  display: block;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border-left: 4px solid var(--app-control-border);
+  border-radius: 0 var(--pico-border-radius) var(--pico-border-radius) 0;
+  color: var(--app-muted);
+  text-decoration: none;
+}
+
+.steps a:hover {
+  background: var(--app-bg-soft);
+  text-decoration: underline;
+}
+
+.steps .step-name,
+.steps .step-state {
+  display: block;
+}
+
+.steps .step-state {
+  font-size: 0.875rem;
+}
+
+.steps a[data-step-state="complete"] {
+  border-left-color: var(--app-success);
+  color: var(--app-text);
+}
+
+.steps a[data-step-state="complete"] .step-state {
+  color: var(--app-success);
+}
+
+.steps a[aria-current="step"] {
+  border-left-color: var(--app-accent);
+  background: color-mix(in srgb, var(--app-accent) 14%, var(--app-surface));
+  color: var(--app-accent-on-tint);
+  font-weight: 700;
+}
+
+.steps a[aria-current="step"] .step-state {
+  font-weight: 400;
+}
+
+.steps-progress[hidden] {
+  display: none;
+}
+
+.steps-progress {
+  margin: 0 0 1rem;
+}
+
+.steps-progress p {
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+
+.steps-progress progress {
+  display: block;
+  width: 100%;
+  height: 0.5rem;
+  margin: 0;
+  accent-color: var(--app-accent);
+}
+
+/* With the steps column open on a wide screen the highlighted step already says where you are, so the line
+   is kept for screen readers only. */
+@media (min-width: 851px) {
+  .search-layout[data-filters="open"] .steps-progress {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+.step[hidden] {
+  display: none;
+}
+
+.step > h2 {
+  margin-top: 0;
+}
+
+.step:not([hidden]) ~ .step:not([hidden]) {
+  margin-top: 2.5rem;
+}
+
+/* Each part of a step (what to do, a field, an action) is a bordered box, the look of the Marin Learn notes. */
+.step-box {
+  margin-top: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--app-border);
+  border-radius: var(--pico-border-radius);
+  background: var(--app-surface);
+  scroll-margin-top: 1rem;
+}
+
+.step-box > :last-child {
+  margin-bottom: 0;
+}
+
+.step-box h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1.5rem;
+}
+
+@media (max-width: 576px) {
+  .step-box {
+    padding: 1rem;
+  }
+}
+
+/* "On this page" is a right-hand column on wide screens and sits above the step on narrow ones. */
+.steps-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 14rem;
+  column-gap: 2rem;
+  align-items: start;
+}
+
+.steps-main {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+}
+
+.steps-toc-holder {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: stretch;
+}
+
+.steps-toc-holder:empty {
+  display: none;
+}
+
+@media (max-width: 850px) {
+  .steps-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .steps-main,
+  .steps-toc-holder {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .steps-toc-holder {
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* Pico makes every nav a flex row; the list's heading sits above its links. */
+.steps-toc.toc {
+  display: block;
+}
+
+/* Next is the solid main action and ends with an arrow. Previous is a quiet icon button, 44 px square. */
+.steps-pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1.5rem 0 0;
+}
+
+.steps-pager .action-button,
+.steps-pager .action-button:has(> svg:only-child) {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  margin: 0;
+}
+
+.steps-pager .primary {
+  margin: 0;
+}
+
+.steps-pager [hidden] {
+  display: none;
+}
+
+/* Forced colors drop background and border colors: the state word and bold weight carry the meaning, and the
+   current step keeps a visible edge. */
+@media (forced-colors: active) {
+  .steps a {
+    border-left-color: CanvasText;
+  }
+
+  .steps a[aria-current="step"] {
+    border-left-color: Highlight;
+    outline: 1px solid Highlight;
+  }
+}
+
+@media print {
+  .steps,
+  .steps-progress,
+  .steps-pager {
+    display: none !important;
+  }
+
+  .step[hidden] {
+    display: block !important;
+  }
+
+  .steps-body {
+    display: block;
   }
 }
