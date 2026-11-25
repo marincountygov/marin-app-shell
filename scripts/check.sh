@@ -61,6 +61,7 @@ if [[ "$BROWSER" == 1 ]]; then
   python3 "$ROOT_DIR/tests/browser_shared_helpers.py"
   python3 "$ROOT_DIR/tests/browser_search_text.py"
   python3 "$ROOT_DIR/tests/browser_button_patterns.py"
+  python3 "$ROOT_DIR/tests/browser_steps.py"
 else
   printf 'SKIP: Browser/font rendering not requested; add --browser for fixture checks.\n'
 fi

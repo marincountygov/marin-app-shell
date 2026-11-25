@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 2.5.0
+
+Version 2.5.0 adds the steps layout: a workflow of steps listed in the collapsible left column, one step shown at a time. Each step says "Completed", "Current" or "Up next" in words, the page shows "Step 2 of 6" with a progress bar and an "On this page" list for the current step, and any step can be opened at any time. An app marks up `nav[data-steps]` and the shell does the rest, so the app needs no step code of its own. It also moves the pinned Marin UI baseline from 1.39.0 to 1.40.0. It is compatible with 2.4.0. See "Steps layout" in `docs/components.md`.
+
 ## Version 2.4.0
 
 Version 2.4.0 refreshes the pinned Marin UI baseline from 1.38.0 to 1.39.0. In Windows forced colors (high contrast), a checked checkbox or radio, including every one in a filter column, is now drawn by the browser so a person can see that it is checked. Nothing else changes, and it is compatible with 2.3.0.

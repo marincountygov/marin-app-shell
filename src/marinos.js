@@ -1176,6 +1176,166 @@
   window.marinOnThisPage = marinOnThisPage;
   document.querySelectorAll(".docs-toc, .toc").forEach(marinOnThisPage);
 
+  // Steps layout: <nav class="steps" data-steps> holds an <ol> of links to the step sections (.step, each with an
+  // h2 and any .step-box parts). One step shows at a time; without JavaScript every step stays on the page and the
+  // links jump down to it. The shell:
+  //  - marks the current link aria-current="step" and gives every link a state word ("Completed" for the steps
+  //    before the current one, "Current", "Up next") in a .step-state span, with data-step-state for the styles.
+  //    Nothing is saved: completed only means earlier. Any step can be opened at any time, forward or back,
+  //  - writes the "Step 2 of 6: Analyze" line and a progress bar into .steps-progress, and shows it,
+  //  - shows the Previous and Next buttons ([data-prev-step], [data-next-step] hold the step id) and the
+  //    toggle that controls the column, which are hidden in the page until JavaScript runs,
+  //  - builds "On this page" into [data-steps-toc] from the current step's .step-box headings (h3), giving
+  //    each box an id, and rebuilds it when the step changes,
+  //  - follows the address: #step or #box-inside-a-step, the Back button, and moves focus to the step's h2
+  //    when the person changes step,
+  //  - dispatches a bubbling "marin-step-change" event on the nav ({ detail: { id, index, total, name } }).
+  // Link text is "1. Name" (a number in the words, never in a shape).
+  const STEP_STATE_WORDS = { complete: "Completed", current: "Current", upcoming: "Up next" };
+  function marinSteps(nav) {
+    if (!nav || nav.dataset.stepsReady) return null;
+    const steps = Array.from(nav.querySelectorAll('a[href^="#"]'))
+      .map((link) => ({ link, id: decodeURIComponent(link.hash.slice(1)) }))
+      .map((step) => ({ ...step, section: document.getElementById(step.id) }))
+      .filter((step) => step.section);
+    if (!steps.length) return null;
+    nav.dataset.stepsReady = "true";
+
+    const slug = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    steps.forEach((step) => {
+      if (!step.link.querySelector(".step-name")) {
+        const text = step.link.textContent.trim();
+        step.link.textContent = "";
+        const name = document.createElement("span");
+        name.className = "step-name";
+        name.textContent = text;
+        const state = document.createElement("span");
+        state.className = "step-state";
+        step.link.append(name, state);
+      }
+      step.label = step.link.querySelector(".step-name").textContent.trim();
+      step.title = step.label.replace(/^\d+\.\s*/, "");
+      step.section.querySelectorAll(".step-box").forEach((box) => {
+        const heading = box.querySelector("h3");
+        if (heading && !box.id) box.id = `${step.id}-${slug(heading.textContent)}`;
+      });
+    });
+
+    const progress = document.querySelector(".steps-progress");
+    let progressText = null;
+    let progressBar = null;
+    if (progress) {
+      progressText = progress.querySelector("p");
+      progressBar = progress.querySelector("progress");
+      if (!progressText) {
+        progressText = document.createElement("p");
+        progressText.setAttribute("role", "status");
+        progress.append(progressText);
+      }
+      if (!progressBar) {
+        progressBar = document.createElement("progress");
+        progressBar.setAttribute("aria-hidden", "true");
+        progress.append(progressBar);
+      }
+      progressBar.max = steps.length;
+      progress.hidden = false;
+    }
+    document.querySelectorAll("[data-next-step], [data-prev-step]").forEach((button) => { button.hidden = false; });
+    const panel = nav.closest(".search-sidebar");
+    if (panel && panel.id) document.querySelectorAll(`button[aria-controls="${panel.id}"]`).forEach((button) => { button.hidden = false; });
+
+    const tocHolder = document.querySelector("[data-steps-toc]");
+    let tocStep = null;
+    function buildToc(step) {
+      if (!tocHolder || tocStep === step.id) return;
+      tocStep = step.id;
+      tocHolder.textContent = "";
+      const boxes = Array.from(step.section.querySelectorAll(".step-box[id]"));
+      if (boxes.length < 2) return;
+      const toc = document.createElement("nav");
+      toc.className = "toc steps-toc";
+      toc.setAttribute("aria-label", "On this page");
+      const title = document.createElement("h2");
+      title.textContent = "On this page";
+      const list = document.createElement("ul");
+      boxes.forEach((box) => {
+        const item = document.createElement("li");
+        const link = document.createElement("a");
+        link.href = `#${box.id}`;
+        link.textContent = box.querySelector("h3").textContent;
+        // The step is named after the visible words, so the link still says where it goes out of context.
+        const context = document.createElement("span");
+        context.className = "visually-hidden";
+        context.textContent = ` (${step.label})`;
+        link.append(context);
+        item.append(link);
+        list.append(item);
+      });
+      toc.append(title, list);
+      tocHolder.append(toc);
+      marinOnThisPage(toc);
+    }
+
+    const indexOf = (id) => steps.findIndex((step) => step.id === id);
+    function stepOfHash(hash) {
+      if (indexOf(hash) >= 0) return hash;
+      const target = hash ? document.getElementById(hash) : null;
+      const section = target && target.closest(".step");
+      return section && indexOf(section.id) >= 0 ? section.id : steps[0].id;
+    }
+
+    function show(id, moveFocus) {
+      const current = Math.max(indexOf(id), 0);
+      steps.forEach((step, index) => {
+        step.section.hidden = index !== current;
+        const state = index < current ? "complete" : index === current ? "current" : "upcoming";
+        step.link.dataset.stepState = state;
+        step.link.querySelector(".step-state").textContent = STEP_STATE_WORDS[state];
+        if (state === "current") step.link.setAttribute("aria-current", "step");
+        else step.link.removeAttribute("aria-current");
+      });
+      const step = steps[current];
+      buildToc(step);
+      if (progress) {
+        progressText.textContent = `Step ${current + 1} of ${steps.length}: ${step.title}`;
+        progressBar.value = current + 1;
+      }
+      nav.dispatchEvent(new CustomEvent("marin-step-change", { bubbles: true, detail: { id: step.id, index: current, total: steps.length, name: step.title } }));
+      if (!moveFocus) return;
+      const heading = step.section.querySelector(":scope > h2");
+      if (!heading) return;
+      heading.tabIndex = -1;
+      heading.focus();
+      heading.scrollIntoView({ block: "start" });
+    }
+
+    function go(id) {
+      const url = new URL(window.location.href);
+      url.hash = id;
+      window.history.pushState(null, "", url);
+      show(id, true);
+    }
+
+    steps.forEach((step) => {
+      step.link.addEventListener("click", (event) => {
+        event.preventDefault();
+        go(step.id);
+      });
+    });
+    document.querySelectorAll("[data-next-step], [data-prev-step]").forEach((button) => {
+      button.addEventListener("click", () => go(button.dataset.nextStep || button.dataset.prevStep));
+    });
+    window.addEventListener("popstate", () => show(stepOfHash(window.location.hash.slice(1)), false));
+
+    const hash = window.location.hash.slice(1);
+    show(stepOfHash(hash), false);
+    const first = hash ? document.getElementById(decodeURIComponent(hash)) : null;
+    if (first && first.classList.contains("step-box")) first.scrollIntoView();
+    return { go, show };
+  }
+  window.marinSteps = marinSteps;
+  document.querySelectorAll("nav[data-steps]").forEach(marinSteps);
+
   // Collapsible filter panels (Marin UI 1.28.0): any button[data-filter-toggle] hides and shows the filter
   // panel it controls (aria-controls) inside its nearest .search-layout. The shell draws the Lucide
   // panel-right-open icon while the panel is open and panel-left-open while it is hidden (unless the button holds

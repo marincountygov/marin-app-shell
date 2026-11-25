@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.5.0 - 2026-11-25
+- Add the steps layout. `nav[data-steps]` lists the steps of a workflow in the collapsible left column; the shell shows one step at a time, writes "Completed", "Current" or "Up next" under each step, sets `aria-current="step"`, fills the "Step 2 of 6: Analyze" line and its progress bar, builds "On this page" from the current step's `.step-box` headings, follows the address and the Back button, moves focus to the step heading, and shows the Previous and Next buttons and the column toggle once JavaScript runs. `window.marinSteps(nav)` starts a list added after load, and a `marin-step-change` event reports the change. Why: Marin Spec carried its own step code and styles, and the next step-by-step app would have copied them. Completed only means earlier than the current step, and nothing is saved. The rules are "Steps layout" in `docs/components.md`.
+- The pinned Marin UI baseline moves from 1.39.0 to 1.40.0, which adds the styles for the layout. A hidden `.filter-toggle` now stays hidden. No component, attribute or path changed.
+
 ## 2.4.0 - 2026-11-24
 - The pinned Marin UI baseline moves from 1.38.0 to 1.39.0. In Windows forced colors a checked checkbox or radio is now drawn with the browser's own control, so its state shows; before, every checked box in a filter column looked unchecked. Outside forced colors nothing changes. No component, attribute or path changed.
 
