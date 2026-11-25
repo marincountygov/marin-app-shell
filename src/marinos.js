@@ -1192,6 +1192,7 @@
   //    and shows the toggle that controls the column, which is also hidden until JavaScript runs,
   //  - builds "On this page" into [data-steps-toc] from the current step's .step-box headings (h3), giving
   //    each box an id, and rebuilds it when the step changes,
+  //  - on a narrow screen closes the open step list when a step is chosen, so the step shows,
   //  - follows the address: #step or #box-inside-a-step, the Back button, and moves focus to the step's h2
   //    when the person changes step,
   //  - dispatches a bubbling "marin-step-change" event on the nav ({ detail: { id, index, total, name } }).
@@ -1372,6 +1373,14 @@
       heading.scrollIntoView({ block: "start" });
     }
 
+    // On a narrow screen the open list sits above the step, so choosing a step closes it and the step is what shows.
+    const narrowScreen = window.matchMedia("(max-width: 850px)");
+    function closeListOnNarrow() {
+      if (!narrowScreen.matches || !panel || !panel.id) return;
+      const toggle = document.querySelector(`button[aria-controls="${panel.id}"]`);
+      if (toggle && toggle.getAttribute("aria-expanded") === "true") toggle.click();
+    }
+
     function go(id) {
       const url = new URL(window.location.href);
       url.hash = id;
@@ -1382,6 +1391,7 @@
     steps.forEach((step) => {
       step.link.addEventListener("click", (event) => {
         event.preventDefault();
+        closeListOnNarrow();
         go(step.id);
       });
     });

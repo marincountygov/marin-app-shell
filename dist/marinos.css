@@ -2163,7 +2163,7 @@ mark.search-hit {
   display: block;
   margin: 0;
   padding: 0.5rem 0.75rem;
-  border-left: 4px solid var(--app-border);
+  border-left: 4px solid var(--app-control-border);
   border-radius: 0 var(--pico-border-radius) var(--pico-border-radius) 0;
   color: var(--app-muted);
   text-decoration: none;

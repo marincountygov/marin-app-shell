@@ -85,6 +85,7 @@ def expected_distribution(root: Path = ROOT) -> dict[str, bytes]:
     files["audit-buttons.py"] = (root / "scripts/audit-buttons.py").read_bytes()  # an app runs this from vendor/marinos/ in its own check
     files["audit-shared-helpers.py"] = (root / "scripts/audit-shared-helpers.py").read_bytes()  # report-only: lists copy, download, file-reading and upload code an app still carries
     files["audit-filter-column.py"] = (root / "scripts/audit-filter-column.py").read_bytes()  # an app runs this from vendor/marinos/ in its own check, with --fail
+    files["audit-steps.py"] = (root / "scripts/audit-steps.py").read_bytes()  # an app that uses the steps layout runs this from vendor/marinos/ in its own check, with --fail
     files["filter-panel.schema.json"] = (root / "vendor/marin-ui/filter-panel.schema.json").read_bytes()  # what an app's filters.json must follow; the audit reads it from beside itself
     for name in ICON_NAMES:
         files[f"icons/lucide/{name}.svg"] = (root / f"vendor/icons/lucide/{name}.svg").read_bytes()

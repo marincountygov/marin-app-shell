@@ -241,6 +241,9 @@ def run(page):
     require(page.evaluate("document.documentElement.scrollWidth <= window.innerWidth"), "No horizontal scroll at 320 px")
     page.click(".filter-toggle")
     require(page.is_visible("nav.steps"), "The toggle opens the steps")
+    page.click("nav.steps a[href='#send']")
+    require(page.get_attribute(".filter-toggle", "aria-expanded") == "false" and not page.is_visible("nav.steps"), "Choosing a step closes the list on a narrow screen")
+    require(visible_steps(page) == ["send"] and page.evaluate("document.activeElement.id") == "send-heading", "The chosen step shows with focus on its heading")
     page.set_viewport_size({"width": 1100, "height": 800})
 
     reflow_checks(page, lambda hash_="": load(page, hash_))
