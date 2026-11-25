@@ -25,7 +25,7 @@ HTML = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
     <div class="search-layout">
       <div class="search-side">
         <button type="button" class="filter-toggle" data-filter-toggle="steps" data-filter-label="Steps" aria-controls="steps-panel" hidden></button>
-        <aside id="steps-panel" class="search-sidebar" aria-labelledby="steps-title">
+        <aside id="steps-panel" class="search-sidebar" data-filter-column-exempt="steps" aria-labelledby="steps-title">
           <div class="search-panel-header">
             <h2 class="search-panel-title" id="steps-title">Steps</h2>
           </div>
