@@ -19,7 +19,8 @@ ICON = (ROOT / "vendor/icons/lucide/layout-grid.svg").read_text().strip()
 HTML = '''<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Shell fixture</title></head><body>
 <marin-os-banner catalog-url="catalog.json"></marin-os-banner>
 <marin-app-header app-id="test-app" app-name="Test App" app-description="Test description">
-<template data-icon>__ICON__</template></marin-app-header>
+<template data-icon>__ICON__</template>
+<template data-navigation><a href="#about">About</a></template></marin-app-header>
 <main id="main" class="container app-main">
 <section id="start" data-tab-section="start"><h2 id="heading-sample">Start</h2>
 <p id="body-sample">Ordinary interface copy.</p><label for="test-input">Test input</label><input id="test-input">

@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "name": "Marin App Shell",
-  "shellVersion": "2.5.0",
-  "marinUiVersion": "1.40.0",
+  "shellVersion": "2.6.0",
+  "marinUiVersion": "1.41.0",
   "installPath": "vendor/marinos",
   "fontPathContract": [
     "../fonts/Jost-wght.ttf",
@@ -247,7 +247,7 @@
   "files": {
     "README.md": {
       "bytes": 1605,
-      "sha256": "5f83f7ab80f0390a17dd146ff48df138e2f19d42484ec35da59b148a605433bb"
+      "sha256": "afb3aa86db8fa6a0bef35a43db95c9f9dcab5a3c4bab3975689db2cf3462f2fb"
     },
     "audit-buttons.py": {
       "bytes": 5813,
@@ -256,6 +256,10 @@
     "audit-filter-column.py": {
       "bytes": 10333,
       "sha256": "a4537da71a460b306614964863812d74ab7722e47e4fe0c8a210d588d21f00ca"
+    },
+    "audit-h1.py": {
+      "bytes": 3896,
+      "sha256": "de7e20ffbf8cf595d83a12d216844f8b551fa4cd143578b8a0d6bb1053d8510a"
     },
     "audit-shared-helpers.py": {
       "bytes": 3754,
@@ -267,7 +271,7 @@
     },
     "brand-source.json": {
       "bytes": 10511,
-      "sha256": "57407a63ac9f9543c7b0eb5e55aa4c85f2a9bb06ada191d6a1827d39235479c8"
+      "sha256": "35be2694ff6986d3534ce53367c36c4e3f45b3c71e21a50801d599e288ce93c1"
     },
     "filter-panel.schema.json": {
       "bytes": 16075,
@@ -462,12 +466,12 @@
       "sha256": "01cd5ffb3a528c219a86e49a814c6c53bd8a69b9a3c305dd237074ba1c811af7"
     },
     "marinos.css": {
-      "bytes": 153230,
-      "sha256": "5d895bc25c2cda14be17d6af86bd043719cd5d2940add4327d0699abd571b72f"
+      "bytes": 154591,
+      "sha256": "63aca4540dad908791ae18cf235a750406571a6180538d2541f0021ce8d72a1d"
     },
     "marinos.js": {
-      "bytes": 224864,
-      "sha256": "3b59ff27f735fa7703d64c42221fc67455b338bb145dc786fbcac6c7a3aa5c3c"
+      "bytes": 225443,
+      "sha256": "bb7d5c36286336fcf2cb98661000428e63a871a548fcebb06d4508baa352af55"
     }
   }
 }

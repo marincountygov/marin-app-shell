@@ -18,6 +18,8 @@ Version 2.2.0 adds the search-result helpers (`marinSearchWords`, `marinSearchSn
 
 Version 2.3.0 adds the report core (`window.marinReports`) without changing anything an existing app relies on.
 
+Version 2.6.0 takes About and Updates out of the default header (`standard-links` now defaults to none), draws no Menu button when the header has no links, opens the MarinOS menu as a wide panel on large screens, leaves unlisted apps out of that menu, and adds `audit-h1.py`. It is compatible in markup, but every app's header looks different, so each needs a visual review.
+
 Version 2.5.0 adds the steps layout (`nav[data-steps]`, `window.marinSteps`) and adopts the Marin UI 1.40.0 baseline without changing anything an existing app relies on.
 
 Version 2.4.0 adopts the Marin UI 1.39.0 baseline (a checked checkbox shows in Windows forced colors) without changing anything an existing app relies on.

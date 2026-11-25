@@ -43,6 +43,11 @@
   --app-danger-text: #7f2d20;
   --app-table-row-hover: #e6f2fb;
   --app-max-width: 1280px;
+
+  /* An h1 has one of two sizes. The app title is the h1 in the app header. The page title is the h1 of a page's own
+     content (a document, a guide, a report, a landing page). Nothing else sets an h1 size. */
+  --app-h1-app: clamp(1.35rem, 2vw, 1.75rem);
+  --app-h1-page: clamp(1.75rem, 3vw, 2.25rem);
   --docs-max-width: var(--app-max-width);
 
   --app-brand: var(--marin-black);
@@ -390,6 +395,32 @@ input[type="radio"] {
   margin-left: auto;
 }
 
+/* Large screens: the MarinOS menu opens as a wide panel with the apps in a horizontal grid and more room between
+   them. It is the same links and the same disclosure (button, Escape, focus order) as the narrow list. */
+@media (min-width: 1024px) {
+  .marinos-menu__panel:not([hidden]) {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14.5rem, 1fr));
+    gap: 0.5rem 1.5rem;
+    width: min(60rem, calc(100vw - 2rem));
+    padding: 1.25rem 1.5rem;
+  }
+
+  /* .menu-panel a is defined further down with the same weight, so this names both classes to win. */
+  .menu-panel.marinos-menu__panel a {
+    width: auto;
+    padding: 0.75rem 1rem;
+  }
+
+  .marinos-menu__panel .marinos-menu__all {
+    grid-column: 1 / -1;
+    margin-top: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--app-border);
+    border-radius: 0;
+  }
+}
+
 .marinos-menu__all {
   margin-top: 0.25rem;
   padding-top: 0.6rem;
@@ -532,6 +563,12 @@ input[type="radio"] {
   color: var(--app-text);
 }
 
+/* An app with nothing in its header menu (no tabs of its own) has no Menu button; About, Updates and the other standard pages are in the footer. */
+.app-menu-toggle[hidden],
+.app-nav[hidden] {
+  display: none;
+}
+
 .app-menu-toggle:hover,
 .app-menu-toggle:focus-visible,
 .app-menu-toggle[aria-expanded="true"] {
@@ -619,7 +656,7 @@ a.app-title-row {
 
 .app-title {
   margin: 0;
-  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  font-size: var(--app-h1-app);
   line-height: 1.2;
 }
 
@@ -663,7 +700,7 @@ a.app-title-row {
   margin-right: auto;
   padding-top: 2rem;
   padding-right: 1rem;
-  padding-bottom: 3rem;
+  padding-bottom: 4.5rem;
   padding-left: 1rem;
 }
 
@@ -1747,12 +1784,10 @@ mark.search-hit {
 }
 
 .hero h1,
-.doc-title {
+.doc-title,
+.page-title {
+  font-size: var(--app-h1-page);
   line-height: 1.12;
-}
-
-.hero h1 {
-  font-size: clamp(2rem, 4vw, 3.5rem);
 }
 
 .lede,

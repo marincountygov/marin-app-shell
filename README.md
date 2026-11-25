@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 2.6.0
+
+Version 2.6.0 takes About and Updates out of the header of every app. The header holds only an app's own tabs, and the footer, which already lists About, Security, Accessibility, Tech and Updates, is where people find the standard pages. An app with no tabs of its own has no Menu button. The MarinOS menu opens as a wide, horizontal panel on large screens, and an app marked `"unlisted": true` in the MarinOS catalog is left out of it. It also ships `audit-h1.py`, which lists CSS that sets an h1 size, and moves the pinned Marin UI baseline from 1.40.0 to 1.41.0: two h1 sizes, more room below the page, and the wide menu. **A presentation change for every app: review each app's header after installing.** An app that names `standard-links` keeps what it names. See "Standard app nav" in Marin UI's `docs/components.md`.
+
 ## Version 2.5.0
 
 Version 2.5.0 adds the steps layout: a workflow of steps listed in the collapsible left column, one step shown at a time. Every step ends with Previous and Next buttons the shell makes. Each step says "Completed", "Current" or "Up next" in words, the page shows "Step 2 of 6" with a progress bar and an "On this page" list for the current step, and any step can be opened at any time. An app marks up `nav[data-steps]` and the shell does the rest, so the app needs no step code of its own. It also ships `audit-steps.py`, which lists steps an app wrote by hand instead of using the layout, and moves the pinned Marin UI baseline from 1.39.0 to 1.40.0. It is compatible with 2.4.0. See "Steps layout" in `docs/components.md`.
