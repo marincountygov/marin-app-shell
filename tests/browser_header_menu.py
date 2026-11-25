@@ -38,6 +38,7 @@ PAGES = {
     "/plain/": page_html(),
     "/tabs/": page_html(header_body='<template data-navigation><a href="#about">About</a></template>'),
     "/explicit/": page_html(header_attrs='standard-links="about updates"'),
+    "/titled/": page_html(header_attrs='title-heading="false"', header_body="").replace('<h2>Start</h2>', '<h1>The page title</h1>'),
 }
 
 
@@ -100,6 +101,20 @@ def header_checks(page):
     require(page.locator("#app-nav a").all_text_contents() == ["About", "Updates"], "standard-links still works when an app names it")
 
 
+def title_checks(page):
+    page.set_viewport_size({"width": 1280, "height": 800})
+    load(page, "/plain/")
+    require(page.eval_on_selector(".app-title", "e => e.tagName") == "H1", "By default the app name is the h1")
+    load(page, "/titled/")
+    require(page.eval_on_selector(".app-title", "e => e.tagName") == "P", "title-heading=false draws the app name as plain text")
+    require(page.locator("h1").count() == 1 and page.locator("h1").inner_text() == "The page title", "The page title is the one h1")
+    require(page.locator(".app-title a.app-title__link").get_attribute("href") == "./", "The app name still links home")
+    plain = page.eval_on_selector(".app-title", "e => { const c = getComputedStyle(e); return [c.fontSize, c.fontWeight, c.marginTop, c.marginBottom]; }")
+    load(page, "/plain/")
+    heading = page.eval_on_selector(".app-title", "e => { const c = getComputedStyle(e); return [c.fontSize, c.fontWeight, c.marginTop, c.marginBottom]; }")
+    require(plain == heading, f"The plain-text app name looks the same as the h1: {plain} vs {heading}")
+
+
 def menu_checks(page):
     def open_menu(width):
         page.set_viewport_size({"width": width, "height": 900})
@@ -145,6 +160,7 @@ def main():
             page.on("pageerror", lambda e: problems.append(str(e)))
             page.on("console", lambda m: problems.append(m.text) if m.type == "error" else None)
             header_checks(page)
+            title_checks(page)
             menu_checks(page)
             context.close()
         browser.close()

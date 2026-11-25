@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.9.0 - 2026-11-26
+- Add `title-heading="false"` on `<marin-app-header>`: the app name is drawn as plain text (a `p` with the same look, still the link home) instead of the h1. A page below the home page that has its own title uses it, so that title is the page's one h1. Why: every inner page of Marin Docs had two h1s, the app title and the page's own. Nothing changes without the attribute.
+
 ## 2.8.0 - 2026-11-26
 - The pinned Marin UI baseline moves from 1.42.0 to 1.43.0: `.app-card` takes its background, edge color and shadow from `--app-card-bg`, `--app-card-border` and `--app-card-shadow` (the usual card look is the default), so a card with a state sets those instead of redrawing its surface. Why: the last five cards that drew their own surface could not use `.app-card` without losing a state. No component, attribute or path changed.
 

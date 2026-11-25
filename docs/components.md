@@ -43,6 +43,7 @@ Attributes:
 | `app-id` | No | None | Stable MarinOS catalog ID used to match the current app locally. Production falls back to URL matching. |
 | `app-description` | No | None | Subtitle below the app name. |
 | `standard-links` | No | none | Space- or comma-separated standard links to include in the top navigation. The default is none: the header holds only the app's own tabs (a `<template data-navigation>` of links), and About, Updates, Security, Accessibility and Tech are in the footer of every app. With no links the shell draws no Menu button and hides the empty navigation (App Shell 2.6.0 and later). |
+| `title-heading` | No | `true` | `false` draws the app name as plain text (a `p`, the same look and still the link home) instead of the page's h1. Use it on a page below the home page that has its own title, so that title is the one h1 (App Shell 2.9.0 and later). |
 | `navigation-label` | No | `Application navigation` | Accessible label for the navigation landmark. |
 | `menu-label` | No | `Menu` | Mobile menu-button label. |
 
