@@ -66,7 +66,7 @@ def main() -> None:
                         fonts = platform_fonts(page,selector)
                         require(any(f["isCustomFont"] and f["glyphCount"] > 0 and family.replace(" ","").lower() in f["familyName"].replace(" ","").lower() for f in fonts),
                                 f"Actual rendered font mismatch: {selector}: {fonts}")
-                    page.locator("#app-nav a[href='#about']").click()
+                    page.locator(".app-footer__nav a[href='#about']").click()
                     page.wait_for_function("() => { const about = document.getElementById('about'); return Boolean(about) && !about.hidden; }")  # the section is built after the click, so it may not exist yet
                     page.evaluate("window.__homeNavigationProbe = true")
                     page.locator(".app-title__link").click()

@@ -6,8 +6,8 @@
     return;
   }
 
-  const SHELL_VERSION = "2.5.0";
-  const MARIN_UI_VERSION = "1.40.0";
+  const SHELL_VERSION = "2.6.0";
+  const MARIN_UI_VERSION = "1.41.0";
   const MARINOS_URL = "https://marincountygov.github.io/marin-os/";
   const MARINOS_STATUS_URL = `${MARINOS_URL}#status`;
   const CATALOG_URL = `${MARINOS_URL}catalog.json`;
@@ -369,7 +369,9 @@
       const appName = normalizedAttribute(this, "app-name", "Application");
       const description = normalizedAttribute(this, "app-description");
       const navigationLabel = normalizedAttribute(this, "navigation-label", "Application navigation");
-      const standardLinks = parseTokenList(this.getAttribute("standard-links"), "about updates");
+      // The header holds only the app's own tabs. About, Updates and the other standard pages are in the footer of every app,
+      // so the default is none; an app that must show one in its header names it in standard-links.
+      const standardLinks = parseTokenList(this.getAttribute("standard-links"), "");
 
       if (!this.hasAttribute("app-name")) componentWarning(this, 'missing required "app-name" attribute');
 
@@ -455,6 +457,12 @@
         seenHrefs.add(href);
         navigation.append(link);
       });
+
+      // An app with nothing of its own in the header has no Menu button and no empty navigation landmark.
+      if (!navigation.querySelector("a")) {
+        menuToggle.hidden = true;
+        navigation.hidden = true;
+      }
 
       actions.append(menuToggle, navigation);
       inner.append(identity, actions);
@@ -1017,7 +1025,9 @@
     function renderMarinosMenu(entries) {
       if (!Array.isArray(entries)) return;
       const current = window.location.href;
+      // An app marked "unlisted": true in the catalog is not shown in the menu.
       const links = entries
+        .filter((entry) => !(entry && entry.unlisted))
         .map((entry) => createMenuLink(entry))
         .filter((link) => link && !current.startsWith(link.href));
       if (!links.length) return;

@@ -53,6 +53,7 @@ python3 "$ROOT_DIR/tests/test_audit_buttons.py"
 python3 "$ROOT_DIR/tests/test_audit_shared_helpers.py"
 python3 "$ROOT_DIR/tests/test_audit_filter_column.py"
 python3 "$ROOT_DIR/tests/test_audit_steps.py"
+python3 "$ROOT_DIR/tests/test_audit_h1.py"
 python3 "$ROOT_DIR/tests/test_contrast_tokens.py"
 if [[ "$BROWSER" == 1 ]]; then
   python3 "$ROOT_DIR/tests/browser_smoke.py" ${FONT_ARGS[@]+"${FONT_ARGS[@]}"}
@@ -63,6 +64,7 @@ if [[ "$BROWSER" == 1 ]]; then
   python3 "$ROOT_DIR/tests/browser_search_text.py"
   python3 "$ROOT_DIR/tests/browser_button_patterns.py"
   python3 "$ROOT_DIR/tests/browser_steps.py"
+  python3 "$ROOT_DIR/tests/browser_header_menu.py"
 else
   printf 'SKIP: Browser/font rendering not requested; add --browser for fixture checks.\n'
 fi
