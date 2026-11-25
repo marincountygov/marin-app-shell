@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 2.7.0
+
+Version 2.7.0 brings the card into the shell. The list of cards (`.search-results-list`) and the record card (`.mm-card` and its parts) now come from the shared styles, at the sizes the standard states: the name 1.25rem and bold, the text 1rem, the small lines 0.875rem. Seven apps each carried their own copy of these rules, and the copies had drifted, so a card looked a little different from app to app. It also ships `audit-cards.py`, which lists an app's copies of the shared card rules and any card whose border, radius, background or shadow an app redraws. The pinned Marin UI baseline moves from 1.41.0 to 1.42.0. **Small differences in every app's cards:** the small lines are a little smaller and the title margin is the same everywhere; review each app's cards after installing, and delete the app's own copy of the card rules. It is compatible with 2.6.0. See "Cards" in Marin UI's `docs/components.md`.
+
 ## Version 2.6.0
 
 Version 2.6.0 takes About and Updates out of the header of every app. The header holds only an app's own tabs, and the footer, which already lists About, Security, Accessibility, Tech and Updates, is where people find the standard pages. An app with no tabs of its own has no Menu button. The MarinOS menu opens as a wide, horizontal panel on large screens, and an app marked `"unlisted": true` in the MarinOS catalog is left out of it. It also ships `audit-h1.py`, which lists CSS that sets an h1 size, and moves the pinned Marin UI baseline from 1.40.0 to 1.41.0: two h1 sizes, more room below the page, and the wide menu. **A presentation change for every app: review each app's header after installing.** An app that names `standard-links` keeps what it names. See "Standard app nav" in Marin UI's `docs/components.md`.

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.7.0 - 2026-11-25
+- The list of cards (`.search-results-list`) and the record card (`.mm-card`, `__select`, `__body`, `__title`, `__text`, `__byline`, `__meta`, `__image`) are in the shared styles, at the sizes the standard states: the name 1.25rem and bold, the text 1rem, the small lines 0.875rem, the title margin 0.25rem. Why: Mentions, Budget, Pulse, Reach, Census, Jobs and Software each carried a copy, and the copies had drifted (a title size set in two apps and not in two others, two title margins, small lines at 0.9375rem).
+- Add `vendor/marinos/audit-cards.py`: it lists an app's copies of the shared card rules and any card whose border, radius, background or shadow an app redraws (the Learn editor is left out, and `/* audit-cards: exempt (the reason) */` before a rule lets it stay). An app runs it with `--fail` in its check.
+- The pinned Marin UI baseline moves from 1.41.0 to 1.42.0.
+
 ## 2.6.0 - 2026-11-25
 - About and Updates are no longer in the default header. `standard-links` defaults to none, so the header holds only an app's own tabs (`<template data-navigation>`), and an app with none has no Menu button and no empty navigation. About, Updates, Security, Accessibility and Tech stay in every app's footer. An app that names `standard-links` keeps what it names. Why: the same five pages were reached from two places, and most apps' header was only About and Updates, so the header read as clutter next to the task.
 - The MarinOS menu leaves out an app marked `"unlisted": true` in the catalog, and (Marin UI 1.41.0) opens as a wide horizontal panel on screens 1024px wide or more.
