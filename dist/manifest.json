@@ -258,8 +258,8 @@
       "sha256": "a4537da71a460b306614964863812d74ab7722e47e4fe0c8a210d588d21f00ca"
     },
     "audit-h1.py": {
-      "bytes": 3896,
-      "sha256": "de7e20ffbf8cf595d83a12d216844f8b551fa4cd143578b8a0d6bb1053d8510a"
+      "bytes": 4156,
+      "sha256": "4ed80dd83af9e1cdb13ba2ac120f6540b111b6147a06fbc317e1eb885a1e01ed"
     },
     "audit-shared-helpers.py": {
       "bytes": 3754,
@@ -271,7 +271,7 @@
     },
     "brand-source.json": {
       "bytes": 10511,
-      "sha256": "35be2694ff6986d3534ce53367c36c4e3f45b3c71e21a50801d599e288ce93c1"
+      "sha256": "90078690070f54e97a14a2b52d59f35b51dbfa1999d2fd6b17b73a1ebf12648e"
     },
     "filter-panel.schema.json": {
       "bytes": 16075,

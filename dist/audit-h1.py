@@ -5,7 +5,8 @@
     python3 vendor/marinos/audit-h1.py . --fail    # exit 1 when anything is found
 
 An h1 has one of two sizes, set by Marin UI (App Shell 2.6.0 and later): the app title (`.app-title`, drawn by
-the shell) and the page title (`.page-title`, `.doc-title` or `.hero h1`). An app does not write `font-size` on an h1.
+the shell) and the page title (`.page-title`, `.doc-title` or `.hero h1`). An app does not write `font-size` on an h1,
+except to set it to one of the two tokens (`var(--app-h1-app)` or `var(--app-h1-page)`).
 This reads the app's own CSS (vendored code, tests, docs and generated data are skipped) and lists a rule that sets
 `font-size` and whose selector is an `h1` or a class used on an `<h1>` in the app's HTML or JavaScript.
 """
@@ -21,6 +22,8 @@ SKIP = {"vendor", "node_modules", "tests", "archive", "learning", "packages", "d
 H1_TAG = re.compile(r"<h1\b([^>]*)>", re.I)
 H1_JS = re.compile(r"""h\(\s*['"]h1['"]\s*,\s*\{([^}]*)\}|createElement\(\s*['"]h1['"]\s*\)""")
 CLASS = re.compile(r"""class(?:Name)?\s*[:=]\s*["']([^"']*)["']""")
+TOKENS = {"var(--app-h1-app)", "var(--app-h1-page)"}
+FONT_SIZE = re.compile(r"(?:^|[;\s])font-size\s*:\s*([^;]+)")
 RULE = re.compile(r"([^{}]+)\{([^{}]*)\}")
 H1_SELECTOR = re.compile(r"(^|[\s,>+~(])h1(?![\w-])")
 
@@ -56,7 +59,8 @@ def audit(app: Path) -> list[str]:
         rel = path.relative_to(app).as_posix()
         for match in RULE.finditer(text):
             selectors, body = match.group(1).strip(), match.group(2)
-            if not re.search(r"(^|[;\s])font-size\s*:", body) or selectors.startswith("@"):
+            sizes = FONT_SIZE.findall(body)
+            if not sizes or selectors.startswith("@") or all(size.strip() in TOKENS for size in sizes):
                 continue
             for selector in (part.strip() for part in selectors.split(",")):
                 last = selector.split()[-1] if selector.split() else ""

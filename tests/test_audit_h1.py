@@ -38,6 +38,11 @@ class AuditH1Tests(unittest.TestCase):
     def test_a_class_used_on_an_h1_in_script_is_listed(self):
         self.assertEqual(len(self.audit(".mm-title { font-size: 2rem; }", js="root.append(h('h1', { class: 'mm-title', text: 'x' }));")), 1)
 
+    def test_the_two_tokens_pass(self):
+        self.assertEqual(self.audit(".reader-header h1 { font-size: var(--app-h1-page); }"), [])
+        self.assertEqual(self.audit("h1.gate { font-size: var(--app-h1-app); }"), [])
+        self.assertEqual(len(self.audit("h1 { font-size: var(--other); }")), 1)
+
     def test_other_properties_on_h1_pass(self):
         self.assertEqual(self.audit("h1 { margin: 0; color: red; }"), [])
 
