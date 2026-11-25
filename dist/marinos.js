@@ -1182,7 +1182,11 @@
   //  - marks the current link aria-current="step" and gives every link a state word ("Completed" for the steps
   //    before the current one, "Current", "Up next") in a .step-state span, with data-step-state for the styles.
   //    Nothing is saved: completed only means earlier. Any step can be opened at any time, forward or back,
-  //  - writes the "Step 2 of 6: Analyze" line and a progress bar into .steps-progress, and shows it,
+  //  - writes the "Step 2 of 6: Analyze" line and a progress bar into .steps-progress, and shows it. The line is
+  //    not a live region: the current step's h2 is described by a hidden "Step 2 of 6", so when focus moves to the
+  //    heading a screen reader says the heading and the position once,
+  //  - sets the page title to "App: Analyze (step 2 of 6)" (the app is the title up to " | ") while the steps are on
+  //    screen, and puts the original title back when another tab is shown (WCAG 2.4.2),
   //  - ends every step with Previous and Next buttons ([data-prev-step], [data-next-step] hold the step id; a step
   //    that already has its own .steps-pager keeps it, and its buttons stay hidden in the page until JavaScript runs),
   //    and shows the toggle that controls the column, which is also hidden until JavaScript runs,
@@ -1263,7 +1267,6 @@
       progressBar = progress.querySelector("progress");
       if (!progressText) {
         progressText = document.createElement("p");
-        progressText.setAttribute("role", "status");
         progress.append(progressText);
       }
       if (!progressBar) {
@@ -1275,6 +1278,19 @@
       progress.hidden = false;
     }
     document.querySelectorAll("[data-next-step], [data-prev-step]").forEach((button) => { button.hidden = false; });
+    // The hidden position the current heading is described by ("Step 2 of 6").
+    const position = document.createElement("span");
+    position.id = "steps-position";
+    position.className = "visually-hidden";
+    (progress || nav).append(position);
+    const baseTitle = document.title;
+    const appName = baseTitle.split(" | ")[0];
+    const host = nav.closest("section");
+    let currentStep = steps[0];
+    let currentIndex = 0;
+    function syncTitle() {
+      document.title = host && host.hidden ? baseTitle : `${appName}: ${currentStep.title} (step ${currentIndex + 1} of ${steps.length})`;
+    }
     const panel = nav.closest(".search-sidebar");
     if (panel && panel.id) document.querySelectorAll(`button[aria-controls="${panel.id}"]`).forEach((button) => { button.hidden = false; });
 
@@ -1329,13 +1345,26 @@
         else step.link.removeAttribute("aria-current");
       });
       const step = steps[current];
+      currentStep = step;
+      currentIndex = current;
+      position.textContent = `Step ${current + 1} of ${steps.length}`;
+      steps.forEach((other) => {
+        const heading = other.section.querySelector(":scope > h2");
+        if (!heading) return;
+        if (other === step) heading.setAttribute("aria-describedby", position.id);
+        else heading.removeAttribute("aria-describedby");
+      });
+      syncTitle();
       buildToc(step);
       if (progress) {
         progressText.textContent = `Step ${current + 1} of ${steps.length}: ${step.title}`;
         progressBar.value = current + 1;
       }
       nav.dispatchEvent(new CustomEvent("marin-step-change", { bubbles: true, detail: { id: step.id, index: current, total: steps.length, name: step.title } }));
-      if (!moveFocus) return;
+      if (moveFocus) focusHeading(step);
+    }
+
+    function focusHeading(step) {
       const heading = step.section.querySelector(":scope > h2");
       if (!heading) return;
       heading.tabIndex = -1;
@@ -1359,7 +1388,19 @@
     document.querySelectorAll("[data-next-step], [data-prev-step]").forEach((button) => {
       button.addEventListener("click", () => go(button.dataset.nextStep || button.dataset.prevStep));
     });
-    window.addEventListener("popstate", () => show(stepOfHash(window.location.hash.slice(1)), false));
+    // Back and Forward between steps move focus to the heading, like Next and Previous. A hash that names another tab
+    // (About, Updates) leaves the step alone.
+    window.addEventListener("popstate", () => {
+      const hash = window.location.hash.slice(1);
+      const target = hash ? document.getElementById(decodeURIComponent(hash)) : null;
+      if (hash && indexOf(hash) < 0 && !(target && target.closest(".step"))) return;
+      // The browser clears focus right after a history event, so the heading takes it a moment later.
+      show(stepOfHash(hash), false);
+      const step = currentStep;
+      window.setTimeout(() => focusHeading(step), 0);
+    });
+    // The title follows the tab: it is the step's while the steps are shown and the page's own when another tab is.
+    if (host) new MutationObserver(syncTitle).observe(host, { attributes: true, attributeFilter: ["hidden"] });
 
     const hash = window.location.hash.slice(1);
     show(stepOfHash(hash), false);

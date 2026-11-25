@@ -9,6 +9,7 @@ Run: python3 tests/browser_steps.py
 from __future__ import annotations
 
 import mimetypes
+import os
 import sys
 from pathlib import Path
 
@@ -17,11 +18,12 @@ from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parents[1]
 ORIGIN = "https://example.test"
 PAGE = f"{ORIGIN}/app/"
-HTML = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Steps fixture</title>
+HTML = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Steps fixture | County of Marin</title>
 <link rel="stylesheet" href="/vendor/marinos/marinos.css"><script src="/vendor/marinos/marinos.js" defer></script></head>
 <body data-app-id="fixture">
 <main id="main" class="container app-main">
     <h1 class="visually-hidden">Steps layout fixture</h1>
+    <section id="start">
     <div class="search-layout">
       <div class="search-side">
         <button type="button" class="filter-toggle" data-filter-toggle="steps" data-filter-label="Steps" aria-controls="steps-panel" hidden></button>
@@ -62,6 +64,7 @@ HTML = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
         </div>
       </div>
     </div>
+    </section>
   </main>
 </body></html>"""
 
@@ -153,6 +156,39 @@ def pager_checks(page):
     require(visible_steps(page) == ["answer"] and page.evaluate("document.activeElement.id") == "answer-heading", "Space on Previous goes back and moves focus to the heading")
 
 
+AXE = os.environ.get("AXE_CORE")
+SPACING = "* { line-height: 1.5 !important; letter-spacing: 0.12em !important; word-spacing: 0.16em !important; } p { margin-bottom: 2em !important; }"
+
+
+def fits(page, what):
+    require(page.evaluate("document.documentElement.scrollWidth <= window.innerWidth"), f"No horizontal scroll {what}")
+    require(page.evaluate("[...document.querySelectorAll('.step:not([hidden]) .steps-pager button')].every(b => b.scrollWidth <= b.clientWidth + 1 && b.getBoundingClientRect().right <= window.innerWidth)"), f"The step buttons are not clipped {what}")
+
+
+def reflow_checks(page, reload):
+    """Text spacing (WCAG 1.4.12), 200% and 400% zoom (1.4.4, 1.4.10) and axe-core, on the second step."""
+    original = page.viewport_size
+    reload("#answer")
+    page.add_style_tag(content=SPACING)
+    fits(page, "with the text spacing overrides")
+    require(page.evaluate("(() => { const side = document.querySelector('.search-sidebar').getBoundingClientRect(); return [...document.querySelectorAll('nav.steps a')].every(a => a.getBoundingClientRect().right <= side.right + 1 && a.scrollWidth <= a.clientWidth + 1); })()"), "Step names are not clipped with the text spacing overrides")
+    for width, height, name in ((640, 400, "200% zoom"), (320, 256, "400% zoom")):
+        page.set_viewport_size({"width": width, "height": height})
+        reload("#answer")
+        fits(page, f"at {name}")
+        page.locator(".step:not([hidden]) [data-next-step]").scroll_into_view_if_needed()
+        require(page.locator(".step:not([hidden]) [data-next-step]").is_visible(), f"Next can be reached at {name}")
+    page.set_viewport_size(original)
+    reload("#answer")
+    if not AXE:
+        print("SKIP: axe-core scan (set AXE_CORE to axe.min.js).")
+        return
+    page.add_script_tag(path=AXE)
+    result = page.evaluate("axe.run(document.querySelector('main'), { runOnly: ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'] })")
+    found = [(v["id"], [n["target"] for n in v["nodes"]]) for v in result["violations"]]
+    require(not found, f"axe-core: {found}")
+
+
 def run(page):
     load(page)
     require(states(page) == ["current", "upcoming", "upcoming"], f"Initial states: {states(page)}")
@@ -160,6 +196,11 @@ def run(page):
     require(page.locator("nav.steps a[aria-current='step']").count() == 1, "One link is the current step")
     require(visible_steps(page) == ["gather"], "One step shows at a time")
     require(page.inner_text(".steps-progress p") == "Step 1 of 3: Gather", "The progress line names the step")
+    # One announcement per step change: the status role is gone and the heading is described by the position.
+    require(page.locator(".steps-progress [role='status'], .steps-progress [aria-live]").count() == 0, "The progress line is not a live region")
+    require(page.evaluate("document.querySelectorAll('.step > h2[aria-describedby]').length") == 1, "Only the current step's heading is described")
+    require(page.evaluate("(() => { const h = document.querySelector('.step:not([hidden]) > h2'); return document.getElementById(h.getAttribute('aria-describedby')).textContent; })()") == "Step 1 of 3", "The heading is described by its position")
+    require(page.title() == "Steps fixture: Gather (step 1 of 3)", f"The page title names the step: {page.title()}")
     require(page.is_visible(".filter-toggle") and page.get_attribute(".filter-toggle", "aria-label") == "Steps", "The Steps toggle shows once JavaScript runs")
     require(page.evaluate("document.querySelectorAll('nav.steps svg, nav.steps img, nav.steps canvas').length") == 0, "No icons or images in the list")
     require(page.evaluate("(() => { const side = document.querySelector('.search-sidebar').getBoundingClientRect(); return [...document.querySelectorAll('nav.steps a')].every(a => a.getBoundingClientRect().left >= side.left && a.getBoundingClientRect().right <= side.right); })()"), "Step links stay inside the column")
@@ -174,6 +215,12 @@ def run(page):
     require(page.get_attribute("[data-prev-step=gather]", "aria-label") == "Previous: gather", "Previous is named")
     require(page.evaluate("document.activeElement.id") == "answer-heading", "Focus moves to the step heading")
     require(page.url.endswith("#answer"), "The address names the step")
+    require(page.title() == "Steps fixture: Answer (step 2 of 3)", f"The page title follows the step: {page.title()}")
+    require(page.evaluate("document.getElementById(document.getElementById('answer-heading').getAttribute('aria-describedby')).textContent") == "Step 2 of 3", "The new heading is described by its position")
+    page.evaluate("document.getElementById('start').hidden = true")
+    page.wait_for_function("document.title === 'Steps fixture | County of Marin'", timeout=3000)
+    page.evaluate("document.getElementById('start').hidden = false")
+    page.wait_for_function("document.title === 'Steps fixture: Answer (step 2 of 3)'", timeout=3000)
 
     pager_checks(page)
 
@@ -183,6 +230,7 @@ def run(page):
     require(states(page) == ["complete", "current", "upcoming"], f"After Previous: {states(page)}")
     page.go_back()
     require(states(page) == ["complete", "complete", "current"], f"After Back: {states(page)}")
+    page.wait_for_function("document.activeElement.id === 'send-heading'", timeout=3000)
 
     load(page, "#answer-your-notes")
     require(visible_steps(page) == ["answer"], "A box hash opens its step")
@@ -194,6 +242,8 @@ def run(page):
     page.click(".filter-toggle")
     require(page.is_visible("nav.steps"), "The toggle opens the steps")
     page.set_viewport_size({"width": 1100, "height": 800})
+
+    reflow_checks(page, lambda hash_="": load(page, hash_))
 
     load(page)
     page.emulate_media(media="print")
