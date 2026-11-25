@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 2.9.0
+
+Version 2.9.0 adds `title-heading="false"` to `<marin-app-header>`. A page below the home page that has its own title (a guide, a regulation, a procedure) uses it so the page's title is the one h1 and the app name is plain text that still links home. It looks the same. Without the attribute nothing changes. It is compatible with 2.8.0. See "Heading sizes" in Marin UI's `docs/components.md`.
+
 ## Version 2.8.0
 
 Version 2.8.0 lets a card change its colors through three custom properties, `--app-card-bg`, `--app-card-border` and `--app-card-shadow`, which default to the usual card look. A card with a state, such as Meeting Meter's summary, sets them on itself instead of redrawing its surface, so every card in every app is the shared `.app-card`. The pinned Marin UI baseline moves from 1.42.0 to 1.43.0. Nothing changes where the properties are not set, and it is compatible with 2.7.0. See "Cards" in Marin UI's `docs/components.md`.

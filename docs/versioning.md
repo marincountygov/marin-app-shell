@@ -18,6 +18,8 @@ Version 2.2.0 adds the search-result helpers (`marinSearchWords`, `marinSearchSn
 
 Version 2.3.0 adds the report core (`window.marinReports`) without changing anything an existing app relies on.
 
+Version 2.9.0 adds the optional `title-heading="false"` attribute on `<marin-app-header>`, which draws the app name as plain text so a page with its own title has one h1. Nothing changes without it.
+
 Version 2.8.0 adopts the Marin UI 1.43.0 baseline: `.app-card` takes its background, edge color and shadow from three custom properties with the usual look as the default. It changes nothing for an app that does not set them.
 
 Version 2.7.0 adds the shared card list and record card (`.search-results-list`, `.mm-card` and its parts) at the sizes the standard states, adopts the Marin UI 1.42.0 baseline, and adds `audit-cards.py`. An app that still carries its own copy of these rules keeps working, but its cards may differ slightly from the shared ones, so each app should delete its copy and review its cards.
