@@ -263,7 +263,7 @@
     },
     "brand-source.json": {
       "bytes": 10511,
-      "sha256": "a8f4a2677154e1babb820c7579428543a1271ca13ed4a39c3e4003f5d88b6243"
+      "sha256": "c9e1faf74d36bcde6fd3c1b3309e250a1c20190e81c4f176d363e43a0aede257"
     },
     "filter-panel.schema.json": {
       "bytes": 16075,
@@ -458,12 +458,12 @@
       "sha256": "01cd5ffb3a528c219a86e49a814c6c53bd8a69b9a3c305dd237074ba1c811af7"
     },
     "marinos.css": {
-      "bytes": 153171,
-      "sha256": "c6f2f1c9159eec97c6629bbcc3f2463675423eb1c4a1a4b524ffcd5edf3c074f"
+      "bytes": 153222,
+      "sha256": "9083c67d36cd541ea39426a34d555caa184aadfb743e02959384039519e10763"
     },
     "marinos.js": {
-      "bytes": 220139,
-      "sha256": "0f4861c90770e134a34a63780a90f5452eb64dc8e4b2b7090ea2419e4f8c059f"
+      "bytes": 222043,
+      "sha256": "0fdd88693d9f8264b8e91e04fd35eb679c8ddc3dc5364d877ac0130b6ee060a4"
     }
   }
 }

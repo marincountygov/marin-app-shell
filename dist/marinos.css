@@ -2328,7 +2328,8 @@ mark.search-hit {
   margin: 1.5rem 0 0;
 }
 
-.steps-pager .action-button {
+.steps-pager .action-button,
+.steps-pager .action-button:has(> svg:only-child) {
   min-width: 2.75rem;
   min-height: 2.75rem;
   margin: 0;

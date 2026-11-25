@@ -1183,8 +1183,9 @@
   //    before the current one, "Current", "Up next") in a .step-state span, with data-step-state for the styles.
   //    Nothing is saved: completed only means earlier. Any step can be opened at any time, forward or back,
   //  - writes the "Step 2 of 6: Analyze" line and a progress bar into .steps-progress, and shows it,
-  //  - shows the Previous and Next buttons ([data-prev-step], [data-next-step] hold the step id) and the
-  //    toggle that controls the column, which are hidden in the page until JavaScript runs,
+  //  - ends every step with Previous and Next buttons ([data-prev-step], [data-next-step] hold the step id; a step
+  //    that already has its own .steps-pager keeps it, and its buttons stay hidden in the page until JavaScript runs),
+  //    and shows the toggle that controls the column, which is also hidden until JavaScript runs,
   //  - builds "On this page" into [data-steps-toc] from the current step's .step-box headings (h3), giving
   //    each box an id, and rebuilds it when the step changes,
   //  - follows the address: #step or #box-inside-a-step, the Back button, and moves focus to the step's h2
@@ -1219,6 +1220,39 @@
         const heading = box.querySelector("h3");
         if (heading && !box.id) box.id = `${step.id}-${slug(heading.textContent)}`;
       });
+    });
+
+    // Previous and Next are part of the layout: every step ends with them unless the page already wrote its own
+    // .steps-pager. Next is the one solid button, with the next step's name in lowercase and an arrow after the words;
+    // Previous is a quiet icon-only button with the arrow before it, named by aria-label and title. The first step has no
+    // Previous and the last has no Next (they are left out, never disabled). The arrows are drawn by the shell and are
+    // decoration. Both buttons sit in a named nav (not role=group, whose Pico styles join the buttons), 44 px or more, in the tab order after the step's content.
+    steps.forEach((step, index) => {
+      if (step.section.querySelector(".steps-pager")) return;
+      const pager = document.createElement("nav");
+      pager.className = "steps-pager";
+      pager.setAttribute("aria-label", "Previous and next step");
+      if (index > 0) {
+        const name = `Previous: ${steps[index - 1].title.toLowerCase()}`;
+        const previous = document.createElement("button");
+        previous.type = "button";
+        previous.className = "action-button";
+        previous.dataset.prevStep = steps[index - 1].id;
+        previous.dataset.icon = "arrow-left";
+        previous.setAttribute("aria-label", name);
+        previous.title = name;
+        pager.append(previous);
+      }
+      if (index < steps.length - 1) {
+        const next = document.createElement("button");
+        next.type = "button";
+        next.className = "primary";
+        next.dataset.nextStep = steps[index + 1].id;
+        next.dataset.iconEnd = "arrow-right";
+        next.textContent = `Next: ${steps[index + 1].title.toLowerCase()}`;
+        pager.append(next);
+      }
+      step.section.append(pager);
     });
 
     const progress = document.querySelector(".steps-progress");

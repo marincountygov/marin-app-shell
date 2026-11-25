@@ -48,18 +48,15 @@ HTML = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
               <p>Collect what you need.</p>
               <div class="step-box"><h3>What you do</h3><p>List the documents.</p></div>
               <div class="step-box"><h3>What you get back</h3><p>A checklist.</p></div>
-              <p class="steps-pager"><button type="button" class="primary" data-next-step="answer" data-icon-end="arrow-right" hidden>Next: answer</button></p>
             </section>
             <section id="answer" class="step" aria-labelledby="answer-heading">
               <h2 id="answer-heading">Answer</h2>
               <div class="step-box"><h3>Your name</h3><label for="name">Name</label><input id="name" type="text"></div>
               <div class="step-box"><h3>Your notes</h3><p>Write them.</p></div>
-              <p class="steps-pager"><button type="button" class="action-button" data-prev-step="gather" data-icon="arrow-left" aria-label="Previous: gather" title="Previous: gather" hidden></button><button type="button" class="primary" data-next-step="send" data-icon-end="arrow-right" hidden>Next: send</button></p>
             </section>
             <section id="send" class="step" aria-labelledby="send-heading">
               <h2 id="send-heading">Send</h2>
               <div class="step-box"><h3>Send it</h3><p>Done.</p></div>
-              <p class="steps-pager"><button type="button" class="action-button" data-prev-step="answer" data-icon="arrow-left" aria-label="Previous: answer" title="Previous: answer" hidden></button></p>
             </section>
           </div>
         </div>
@@ -109,6 +106,53 @@ def load(page, hash_=""):
     page.wait_for_selector("nav.steps[data-steps-ready]", state="attached")
 
 
+def pager_checks(page):
+    """Previous and Next on step 2: names, group, size, spacing, keyboard, focus ring, forced colors."""
+    require(page.locator(".step:not([hidden]) .steps-pager").count() == 1, "Each step has one pager")
+    group = page.locator(".step:not([hidden]) .steps-pager")
+    require(group.evaluate("e => e.tagName") == "NAV" and group.get_attribute("aria-label") == "Previous and next step", "The pager is a named nav")
+    previous, following = group.locator("[data-prev-step]"), group.locator("[data-next-step]")
+    require(previous.get_attribute("aria-label") == "Previous: gather" and previous.get_attribute("title") == "Previous: gather", "Previous is named by aria-label and title")
+    require(previous.inner_text().strip() == "" and previous.locator("svg[aria-hidden='true']").count() == 1, "Previous is icon-only with a hidden arrow")
+    require(following.inner_text().strip() == "Next: send", "Next keeps its words and names the next step in lowercase")
+    require(following.get_attribute("aria-label") is None, "Next is named by its visible words, so the name matches the label (WCAG 2.5.3)")
+    require(following.locator("svg[aria-hidden='true']").count() == 1 and following.evaluate("e => e.lastElementChild.tagName.toLowerCase() === 'svg'"), "Next ends with a hidden arrow")
+    require(following.evaluate("e => e.classList.contains('primary')") and not previous.evaluate("e => e.classList.contains('primary')"), "Next is the one solid button")
+    boxes = [previous.bounding_box(), following.bounding_box()]
+    require(all(b["width"] >= 44 and b["height"] >= 44 for b in boxes), f"Both targets are at least 44 px: {boxes}")
+    require(boxes[0]["width"] < 60 and boxes[1]["width"] < 400, f"The buttons keep their own size, not stretched or joined: {boxes}")
+    require(boxes[1]["x"] - (boxes[0]["x"] + boxes[0]["width"]) >= 8, "The buttons have a gap between them")
+    require(group.locator("[disabled], [aria-disabled]").count() == 0, "Nothing is disabled")
+    # Keyboard: Previous then Next in the tab order, a visible focus ring, Space and Enter work.
+    previous.focus()
+    page.keyboard.press("Shift+Tab")
+    page.keyboard.press("Tab")
+    require(page.evaluate("document.activeElement.dataset.prevStep") == "gather", "Previous takes focus")
+    ring = previous.evaluate("e => { const c = getComputedStyle(e); return [c.outlineStyle, parseFloat(c.outlineWidth)]; }")
+    require(ring[0] != "none" and ring[1] >= 2, f"Previous shows a focus ring: {ring}")
+    page.keyboard.press("Tab")
+    require(page.evaluate("document.activeElement.dataset.nextStep") == "send", "Next follows Previous in the tab order")
+    ring = following.evaluate("e => { const c = getComputedStyle(e); return [c.outlineStyle, parseFloat(c.outlineWidth)]; }")
+    require(ring[0] != "none" and ring[1] >= 2, f"Next shows a focus ring: {ring}")
+    # Windows forced colors: both keep a border and their arrows.
+    page.emulate_media(forced_colors="active")
+    require(all(group.locator(f"[data-{n}-step]").evaluate("e => parseFloat(getComputedStyle(e).borderTopWidth) >= 1") for n in ("prev", "next")), "Both buttons keep a border in forced colors")
+    page.keyboard.press("Shift+Tab")
+    require(page.evaluate("document.activeElement.dataset.prevStep") == "gather", "Shift+Tab goes back to Previous")
+    require(previous.evaluate("e => getComputedStyle(e).outlineStyle") != "none", "The focus ring shows in forced colors")
+    page.emulate_media(forced_colors="none")
+    # The ends of the flow: no Previous on the first step, no Next on the last, and neither is disabled.
+    require(page.locator("#gather .steps-pager [data-prev-step]").count() == 0 and page.locator("#gather .steps-pager [data-next-step]").count() == 1, "The first step has Next only")
+    require(page.locator("#send .steps-pager [data-next-step]").count() == 0 and page.locator("#send .steps-pager [data-prev-step]").count() == 1, "The last step has Previous only")
+    # Enter on Next moves on, Space on Previous goes back, and focus follows to the step heading.
+    following.focus()
+    page.keyboard.press("Enter")
+    require(visible_steps(page) == ["send"] and page.evaluate("document.activeElement.id") == "send-heading", "Enter on Next opens the next step and moves focus to its heading")
+    page.focus("#send [data-prev-step]")
+    page.keyboard.press("Space")
+    require(visible_steps(page) == ["answer"] and page.evaluate("document.activeElement.id") == "answer-heading", "Space on Previous goes back and moves focus to the heading")
+
+
 def run(page):
     load(page)
     require(states(page) == ["current", "upcoming", "upcoming"], f"Initial states: {states(page)}")
@@ -130,6 +174,8 @@ def run(page):
     require(page.get_attribute("[data-prev-step=gather]", "aria-label") == "Previous: gather", "Previous is named")
     require(page.evaluate("document.activeElement.id") == "answer-heading", "Focus moves to the step heading")
     require(page.url.endswith("#answer"), "The address names the step")
+
+    pager_checks(page)
 
     page.click("nav.steps a[href='#send']")
     require(states(page) == ["complete", "complete", "current"], f"After skipping ahead: {states(page)}")
