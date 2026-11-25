@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.8.0 - 2026-11-26
+- The pinned Marin UI baseline moves from 1.42.0 to 1.43.0: `.app-card` takes its background, edge color and shadow from `--app-card-bg`, `--app-card-border` and `--app-card-shadow` (the usual card look is the default), so a card with a state sets those instead of redrawing its surface. Why: the last five cards that drew their own surface could not use `.app-card` without losing a state. No component, attribute or path changed.
+
 ## 2.7.0 - 2026-11-25
 - The list of cards (`.search-results-list`) and the record card (`.mm-card`, `__select`, `__body`, `__title`, `__text`, `__byline`, `__meta`, `__image`) are in the shared styles, at the sizes the standard states: the name 1.25rem and bold, the text 1rem, the small lines 0.875rem, the title margin 0.25rem. Why: Mentions, Budget, Pulse, Reach, Census, Jobs and Software each carried a copy, and the copies had drifted (a title size set in two apps and not in two others, two title margins, small lines at 0.9375rem).
 - Add `vendor/marinos/audit-cards.py`: it lists an app's copies of the shared card rules and any card whose border, radius, background or shadow an app redraws (the Learn editor is left out, and `/* audit-cards: exempt (the reason) */` before a rule lets it stay). An app runs it with `--fail` in its check.

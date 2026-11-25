@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 2.8.0
+
+Version 2.8.0 lets a card change its colors through three custom properties, `--app-card-bg`, `--app-card-border` and `--app-card-shadow`, which default to the usual card look. A card with a state, such as Meeting Meter's summary, sets them on itself instead of redrawing its surface, so every card in every app is the shared `.app-card`. The pinned Marin UI baseline moves from 1.42.0 to 1.43.0. Nothing changes where the properties are not set, and it is compatible with 2.7.0. See "Cards" in Marin UI's `docs/components.md`.
+
 ## Version 2.7.0
 
 Version 2.7.0 brings the card into the shell. The list of cards (`.search-results-list`) and the record card (`.mm-card` and its parts) now come from the shared styles, at the sizes the standard states: the name 1.25rem and bold, the text 1rem, the small lines 0.875rem. Seven apps each carried their own copy of these rules, and the copies had drifted, so a card looked a little different from app to app. It also ships `audit-cards.py`, which lists an app's copies of the shared card rules and any card whose border, radius, background or shadow an app redraws. The pinned Marin UI baseline moves from 1.41.0 to 1.42.0. **Small differences in every app's cards:** the small lines are a little smaller and the title margin is the same everywhere; review each app's cards after installing, and delete the app's own copy of the card rules. It is compatible with 2.6.0. See "Cards" in Marin UI's `docs/components.md`.
