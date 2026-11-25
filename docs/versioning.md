@@ -18,6 +18,8 @@ Version 2.2.0 adds the search-result helpers (`marinSearchWords`, `marinSearchSn
 
 Version 2.3.0 adds the report core (`window.marinReports`) without changing anything an existing app relies on.
 
+Version 2.4.0 adopts the Marin UI 1.39.0 baseline (a checked checkbox shows in Windows forced colors) without changing anything an existing app relies on.
+
 Patch releases fix compatible defects. Minor releases add compatible capabilities
 or intentionally change presentation and therefore still require visual review.
 Major releases change required component markup, routes, or deployment paths.

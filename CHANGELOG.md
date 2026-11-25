@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.4.0 - 2026-11-24
+- The pinned Marin UI baseline moves from 1.38.0 to 1.39.0. In Windows forced colors a checked checkbox or radio is now drawn with the browser's own control, so its state shows; before, every checked box in a filter column looked unchecked. Outside forced colors nothing changes. No component, attribute or path changed.
+
 ## 2.3.0 - 2026-11-24
 - Add the report core, `window.marinReports`: `create`, `renderHtml`, `toText`, `toMarkdown`, `standaloneHtml`, `csvRows`, `toJson`, `parseJson`, `formatDate` and `pacificToday`. A report is plain data that every output is made from (docs/reports.md). A cell of a table's raw `values` can also carry a margin of error and a one-sided bound, which the CSV writes as columns of their own. The Marin UI baseline is unchanged.
 

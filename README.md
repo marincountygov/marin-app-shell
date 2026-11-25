@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 2.4.0
+
+Version 2.4.0 refreshes the pinned Marin UI baseline from 1.38.0 to 1.39.0. In Windows forced colors (high contrast), a checked checkbox or radio, including every one in a filter column, is now drawn by the browser so a person can see that it is checked. Nothing else changes, and it is compatible with 2.3.0.
+
 ## Version 2.3.0
 
 Version 2.3.0 adds the report core, `window.marinReports`. A report is plain data, and the core makes the preview HTML, text, Markdown, a standalone page, CSV rows and the report file from it, and reads a report file back. It has no DOM access. A table cell can carry a margin of error and a one-sided bound, so a CSV keeps both. It is compatible with 2.2.0. See `docs/reports.md`.
