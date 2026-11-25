@@ -54,6 +54,7 @@ python3 "$ROOT_DIR/tests/test_audit_shared_helpers.py"
 python3 "$ROOT_DIR/tests/test_audit_filter_column.py"
 python3 "$ROOT_DIR/tests/test_audit_steps.py"
 python3 "$ROOT_DIR/tests/test_audit_h1.py"
+python3 "$ROOT_DIR/tests/test_audit_cards.py"
 python3 "$ROOT_DIR/tests/test_contrast_tokens.py"
 if [[ "$BROWSER" == 1 ]]; then
   python3 "$ROOT_DIR/tests/browser_smoke.py" ${FONT_ARGS[@]+"${FONT_ARGS[@]}"}
