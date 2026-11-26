@@ -3,15 +3,17 @@ set -euo pipefail
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 ROOT_DIR=$(cd -- "$SCRIPT_DIR/.." && pwd)
 BROWSER=0
+APPS=0
 FONT_ARGS=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --browser) BROWSER=1; shift ;;
+    --apps) APPS=1; shift ;;
     --font-source)
       [[ $# -ge 2 ]] || { printf 'Missing --font-source path\n' >&2; exit 2; }
       FONT_ARGS=(--font-source "$2"); shift 2 ;;
     -h|--help)
-      printf 'Usage: bash scripts/check.sh [--browser] [--font-source /path/to/marin-ui]\n'
+      printf 'Usage: bash scripts/check.sh [--browser] [--apps] [--font-source /path/to/marin-ui]\n'
       exit 0 ;;
     *) printf 'Unknown option: %s\n' "$1" >&2; exit 2 ;;
   esac
@@ -55,6 +57,7 @@ python3 "$ROOT_DIR/tests/test_audit_filter_column.py"
 python3 "$ROOT_DIR/tests/test_audit_steps.py"
 python3 "$ROOT_DIR/tests/test_audit_h1.py"
 python3 "$ROOT_DIR/tests/test_audit_cards.py"
+python3 "$ROOT_DIR/tests/test_check_apps.py"
 python3 "$ROOT_DIR/tests/test_contrast_tokens.py"
 if [[ "$BROWSER" == 1 ]]; then
   python3 "$ROOT_DIR/tests/browser_smoke.py" ${FONT_ARGS[@]+"${FONT_ARGS[@]}"}
@@ -68,5 +71,11 @@ if [[ "$BROWSER" == 1 ]]; then
   python3 "$ROOT_DIR/tests/browser_header_menu.py"
 else
   printf 'SKIP: Browser/font rendering not requested; add --browser for fixture checks.\n'
+fi
+if [[ "$APPS" == 1 ]]; then
+  printf 'Checking that every app next to this repo is on shell %s...\n' "$(tr -d '[:space:]' < "$ROOT_DIR/SHELL_VERSION")"
+  python3 "$ROOT_DIR/scripts/check-apps.py"
+else
+  printf 'SKIP: App versions not requested; add --apps to fail when an app is behind this shell.\n'
 fi
 printf 'Requested checks passed.\n'
