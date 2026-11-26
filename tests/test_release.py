@@ -202,6 +202,53 @@ class ReleaseTests(unittest.TestCase):
         (self.app / FONT_PATHS[0]).write_bytes(b"corrupt")
         with self.assertRaises(AssetError): installer.check_app(self.app, self.root)
 
+    def newer_checkout(self, version="99.0.0"):
+        """Make the shell checkout newer than what the app has installed."""
+        (self.root / "SHELL_VERSION").write_text(version + "\n")
+        with contextlib.redirect_stdout(io.StringIO()):
+            build(self.root)
+
+    def test_check_on_the_current_release_is_strict_and_has_no_note(self):
+        self.run_install()
+        self.assertIsNone(installer.check_installed(self.app, self.root))
+
+    def test_an_app_on_an_older_shell_passes_the_check_with_a_note(self):
+        self.run_install()
+        installed = shell_version(self.root)
+        self.newer_checkout()
+        with self.assertRaises(AssetError): installer.check_app(self.app, self.root)  # the installer's own validation stays strict
+        note = installer.check_installed(self.app, self.root)
+        self.assertIn(installed, note)
+        self.assertIn("99.0.0", note)
+
+    def test_an_older_install_that_was_damaged_still_fails(self):
+        self.run_install()
+        self.newer_checkout()
+        shell = self.app / "vendor/marinos"
+        target = next(p for p in sorted(shell.iterdir()) if p.is_file() and p.name != "manifest.json")
+        target.write_bytes(target.read_bytes() + b"tampered")
+        with self.assertRaises(AssetError): installer.check_installed(self.app, self.root)
+
+    def test_an_older_install_with_an_extra_file_still_fails(self):
+        self.run_install()
+        self.newer_checkout()
+        (self.app / "vendor/marinos/extra.js").write_text("alert(1)")
+        with self.assertRaises(AssetError): installer.check_installed(self.app, self.root)
+
+    def test_marin_yml_that_names_a_different_shell_than_the_installed_one_fails(self):
+        self.run_install()
+        self.newer_checkout()
+        (self.app / "marin.yml").write_text("schema: 1\nplatform:\n  shell: 1.0.1\n")
+        with self.assertRaises(AssetError): installer.check_installed(self.app, self.root)
+
+    def test_an_app_newer_than_the_shell_checkout_fails(self):
+        self.run_install()
+        (self.root / "SHELL_VERSION").write_text("0.0.1\n")
+        with contextlib.redirect_stdout(io.StringIO()):
+            build(self.root)
+        with self.assertRaisesRegex(AssetError, "newer than this shell checkout"):
+            installer.check_installed(self.app, self.root)
+
     def test_preflight_rejects_shell_target(self):
         with self.assertRaises(AssetError): installer.install(self.root, source=self.ui, root=self.root)
 

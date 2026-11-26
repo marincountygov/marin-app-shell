@@ -260,7 +260,12 @@ bash scripts/install.sh ../marin-unzipper --check
 
 `--dry-run` reports the `platform.shell` transition and managed asset changes without
 writing them. `--check` verifies the installed shell and companion hashes and also
-requires `marin.yml` `platform.shell` to match the installed release. It does not
+requires `marin.yml` `platform.shell` to match the installed release. An app that is on
+an older release than this checkout passes when its own installed files are intact (checked
+against the manifest it was installed with) and the check prints a note that a newer shell is
+available, so a new shell release does not make every app's check fail until it is reinstalled.
+A damaged install, a `marin.yml` that names a different shell than the one installed, or an app
+newer than this checkout still fails. It does not
 claim icon/catalog parity, deployment, accessibility, or security review has been
 completed.
 

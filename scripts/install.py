@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 from dataclasses import dataclass
+import json
 import os
 import shutil
 import signal
@@ -226,26 +227,61 @@ def app_root(value: str | Path, root: Path) -> Path:
     return app
 
 
-def check_app(app: Path, root: Path = ROOT) -> None:
-    manifest = verify_distribution(root)
-    state = read_file_state(app / "marin.yml", app)
-    declared = parse_manifest(state.data).version
-    require(declared == manifest["shellVersion"],
-            f"marin.yml platform.shell is {declared}; this release requires {manifest['shellVersion']}")
+def verify_installed_files(app: Path, manifest: dict, expected_manifest: bytes | None) -> None:
+    """The installed shell, fonts and icons are exactly what `manifest` lists, byte for byte."""
     shell = app / "vendor/marinos"
     require_plain_path(shell, app)
     require(shell.is_dir(), f"Installed shell missing: {shell}")
     required = set(manifest["files"]) | {"manifest.json"}
     actual = {p.relative_to(shell).as_posix() for p in shell.rglob("*") if p.is_file() or p.is_symlink()}
     require(actual == required, "Installed shell file inventory differs from the pinned release")
-    require((shell / "manifest.json").read_bytes() == (root / "dist/manifest.json").read_bytes(),
-            "Installed shell manifest differs from this release")
+    if expected_manifest is not None:
+        require((shell / "manifest.json").read_bytes() == expected_manifest,
+                "Installed shell manifest differs from this release")
     for relative, meta in manifest["files"].items():
         require_plain_path(shell / relative, app)
         verify_file(shell / relative, meta, relative)
-    for relative, meta in {**manifest["fontAssets"], **manifest["companionIcons"]}.items():
+    for relative, meta in {**manifest.get("fontAssets", {}), **manifest.get("companionIcons", {})}.items():
         require_plain_path(app / relative, app)
         verify_file(app / relative, meta, relative)
+
+
+def check_app(app: Path, root: Path = ROOT) -> None:
+    """Strict: the app has exactly the release in `root` installed. Used by the installer's own final validation."""
+    manifest = verify_distribution(root)
+    state = read_file_state(app / "marin.yml", app)
+    declared = parse_manifest(state.data).version
+    require(declared == manifest["shellVersion"],
+            f"marin.yml platform.shell is {declared}; this release requires {manifest['shellVersion']}")
+    verify_installed_files(app, manifest, (root / "dist/manifest.json").read_bytes())
+
+
+def version_key(version: str) -> tuple[int, ...]:
+    return tuple(int(part) for part in version.split("."))
+
+
+def check_installed(app: Path, root: Path = ROOT) -> str | None:
+    """What `--check` does. An app on the release in `root` gets the strict check. An app on an older release passes when its own
+    installed shell is intact, byte for byte against the manifest it was installed with, and gets a note that a newer shell is
+    available: an app may lag the shell without its checks failing. A damaged install, a marin.yml that names a different shell
+    than the one installed, or an app newer than the shell checkout still fails."""
+    manifest = verify_distribution(root)
+    state = read_file_state(app / "marin.yml", app)
+    declared = parse_manifest(state.data).version
+    current = manifest["shellVersion"]
+    if declared == current:
+        check_app(app, root)
+        return None
+    require(version_key(declared) < version_key(current),
+            f"marin.yml platform.shell is {declared}, newer than this shell checkout ({current}); update the shell checkout")
+    installed_path = app / "vendor/marinos/manifest.json"
+    require_plain_path(installed_path, app)
+    require(installed_path.is_file(), f"Installed shell manifest missing: {installed_path}")
+    installed = json.loads(installed_path.read_bytes())
+    require(installed.get("shellVersion") == declared and isinstance(installed.get("files"), dict),
+            f"marin.yml platform.shell is {declared}, but the installed shell manifest says {installed.get('shellVersion')}")
+    verify_installed_files(app, installed, None)
+    return f"the installed shell is {declared} and the shell checkout has {current}; install it when you are ready: bash {root / 'scripts/install.sh'} {app}"
 
 
 def install(app: Path, source: str | Path | None = None, dry_run: bool = False,
@@ -305,8 +341,10 @@ def main() -> None:
         lock = app / ".marinos-install.lock"
         require(not lock.exists() and not lock.is_symlink(),
                 f"Install lock exists: {lock}; wait for completion or inspect recovery first")
-        check_app(app)
+        note = check_installed(app)
         print("Installed shell, font, icon, and marin.yml integrity: PASS")
+        if note:
+            print(f"NOTE: {note}")
     else:
         install(args.app, args.font_source, args.dry_run)
 
