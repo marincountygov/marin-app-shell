@@ -268,6 +268,12 @@ requires `marin.yml` `platform.shell` to match the installed release. An app tha
 an older release than this checkout passes when its own installed files are intact (checked
 against the manifest it was installed with) and the check prints a note that a newer shell is
 available, so a new shell release does not make every app's check fail until it is reinstalled.
+
+To see which apps still need the new release, run this from the shell repo. It reads every app checked out next to it and fails for each one that is on an older shell, with the install command to run:
+
+```bash
+bash scripts/check.sh --apps
+```
 A damaged install, a `marin.yml` that names a different shell than the one installed, or an app
 newer than this checkout still fails. It does not
 claim icon/catalog parity, deployment, accessibility, or security review has been

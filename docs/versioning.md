@@ -46,7 +46,7 @@ Major releases change required component markup, routes, or deployment paths.
 6. Review the root demo and a consuming app in light/dark and narrow/desktop layouts when presentation changes. Compare actual loaded fonts, not just token definitions.
 7. Review the demo header/favicon/catalog icon parity and any separate real catalog update when brand/icon inputs change.
 8. Commit source and generated distribution together; tag `vX.Y.Z` after review.
-9. Open one shell update PR per consumer. A source handoff requires a matching local UI checkout or verified font cache; apps are standalone after install.
+9. Open one shell update PR per consumer. A source handoff requires a matching local UI checkout or verified font cache; apps are standalone after install. After they merge, run `bash scripts/check.sh --apps`: it fails for each app checked out next to this repo that is on an older shell, and prints the install command for it. Apps do not run this themselves, so a new release never fails an app's own check.
 
 ## Consumer changes
 
