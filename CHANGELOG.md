@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.10.0 - 2026-11-26
+- The home page layout is in the shell: `.home-search` and its results, `.directory-grid`, `.directory-card` and `.directory-card__badges`, with `main.container.app-main` as the home page. Why: MarinOS, Marin Docs and Marin Pulse each carried their own copy of the search styles, and two of them used the document layout, so the search box and the cards jumped between them. The pinned Marin UI baseline moves from 1.43.0 to 1.44.0.
+
 ## Tooling, 2026-11-26 (no version change: the installer is not part of `dist/`)
 - `scripts/install.py --check` lets an app lag the shell. An app on the release in this checkout gets the strict check as before. An app on an older release passes when its own installed shell, fonts and icons are intact, byte for byte against the manifest it was installed with, and the check prints a note that a newer shell is available. A damaged install, a `marin.yml` that names a different shell than the one installed, or an app newer than the checkout still fails. The installer's own final validation after an install stays strict. Why: every shell release made every app's local `check.sh` fail with "this release requires X" until the app was reinstalled, so 20 apps failed their own checks after shell 2.9.0 although nothing was wrong with them.
 
