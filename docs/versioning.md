@@ -18,6 +18,8 @@ Version 2.2.0 adds the search-result helpers (`marinSearchWords`, `marinSearchSn
 
 Version 2.3.0 adds the report core (`window.marinReports`) without changing anything an existing app relies on.
 
+Version 2.10.0 adopts the Marin UI 1.44.0 baseline: the shared home page layout (`.home-search`, `.directory-grid`, `.directory-card`). An app that keeps its own copy of those rules keeps working, but should delete it.
+
 Version 2.9.0 adds the optional `title-heading="false"` attribute on `<marin-app-header>`, which draws the app name as plain text so a page with its own title has one h1. Nothing changes without it.
 
 Version 2.8.0 adopts the Marin UI 1.43.0 baseline: `.app-card` takes its background, edge color and shadow from three custom properties with the usual look as the default. It changes nothing for an app that does not set them.

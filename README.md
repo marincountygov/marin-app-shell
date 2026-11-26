@@ -5,6 +5,10 @@ apps. It owns the banner, header, standard information sections, footer, navigat
 shared styling, and shared behavior. Apps own their workflows, content, security
 configuration, and app-specific CSS/JavaScript.
 
+## Version 2.10.0
+
+Version 2.10.0 brings the home page layout into the shell: the search box (`.home-search`), the card grid (`.directory-grid`, the same grid as `.docs-grid`) and the directory card, with `main.container.app-main` as the home page. MarinOS, Marin Docs and Marin Pulse each carried their own copy and the copies had drifted, so the search box and the cards sat 8px apart from one app's home page to the next. An app that carried its own copy should delete it. The pinned Marin UI baseline moves from 1.43.0 to 1.44.0. It is compatible with 2.9.0. See "Home page" in Marin UI's `docs/components.md`.
+
 ## Version 2.9.0
 
 Version 2.9.0 adds `title-heading="false"` to `<marin-app-header>`. A page below the home page that has its own title (a guide, a regulation, a procedure) uses it so the page's title is the one h1 and the app name is plain text that still links home. It looks the same. Without the attribute nothing changes. It is compatible with 2.8.0. See "Heading sizes" in Marin UI's `docs/components.md`.
