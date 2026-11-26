@@ -144,7 +144,8 @@ the installer does not silently perform a first-time migration.
 
 The release in `vendor/marinos/manifest.json` must match `platform.shell`.
 `bash scripts/install.sh /path/to/app --check` verifies that agreement in addition
-to managed shell, font, and icon integrity.
+to managed shell, font, and icon integrity. An app on an older release than the shell checkout
+passes if its own install is intact, and is told a newer shell is available.
 
 ## No runtime central dependency
 

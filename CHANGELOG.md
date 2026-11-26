@@ -1,5 +1,8 @@
 # Changelog
 
+## Tooling, 2026-11-26 (no version change: the installer is not part of `dist/`)
+- `scripts/install.py --check` lets an app lag the shell. An app on the release in this checkout gets the strict check as before. An app on an older release passes when its own installed shell, fonts and icons are intact, byte for byte against the manifest it was installed with, and the check prints a note that a newer shell is available. A damaged install, a `marin.yml` that names a different shell than the one installed, or an app newer than the checkout still fails. The installer's own final validation after an install stays strict. Why: every shell release made every app's local `check.sh` fail with "this release requires X" until the app was reinstalled, so 20 apps failed their own checks after shell 2.9.0 although nothing was wrong with them.
+
 ## 2.9.0 - 2026-11-26
 - Add `title-heading="false"` on `<marin-app-header>`: the app name is drawn as plain text (a `p` with the same look, still the link home) instead of the h1. A page below the home page that has its own title uses it, so that title is the page's one h1. Why: every inner page of Marin Docs had two h1s, the app title and the page's own. Nothing changes without the attribute.
 
